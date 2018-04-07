@@ -99,6 +99,25 @@ sealed class Try<out T> {
                     Failure(exception)
                 }
     }
+
+    /**
+     * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
+     *
+     * @param successTransform Function transforming value of a [Success] to a new [Try].
+     * @param failureTransform Function transforming exception from a [Failure] to a new [Try].
+     *
+     * @return New [Try] being a result of a transformation of a [Success] with [successTransform]
+     * or a [Failure] with [failureTransform].
+     */
+    fun <R> transform(successTransform: (T) -> Try<R>, failureTransform: (Throwable) -> Try<R>): Try<R> =
+            try {
+                when (this) {
+                    is Success -> successTransform(value)
+                    is Failure -> failureTransform(exception)
+                }
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
 }
 
 /**

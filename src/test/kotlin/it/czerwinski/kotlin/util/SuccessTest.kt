@@ -218,4 +218,32 @@ class SuccessTest {
         // then:
         assertEquals(Success("text"), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun transformShouldReturnNewSuccess() {
+        // given:
+        val success: Try<Int> = Success(123)
+        // when:
+        val result = success.transform(
+                { value -> Success(value.toString()) },
+                { exception -> Success(exception.message) })
+        // then:
+        assertEquals(Success("123"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun transformShouldReturnFailureWithThrownException() {
+        // given:
+        val success: Try<Int> = Success(123)
+        val successException = IllegalArgumentException()
+        val failureException = NullPointerException()
+        // when:
+        val result: Try<String> = success.transform(
+                { _ -> throw successException },
+                { _ -> throw failureException })
+        // then:
+        assertEquals(Failure(successException), result)
+    }
 }

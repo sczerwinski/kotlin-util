@@ -216,4 +216,32 @@ class FailureTest {
         // then:
         assertEquals(Failure(newException), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun transformShouldReturnNewSuccess() {
+        // given:
+        val failure: Try<Int> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.transform(
+                { value -> Success(value.toString()) },
+                { exception -> Success(exception.message) })
+        // then:
+        assertEquals(Success("Test exception"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun transformShouldReturnFailureWithThrownException() {
+        // given:
+        val failure: Try<Int> = Failure(RuntimeException("Test exception"))
+        val successException = IllegalArgumentException()
+        val failureException = NullPointerException()
+        // when:
+        val result: Try<String> = failure.transform(
+                { _ -> throw successException },
+                { _ -> throw failureException })
+        // then:
+        assertEquals(Failure(failureException), result)
+    }
 }
