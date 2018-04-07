@@ -169,6 +169,7 @@ class RightProjectionTest {
         // then:
         assertTrue(result)
     }
+
     @Test
     @Throws(Exception::class)
     fun allShouldReturnFalseIfRightAndPredicateIsFalse() {
@@ -201,6 +202,7 @@ class RightProjectionTest {
         // then:
         assertTrue(result)
     }
+
     @Test
     @Throws(Exception::class)
     fun anyShouldReturnFalseIfRightAndPredicateIsFalse() {
@@ -210,5 +212,38 @@ class RightProjectionTest {
         val result = either.right.any { it > 0f }
         // then:
         assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterShouldReturnNullIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.right.filter { it > 0 }
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterShouldReturnTheSameRightIfPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Right(1f)
+        // when:
+        val result = either.right.filter { it > 0f }
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterShouldReturnNullIfPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Right(-1f)
+        // when:
+        val result = either.right.filter { it > 0f }
+        // then:
+        assertNull(result)
     }
 }

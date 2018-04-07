@@ -224,6 +224,18 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> predicate(either.value)
         is Right -> false
     }
+
+    /**
+     * Returns the same [Left] if the [predicate] is satisfied for the value. Otherwise returns `null`.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Left] if the [predicate] is satisfied for the value. Otherwise returns `null`.
+     */
+    fun filter(predicate: (L) -> Boolean): Either<L, R>? = when (either) {
+        is Left -> either.takeIf { predicate(it.value) }
+        is Right -> null
+    }
 }
 
 /**
@@ -322,6 +334,18 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
     fun any(predicate: (R) -> Boolean): Boolean = when (either) {
         is Left -> false
         is Right -> predicate(either.value)
+    }
+
+    /**
+     * Returns the same [Right] if the [predicate] is satisfied for the value. Otherwise returns `null`.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Right] if the [predicate] is satisfied for the value. Otherwise returns `null`.
+     */
+    fun filter(predicate: (R) -> Boolean): Either<L, R>? = when (either) {
+        is Left -> null
+        is Right -> either.takeIf { predicate(it.value) }
     }
 }
 
