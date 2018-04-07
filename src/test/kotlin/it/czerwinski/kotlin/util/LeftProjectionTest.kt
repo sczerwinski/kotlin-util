@@ -68,4 +68,83 @@ class LeftProjectionTest {
         // then:
         assertEquals(-1, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun forEachShouldBeCalledIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        var result = "default"
+        // when:
+        either.left.forEach { result = it.toString() }
+        // then:
+        assertEquals("256", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun forEachShouldNotBeCalledIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        var result = "default"
+        // when:
+        either.left.forEach { result = it.toString() }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun mapShouldTransformLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.left.map { it.toString() }
+        // then:
+        assertEquals(Left("256"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun fmapShouldNotTransformRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.map { it.toString() }
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldTransformLeftToLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result: Either<String, Float> = either.left.flatMap { Left(it.toString()) }
+        // then:
+        assertEquals(Left("256"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldTransformLeftToRight() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result: Either<String, Float> = either.left.flatMap { Right(it * 0.1f) }
+        // then:
+        assertEquals(Right(25.6f), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldNotTransformRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result: Either<String, Float> = either.left.flatMap { Left(it.toString()) }
+        // then:
+        assertEquals(either, result)
+    }
 }

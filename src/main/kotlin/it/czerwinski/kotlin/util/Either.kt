@@ -137,6 +137,28 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> either.value
         is Right -> null
     }
+
+    /**
+     * Runs [action] if this is a [Left]. Returns [Unit] without any action if this is a [Right].
+     *
+     * @param action Action to be run on a [Left].
+     */
+    fun forEach(action: (L) -> Unit) = when (either) {
+        is Left -> action(either.value)
+        is Right -> Unit
+    }
+
+    /**
+     * Maps value of this [Left] using [transform].
+     *
+     * @param transform Function transforming a [Left].
+     *
+     * @return [Left] mapped using [transform] or this object if this is a [Right].
+     */
+    fun <T> map(transform: (L) -> T): Either<T, R> = when (either) {
+        is Left -> Left(transform(either.value))
+        is Right -> either
+    }
 }
 
 /**
@@ -149,6 +171,18 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
 fun <L, R> LeftProjection<L, R>.getOrElse(default: () -> L): L = when (either) {
     is Left -> either.value
     is Right -> default()
+}
+
+/**
+ * Maps value of this [Left] to a new [Either] using [transform].
+ *
+ * @param transform Function transforming a [Left] to an [Either].
+ *
+ * @return [Either] mapped using [transform] or this object if this is a [Right].
+ */
+fun <L, R, T> LeftProjection<L, R>.flatMap(transform: (L) -> Either<T, R>): Either<T, R> = when (either) {
+    is Left -> transform(either.value)
+    is Right -> either
 }
 
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
@@ -174,16 +208,50 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> null
         is Right -> either.value
     }
+
+    /**
+     * Runs [action] if this is a [Right]. Returns [Unit] without any action if this is a [Left].
+     *
+     * @param action Action to be run on a [Right].
+     */
+    fun forEach(action: (R) -> Unit) = when (either) {
+        is Left -> Unit
+        is Right -> action(either.value)
+    }
+
+    /**
+     * Maps value of this [Right] using [transform].
+     *
+     * @param transform Function transforming a [Right].
+     *
+     * @return [Right] mapped using [transform] or this object if this is a [Left].
+     */
+    fun <T> map(transform: (R) -> T): Either<L, T> = when (either) {
+        is Left -> either
+        is Right -> Right(transform(either.value))
+    }
 }
 
 /**
- * Gets value of this [Left] or [default] value if this is [Right].
+ * Gets value of this [Right] or [default] value if this is [Left].
  *
  * @param default Default value provider.
  *
- * @return Value of this [Left] or [default].
+ * @return Value of this [Right] or [default].
  */
 fun <L, R> RightProjection<L, R>.getOrElse(default: () -> R): R = when (either) {
     is Left -> default()
     is Right -> either.value
+}
+
+/**
+ * Maps value of this [Right] to a new [Either] using [transform].
+ *
+ * @param transform Function transforming a [Right] to an [Either].
+ *
+ * @return [Either] mapped using [transform] or this object if this is a [Left].
+ */
+fun <L, R, T> RightProjection<L, R>.flatMap(transform: (R) -> Either<L, T>): Either<L, T> = when (either) {
+    is Left -> either
+    is Right -> transform(either.value)
 }
