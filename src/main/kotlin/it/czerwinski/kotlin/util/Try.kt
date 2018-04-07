@@ -91,22 +91,6 @@ sealed class Try<out T> {
      */
     abstract fun filterNot(predicate: (T) -> Boolean): Try<T>
 
-    companion object {
-        /**
-         * Creates a new [Try] based on the result of the [callable].
-         *
-         * @param callable A callable operation.
-         *
-         * @return An instance of [Success] or [Failure], depending on whether the operation.
-         */
-        operator fun <T> invoke(callable: () -> T): Try<T> =
-                try {
-                    Success(callable())
-                } catch (exception: Throwable) {
-                    Failure(exception)
-                }
-    }
-
     /**
      * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
      *
@@ -125,6 +109,22 @@ sealed class Try<out T> {
             } catch (exception: Throwable) {
                 Failure(exception)
             }
+
+    companion object {
+        /**
+         * Creates a new [Try] based on the result of the [callable].
+         *
+         * @param callable A callable operation.
+         *
+         * @return An instance of [Success] or [Failure], depending on whether the operation.
+         */
+        operator fun <T> invoke(callable: () -> T): Try<T> =
+                try {
+                    Success(callable())
+                } catch (exception: Throwable) {
+                    Failure(exception)
+                }
+    }
 }
 
 /**
