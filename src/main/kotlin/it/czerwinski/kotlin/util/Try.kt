@@ -1,0 +1,295 @@
+/*
+ *
+ * This Kotlin code is based on Scala, licensed under the BSD 3-Clause License.
+ *
+ * ===== SCALA LICENSE =====
+ *
+ * Copyright (c) 2002-2018 EPFL
+ * Copyright (c) 2011-2018 Lightbend, Inc.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ *   * Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *   * Neither the name of the EPFL nor the names of its contributors
+ *     may be used to endorse or promote products derived from this software
+ *     without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+package it.czerwinski.kotlin.util
+
+/**
+ * Representation of an operation that might successfully return a value or throw an exception.
+ *
+ * An instance of [Try] may be either a [Success] or a [Failure].
+ *
+ * This type is based on `scala.util.Try`.
+ *
+ * @param T Type of the value of a successful operation.
+ */
+sealed class Try<out T> {
+
+    /**
+     * Returns `true` if this is a [Success] or `false` if this is [Failure].
+     *
+     * @return `true` if this is a [Success] or `false` if this is [Failure].
+     */
+    abstract val isSuccess: Boolean
+
+    /**
+     * Returns `true` if this is a [Failure] or `false` if this is [Success].
+     *
+     * @return `true` if this is a [Failure] or `false` if this is [Success].
+     */
+    abstract val isFailure: Boolean
+
+    /**
+     * Returns a [Success] with an exception it this is a [Failure] or a [Failure] if this is a [Success].
+     *
+     * @return A [Success] with an exception it this is a [Failure] or a [Failure] if this is a [Success].
+     */
+    abstract val failed: Try<Throwable>
+
+    /**
+     * Gets the value of a [Success] or throw an exception from a [Failure].
+     *
+     * @return Value of a [Success].
+     *
+     * @throws Throwable If this is a [Failure].
+     */
+    abstract fun get(): T
+
+    /**
+     * Gets the value of a [Success] or `null` if this is a [Failure].
+     *
+     * @return Value of a [Success] or `null`.
+     */
+    abstract fun getOrNull(): T?
+
+    /**
+     * Runs [action] if this is a [Success]. Returns [Unit] without any action if this is a [Failure].
+     *
+     * @param action Action to be run on a value of a [Success].
+     */
+    abstract fun forEach(action: (T) -> Unit)
+
+    /**
+     * Maps value of a [Success] using [transform] or returns the same [Try] if this is a [Failure].
+     *
+     * @param transform Function transforming value of a [Success].
+     *
+     * @return [Try] with a value mapped using [transform] or this object if this is a [Failure].
+     */
+    abstract fun <R> map(transform: (T) -> R): Try<R>
+
+    /**
+     * Maps value of a [Success] to a new [Try] using [transform] or returns the same [Try] if this is a [Failure].
+     *
+     * @param transform Function transforming value of a [Success] to a [Try].
+     *
+     * @return [Try] returned by [transform] or this object if this is a [Failure].
+     */
+    abstract fun <R> flatMap(transform: (T) -> Try<R>): Try<R>
+
+    /**
+     * Returns the same [Success] if the [predicate] is satisfied for the value. Otherwise returns a [Failure].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Success] if the [predicate] is satisfied for the value. Otherwise returns a [Failure].
+     */
+    abstract fun filter(predicate: (T) -> Boolean): Try<T>
+
+    /**
+     * Returns the same [Success] if the [predicate] is not satisfied for the value. Otherwise returns a [Failure].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Success] if the [predicate] is not satisfied for the value. Otherwise returns a [Failure].
+     */
+    abstract fun filterNot(predicate: (T) -> Boolean): Try<T>
+
+    /**
+     * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
+     *
+     * @param successTransform Function transforming value of a [Success] to a new [Try].
+     * @param failureTransform Function transforming exception from a [Failure] to a new [Try].
+     *
+     * @return New [Try] being a result of a transformation of a [Success] with [successTransform]
+     * or a [Failure] with [failureTransform].
+     */
+    fun <R> transform(successTransform: (T) -> Try<R>, failureTransform: (Throwable) -> Try<R>): Try<R> =
+            try {
+                when (this) {
+                    is Success -> successTransform(value)
+                    is Failure -> failureTransform(exception)
+                }
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
+
+    /**
+     * Converts this [Try] to [Either].
+     *
+     * @return [Left] if this is [Failure] or [Right] if this is [Success].
+     */
+    abstract fun toEither(): Either<Throwable, T>
+
+    companion object {
+        /**
+         * Creates a new [Try] based on the result of the [callable].
+         *
+         * @param callable A callable operation.
+         *
+         * @return An instance of [Success] or [Failure], depending on whether the operation.
+         */
+        operator fun <T> invoke(callable: () -> T): Try<T> =
+                try {
+                    Success(callable())
+                } catch (exception: Throwable) {
+                    Failure(exception)
+                }
+    }
+}
+
+/**
+ * Gets the value of a [Success] or [default] value if this is a [Failure].
+ *
+ * @param default Default value provider.
+ *
+ * @return Value of a [Success] or [default] value.
+ */
+fun <T> Try<T>.getOrElse(default: () -> T): T =
+        if (isSuccess) get() else default()
+
+/**
+ * Returns this [Try] if this is a [Success] or [default] if this is a [Failure].
+ *
+ * @param default Default [Try] provider.
+ *
+ * @return This [Success] or [default].
+ */
+fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
+        if (isSuccess) this else default()
+
+/**
+ * Transforms a nested [Try] to a not nested [Try].
+ *
+ * @return [Try] nested in a [Success] or this object if this is a [Failure].
+ */
+fun <T> Try<Try<T>>.flatten(): Try<T> = when (this) {
+    is Success -> value
+    is Failure -> this
+}
+
+/**
+ * Returns this [Try] if this is a [Success] or a [Try] created for the [rescue] operation if this is a [Failure].
+ *
+ * @param rescue Function creating a new value from the exception of a [Failure].
+ *
+ * @return This [Try] if this is a [Success] or a [Try] created for the [rescue] operation if this is a [Failure].
+ */
+fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
+    is Success -> this
+    is Failure -> Try { rescue(exception) }
+}
+
+/**
+ * Returns this [Try] if this is a [Success] or a [Try] created by the [rescue] function if this is a [Failure].
+ *
+ * @param rescue Function creating a new [Try] from the exception of a [Failure].
+ *
+ * @return This [Try] if this is a [Success] or a [Try] created by the [rescue] function if this is a [Failure].
+ */
+fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) {
+    is Success -> this
+    is Failure -> try {
+        rescue(exception)
+    } catch (exception: Throwable) {
+        Failure(exception)
+    }
+}
+
+data class Success<out T>(val value: T) : Try<T>() {
+
+    override val isSuccess: Boolean
+        get() = true
+
+    override val isFailure: Boolean
+        get() = false
+
+    override val failed: Try<Throwable>
+        get() = Failure(UnsupportedOperationException("Unsupported operation: Success::failed"))
+
+    override fun get(): T = value
+    override fun getOrNull(): T? = value
+
+    override fun forEach(action: (T) -> Unit) = action(value)
+    override fun <R> map(transform: (T) -> R): Try<R> = Try { transform(value) }
+    override fun <R> flatMap(transform: (T) -> Try<R>): Try<R> =
+            try {
+                transform(value)
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
+
+    override fun filter(predicate: (T) -> Boolean): Try<T> =
+            try {
+                if (predicate(value)) this
+                else throw NoSuchElementException("Predicate not satisfied for $value")
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
+    override fun filterNot(predicate: (T) -> Boolean): Try<T> =
+            try {
+                if (!predicate(value)) this
+                else throw NoSuchElementException("Predicate not satisfied for $value")
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
+
+    override fun toEither(): Either<Throwable, T> = Right(value)
+}
+
+data class Failure(val exception: Throwable) : Try<Nothing>() {
+
+    override val isSuccess: Boolean
+        get() = false
+
+    override val isFailure: Boolean
+        get() = true
+
+    override val failed: Try<Throwable>
+        get() = Success(exception)
+
+    override fun get(): Nothing = throw exception
+    override fun getOrNull(): Nothing? = null
+
+    override fun forEach(action: (Nothing) -> Unit) = Unit
+    override fun <R> map(transform: (Nothing) -> R): Try<R> = this
+    override fun <R> flatMap(transform: (Nothing) -> Try<R>): Try<R> = this
+
+    override fun filter(predicate: (Nothing) -> Boolean): Try<Nothing> = this
+    override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
+
+    override fun toEither(): Either<Throwable, Nothing> = Left(exception)
+}
