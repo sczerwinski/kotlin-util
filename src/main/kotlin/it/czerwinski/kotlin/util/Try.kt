@@ -110,6 +110,11 @@ sealed class Try<out T> {
                 Failure(exception)
             }
 
+    /**
+     * Converts this [Try] to [Either].
+     *
+     * @return [Left] if this is [Failure] or [Right] if this is [Success].
+     */
     abstract fun toEither(): Either<Throwable, T>
 
     companion object {
