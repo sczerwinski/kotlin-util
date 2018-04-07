@@ -246,4 +246,15 @@ class SuccessTest {
         // then:
         assertEquals(Failure(successException), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun failedShouldReturnFailure() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.failed
+        // then:
+        assertTrue(result.isFailure)
+    }
 }

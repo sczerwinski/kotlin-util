@@ -26,6 +26,13 @@ sealed class Try<out T> {
     abstract val isFailure: Boolean
 
     /**
+     * Returns a [Success] with an exception it this is a [Failure] or a [Failure] if this is a [Success].
+     *
+     * @return A [Success] with an exception it this is a [Failure] or a [Failure] if this is a [Success].
+     */
+    abstract val failed: Try<Throwable>
+
+    /**
      * Gets the value of a [Success] or throw an exception from a [Failure].
      *
      * @return Value of a [Success].
@@ -183,6 +190,9 @@ data class Success<out T>(val value: T) : Try<T>() {
     override val isSuccess: Boolean = true
     override val isFailure: Boolean = false
 
+    override val failed: Try<Throwable>
+        get() = Failure(UnsupportedOperationException("Unsupported operation: Success::failed"))
+
     override fun get(): T = value
     override fun getOrNull(): T? = value
 
@@ -215,6 +225,9 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
 
     override val isSuccess: Boolean = false
     override val isFailure: Boolean = true
+
+    override val failed: Try<Throwable>
+        get() = Success(exception)
 
     override fun get(): Nothing = throw exception
     override fun getOrNull(): Nothing? = null

@@ -244,4 +244,16 @@ class FailureTest {
         // then:
         assertEquals(Failure(failureException), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun failedShouldReturnSuccessWithTheSameException() {
+        // given:
+        val exception = RuntimeException("Test exception")
+        val failure: Try<Int> = Failure(exception)
+        // when:
+        val result = failure.failed
+        // then:
+        assertEquals(Success(exception), result)
+    }
 }
