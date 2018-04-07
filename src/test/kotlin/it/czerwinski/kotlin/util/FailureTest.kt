@@ -78,4 +78,16 @@ class FailureTest {
         // then:
         assertEquals(Failure(defaultException), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun forEachShouldNotBeCalled() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        var result = "default"
+        // when:
+        failure.forEach { result = it }
+        // then:
+        assertEquals("default", result)
+    }
 }

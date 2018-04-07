@@ -41,6 +41,13 @@ sealed class Try<out T> {
      */
     abstract fun getOrNull(): T?
 
+    /**
+     * Runs [action] if this is a [Success]. Returns [Unit] without any action if this is a [Failure].
+     *
+     * @param action Action to be run on a value of a [Success].
+     */
+    abstract fun forEach(action: (T) -> Unit)
+
     companion object {
         /**
          * Creates a new [Try] based on the result of the [callable].
@@ -61,6 +68,8 @@ sealed class Try<out T> {
 /**
  * Gets the value of a [Success] or [default] value if this is a [Failure].
  *
+ * @param default Default value provider.
+ *
  * @return Value of a [Success] or [default] value.
  */
 fun <T> Try<T>.getOrElse(default: () -> T): T =
@@ -68,6 +77,8 @@ fun <T> Try<T>.getOrElse(default: () -> T): T =
 
 /**
  * Returns this [Try] if this is a [Success] or [default] if this is a [Failure].
+ *
+ * @param default Default [Try] provider.
  *
  * @return This [Success] or [default].
  */
@@ -81,6 +92,8 @@ data class Success<out T>(val value: T) : Try<T>() {
 
     override fun get(): T = value
     override fun getOrNull(): T? = value
+
+    override fun forEach(action: (T) -> Unit) = action(value)
 }
 
 data class Failure(val exception: Throwable) : Try<Nothing>() {
@@ -90,4 +103,6 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
 
     override fun get(): Nothing = throw exception
     override fun getOrNull(): Nothing? = null
+
+    override fun forEach(action: (Nothing) -> Unit) = Unit
 }

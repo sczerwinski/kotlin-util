@@ -70,4 +70,16 @@ class SuccessTest {
         // then:
         assertEquals(success, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun forEachShouldBeCalled() {
+        // given:
+        val success = Success("text")
+        var result = "default"
+        // when:
+        success.forEach { result = it }
+        // then:
+        assertEquals("text", result)
+    }
 }
