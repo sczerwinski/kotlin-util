@@ -196,6 +196,34 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> Left(transform(either.value))
         is Right -> either
     }
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Left]
+     * or `true` if this is [Right].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Left]
+     * or `true` if this is [Right].
+     */
+    fun all(predicate: (L) -> Boolean): Boolean = when (either) {
+        is Left -> predicate(either.value)
+        is Right -> true
+    }
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Left]
+     * or `false` if this is [Right].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Left]
+     * or `false` if this is [Right].
+     */
+    fun any(predicate: (L) -> Boolean): Boolean = when (either) {
+        is Left -> predicate(either.value)
+        is Right -> false
+    }
 }
 
 /**
@@ -266,6 +294,34 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
     fun <T> map(transform: (R) -> T): Either<L, T> = when (either) {
         is Left -> either
         is Right -> Right(transform(either.value))
+    }
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Right]
+     * or `true` if this is [Left].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Right]
+     * or `true` if this is [Left].
+     */
+    fun all(predicate: (R) -> Boolean): Boolean = when (either) {
+        is Left -> true
+        is Right -> predicate(either.value)
+    }
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Right]
+     * or `false` if this is [Left].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Right]
+     * or `false` if this is [Left].
+     */
+    fun any(predicate: (R) -> Boolean): Boolean = when (either) {
+        is Left -> false
+        is Right -> predicate(either.value)
     }
 }
 

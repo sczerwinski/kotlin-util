@@ -106,7 +106,7 @@ class LeftProjectionTest {
 
     @Test
     @Throws(Exception::class)
-    fun fmapShouldNotTransformRight() {
+    fun mapShouldNotTransformRight() {
         // given:
         val either: Either<Int, Float> = Right(3.14f)
         // when:
@@ -146,5 +146,71 @@ class LeftProjectionTest {
         val result: Either<String, Float> = either.left.flatMap { Left(it.toString()) }
         // then:
         assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnTrueIfLeftAndPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Left(1)
+        // when:
+        val result = either.left.all { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnFalseIfLeftAndPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Left(-1)
+        // when:
+        val result = either.left.all { it > 0 }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnTrueIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.all { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnTrueIfLeftAndPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Left(1)
+        // when:
+        val result = either.left.any { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnFalseIfLeftAndPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Left(-1)
+        // when:
+        val result = either.left.any { it > 0 }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnFalseIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.any { it > 0 }
+        // then:
+        assertFalse(result)
     }
 }

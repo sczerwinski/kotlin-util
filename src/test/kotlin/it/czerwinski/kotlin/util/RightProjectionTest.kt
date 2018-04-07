@@ -106,7 +106,7 @@ class RightProjectionTest {
 
     @Test
     @Throws(Exception::class)
-    fun fmapShouldTransformRight() {
+    fun mapShouldTransformRight() {
         // given:
         val either: Either<Int, Float> = Right(3.14f)
         // when:
@@ -146,5 +146,69 @@ class RightProjectionTest {
         val result: Either<Int, String> = either.right.flatMap { Right(it.toString()) }
         // then:
         assertEquals(Right("3.14"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnTrueIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.right.all { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnFalseIfRightAndPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Right(1f)
+        // when:
+        val result = either.right.all { it > 0f }
+        // then:
+        assertTrue(result)
+    }
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnFalseIfRightAndPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Right(-1f)
+        // when:
+        val result = either.right.all { it > 0f }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnFalseIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.right.any { it > 0 }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnFalseIfRightAndPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Right(1f)
+        // when:
+        val result = either.right.any { it > 0f }
+        // then:
+        assertTrue(result)
+    }
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnFalseIfRightAndPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Right(-1f)
+        // when:
+        val result = either.right.any { it > 0f }
+        // then:
+        assertFalse(result)
     }
 }
