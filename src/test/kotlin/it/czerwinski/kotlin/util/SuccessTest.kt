@@ -7,7 +7,7 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
-    fun shouldNotBeSuccess() {
+    fun shouldBeSuccess() {
         // given:
         val success: Try<String> = Success("text")
         // when:
@@ -18,7 +18,7 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
-    fun shouldBeFailure() {
+    fun shouldNotBeFailure() {
         // given:
         val success: Try<String> = Success("text")
         // when:
