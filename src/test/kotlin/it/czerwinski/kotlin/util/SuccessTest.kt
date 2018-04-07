@@ -152,4 +152,48 @@ class SuccessTest {
         // then:
         assertEquals(Failure(exception), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterShouldReturnTheSameSuccessIfPredicateIsTrue() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.filter { it == "text" }
+        // then:
+        assertEquals(success, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterShouldReturnFailureIfPredicateIsFalse() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.filter { it == "other text" }
+        // then:
+        assertTrue(result.isFailure)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnTheSameSuccessIfPredicateIsFalse() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.filterNot { it == "other text" }
+        // then:
+        assertEquals(success, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnFailureIfPredicateIsTrue() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.filterNot { it == "text" }
+        // then:
+        assertTrue(result.isFailure)
+    }
 }

@@ -66,6 +66,24 @@ sealed class Try<out T> {
      */
     abstract fun <R> flatMap(transform: (T) -> Try<R>): Try<R>
 
+    /**
+     * Returns the same [Success] if the [predicate] is satisfied for the value. Otherwise returns a [Failure].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Success] if the [predicate] is satisfied for the value. Otherwise returns a [Failure].
+     */
+    abstract fun filter(predicate: (T) -> Boolean): Try<T>
+
+    /**
+     * Returns the same [Success] if the [predicate] is not satisfied for the value. Otherwise returns a [Failure].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Success] if the [predicate] is not satisfied for the value. Otherwise returns a [Failure].
+     */
+    abstract fun filterNot(predicate: (T) -> Boolean): Try<T>
+
     companion object {
         /**
          * Creates a new [Try] based on the result of the [callable].
@@ -129,6 +147,21 @@ data class Success<out T>(val value: T) : Try<T>() {
             } catch (exception: Throwable) {
                 Failure(exception)
             }
+
+    override fun filter(predicate: (T) -> Boolean): Try<T> =
+            try {
+                if (predicate(value)) this
+                else throw NoSuchElementException("Predicate not satisfied for $value")
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
+    override fun filterNot(predicate: (T) -> Boolean): Try<T> =
+            try {
+                if (!predicate(value)) this
+                else throw NoSuchElementException("Predicate not satisfied for $value")
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
 }
 
 data class Failure(val exception: Throwable) : Try<Nothing>() {
@@ -142,4 +175,7 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
     override fun forEach(action: (Nothing) -> Unit) = Unit
     override fun <R> map(transform: (Nothing) -> R): Try<R> = this
     override fun <R> flatMap(transform: (Nothing) -> Try<R>): Try<R> = this
+
+    override fun filter(predicate: (Nothing) -> Boolean): Try<Nothing> = this
+    override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
 }
