@@ -25,6 +25,18 @@ sealed class Either<out L, out R> {
     abstract val isRight: Boolean
 
     /**
+     * Projects [Either] as [Left].
+     */
+    val left: LeftProjection<L, R>
+        get() = LeftProjection(this)
+
+    /**
+     * Projects [Either] as [Right].
+     */
+    val right: RightProjection<L, R>
+        get() = RightProjection(this)
+
+    /**
      * Transforms [Left] with [leftTransform] or [Right] with [rightTransform].
      *
      * @param leftTransform Function transforming [Left] value.
@@ -100,4 +112,78 @@ data class Right<out R>(val value: R) : Either<Nothing, R>() {
     override fun <T> fold(leftTransform: (Nothing) -> T, rightTransform: (R) -> T): T = rightTransform(value)
 
     override fun swap(): Either<R, Nothing> = Left(value)
+}
+
+data class LeftProjection<out L, out R>(val either: Either<L, R>) {
+
+    /**
+     * Gets value of this [Left].
+     *
+     * @return Value of this [Left].
+     *
+     * @throws NoSuchElementException If this is [Right].
+     */
+    fun get(): L = when (either) {
+        is Left -> either.value
+        is Right -> throw NoSuchElementException("Getting Left value from Right")
+    }
+
+    /**
+     * Gets value of this [Left] or `null` if this is [Right].
+     *
+     * @return Value of this [Left] or `null`.
+     */
+    fun getOrNull(): L? = when (either) {
+        is Left -> either.value
+        is Right -> null
+    }
+}
+
+/**
+ * Gets value of this [Left] or [default] value if this is [Right].
+ *
+ * @param default Default value provider.
+ *
+ * @return Value of this [Left] or [default].
+ */
+fun <L, R> LeftProjection<L, R>.getOrElse(default: () -> L): L = when (either) {
+    is Left -> either.value
+    is Right -> default()
+}
+
+data class RightProjection<out L, out R>(val either: Either<L, R>) {
+
+    /**
+     * Gets value of this [Right].
+     *
+     * @return Value of this [Right].
+     *
+     * @throws NoSuchElementException If this is [Left].
+     */
+    fun get(): R = when (either) {
+        is Left -> throw NoSuchElementException("Getting Right value from Left")
+        is Right -> either.value
+    }
+
+    /**
+     * Gets value of this [Right] or `null` if this is [Left].
+     *
+     * @return Value of this [Right] or `null`.
+     */
+    fun getOrNull(): R? = when (either) {
+        is Left -> null
+        is Right -> either.value
+    }
+}
+
+/**
+ * Gets value of this [Left] or [default] value if this is [Right].
+ *
+ * @param default Default value provider.
+ *
+ * @return Value of this [Left] or [default].
+ */
+fun <L, R> RightProjection<L, R>.getOrElse(default: () -> R): R = when (either) {
+    is Left -> default()
+    is Right -> either.value
 }
