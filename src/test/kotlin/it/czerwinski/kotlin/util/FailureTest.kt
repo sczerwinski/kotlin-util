@@ -200,7 +200,7 @@ class FailureTest {
         val failure: Try<String> = Failure(RuntimeException("Test exception"))
         val newException = NullPointerException()
         // when:
-        val result = failure.recoverWith { exception -> Failure(newException) }
+        val result = failure.recoverWith { _ -> Failure(newException) }
         // then:
         assertEquals(Failure(newException), result)
     }
