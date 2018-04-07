@@ -62,4 +62,37 @@ class LeftTest {
         // then:
         assertEquals("left text", result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun joinLeftShouldReturnInnerLeft() {
+        // given:
+        val either: Either<Either<String, Int>, Number> = Left(Left("text"))
+        // when:
+        val result = either.joinLeft()
+        // then:
+        assertEquals(Left("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun joinLeftShouldReturnInnerRight() {
+        // given:
+        val either: Either<Either<String, Int>, Number> = Left(Right(123))
+        // when:
+        val result = either.joinLeft()
+        // then:
+        assertEquals(Right(123), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun joinRightShouldReturnThisLeft() {
+        // given:
+        val either: Either<Number, Either<Float, String>> = Left(123)
+        // when:
+        val result = either.joinRight()
+        // then:
+        assertEquals(Left(123), result)
+    }
 }

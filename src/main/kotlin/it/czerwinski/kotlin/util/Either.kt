@@ -52,6 +52,30 @@ fun <T> Either<T, T>.merge(): T = when (this) {
     is Right -> value
 }
 
+/**
+ * Returns this if this is [Right]. Otherwise returns value of [Left].
+ *
+ * Requires [Left] to be an [Either].
+ *
+ * @return This if this is [Right]. Otherwise returns value of [Left].
+ */
+fun <L, R> Either<Either<L, R>, R>.joinLeft(): Either<L, R> = when (this) {
+    is Left -> value
+    is Right -> this
+}
+
+/**
+ * Returns this if this is [Left]. Otherwise returns value of [Right].
+ *
+ * Requires [Right] to be an [Either].
+ *
+ * @return This if this is [Left]. Otherwise returns value of [Right].
+ */
+fun <L, R> Either<L, Either<L, R>>.joinRight(): Either<L, R> = when (this) {
+    is Left -> this
+    is Right -> value
+}
+
 data class Left<out L>(val value: L) : Either<L, Nothing>() {
 
     override val isLeft: Boolean
