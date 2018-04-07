@@ -187,8 +187,11 @@ fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) 
 
 data class Success<out T>(val value: T) : Try<T>() {
 
-    override val isSuccess: Boolean = true
-    override val isFailure: Boolean = false
+    override val isSuccess: Boolean
+        get() = true
+
+    override val isFailure: Boolean
+        get() = false
 
     override val failed: Try<Throwable>
         get() = Failure(UnsupportedOperationException("Unsupported operation: Success::failed"))
@@ -223,8 +226,11 @@ data class Success<out T>(val value: T) : Try<T>() {
 
 data class Failure(val exception: Throwable) : Try<Nothing>() {
 
-    override val isSuccess: Boolean = false
-    override val isFailure: Boolean = true
+    override val isSuccess: Boolean
+        get() = false
+
+    override val isFailure: Boolean
+        get() = true
 
     override val failed: Try<Throwable>
         get() = Success(exception)
