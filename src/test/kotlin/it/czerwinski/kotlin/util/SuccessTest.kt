@@ -196,4 +196,26 @@ class SuccessTest {
         // then:
         assertTrue(result.isFailure)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun recoverShouldReturnTheSameSuccess() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.recover { exception -> exception.message }
+        // then:
+        assertEquals(Success("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun recoverWithShouldReturnTheSameSuccess() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.recoverWith { exception -> Success(exception.message) }
+        // then:
+        assertEquals(Success("text"), result)
+    }
 }

@@ -158,4 +158,62 @@ class FailureTest {
         // then:
         assertEquals(failure, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun recoverShouldReturnSuccess() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.recover { exception -> exception.message }
+        // then:
+        assertEquals(Success("Test exception"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun recoverShouldReturnFailureWithFrownException() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        val exception = NullPointerException()
+        // when:
+        val result = failure.recover { throw exception }
+        // then:
+        assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun recoverWithShouldReturnSuccess() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.recoverWith { exception -> Success(exception.message) }
+        // then:
+        assertEquals(Success("Test exception"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun recoverWithShouldReturnFailureWithNewException() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        val newException = NullPointerException()
+        // when:
+        val result = failure.recoverWith { exception -> Failure(newException) }
+        // then:
+        assertEquals(Failure(newException), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun recoverWithShouldReturnFailureWithThrownException() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        val newException = NullPointerException()
+        // when:
+        val result = failure.recoverWith { _ -> throw newException }
+        // then:
+        assertEquals(Failure(newException), result)
+    }
 }

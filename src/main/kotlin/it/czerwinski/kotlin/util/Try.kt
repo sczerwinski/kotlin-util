@@ -131,6 +131,34 @@ fun <T> Try<Try<T>>.flatten(): Try<T> = when (this) {
     is Failure -> this
 }
 
+/**
+ * Returns this [Try] if this is a [Success] or a [Try] created for the [rescue] operation if this is a [Failure].
+ *
+ * @param rescue Function creating a new value from the exception of a [Failure].
+ *
+ * @return This [Try] if this is a [Success] or a [Try] created for the [rescue] operation if this is a [Failure].
+ */
+fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
+    is Success -> this
+    is Failure -> Try { rescue(exception) }
+}
+
+/**
+ * Returns this [Try] if this is a [Success] or a [Try] created by the [rescue] function if this is a [Failure].
+ *
+ * @param rescue Function creating a new [Try] from the exception of a [Failure].
+ *
+ * @return This [Try] if this is a [Success] or a [Try] created by the [rescue] function if this is a [Failure].
+ */
+fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) {
+    is Success -> this
+    is Failure -> try {
+        rescue(exception)
+    } catch (exception: Throwable) {
+        Failure(exception)
+    }
+}
+
 data class Success<out T>(val value: T) : Try<T>() {
 
     override val isSuccess: Boolean = true
