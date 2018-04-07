@@ -29,8 +29,17 @@ sealed class Try<out T> {
      * Gets the value of a [Success] or throw an exception from a [Failure].
      *
      * @return Value of a [Success].
+     *
+     * @throws Throwable If this is a [Failure].
      */
     abstract fun get(): T
+
+    /**
+     * Gets the value of a [Success] or `null` if this is a [Failure].
+     *
+     * @return Value of a [Success] or `null`.
+     */
+    abstract fun getOrNull(): T?
 
     companion object {
         /**
@@ -49,12 +58,29 @@ sealed class Try<out T> {
     }
 }
 
+/**
+ * Gets the value of a [Success] or [default] value if this is a [Failure].
+ *
+ * @return Value of a [Success] or [default] value.
+ */
+fun <T> Try<T>.getOrElse(default: () -> T): T =
+        if (isSuccess) get() else default()
+
+/**
+ * Returns this [Try] if this is a [Success] or [default] if this is a [Failure].
+ *
+ * @return This [Success] or [default].
+ */
+fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
+        if (isSuccess) this else default()
+
 data class Success<out T>(val value: T) : Try<T>() {
 
     override val isSuccess: Boolean = true
     override val isFailure: Boolean = false
 
     override fun get(): T = value
+    override fun getOrNull(): T? = value
 }
 
 data class Failure(val exception: Throwable) : Try<Nothing>() {
@@ -63,4 +89,5 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
     override val isFailure: Boolean = true
 
     override fun get(): Nothing = throw exception
+    override fun getOrNull(): Nothing? = null
 }

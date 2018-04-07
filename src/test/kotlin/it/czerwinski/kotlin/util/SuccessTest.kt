@@ -29,12 +29,45 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
-    fun shouldGetValue() {
+    fun getShouldReturnValue() {
         // given:
         val success: Try<String> = Success("text")
         // when:
         val result = success.get()
         // then:
         assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getOrNullShouldReturnValue() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.getOrNull()
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getOrElseShouldReturnValue() {
+        // given:
+        val success = Success("text")
+        // when:
+        val result = success.getOrElse { "default" }
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun orElseShouldReturnThis() {
+        // given:
+        val success = Success("text")
+        // when:
+        val result = success.orElse { Failure(NullPointerException()) }
+        // then:
+        assertEquals(success, result)
     }
 }
