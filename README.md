@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/sczerwinski/kotlin-util.svg?branch=develop)](https://travis-ci.org/sczerwinski/kotlin-util)
 
-# Kotlin utility types based on Scala
+# Kotlin Utilities
 
-## Supported types
+## Supported types based on Scala
 
 ### `Either`
 
