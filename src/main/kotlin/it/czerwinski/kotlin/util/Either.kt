@@ -23,6 +23,33 @@ sealed class Either<out L, out R> {
      * @return `true` if this is a [Right] or `false` if this is [Left].
      */
     abstract val isRight: Boolean
+
+    /**
+     * Transforms [Left] with [leftTransform] or [Right] with [rightTransform].
+     *
+     * @param leftTransform Function transforming [Left] value.
+     * @param rightTransform Function transforming [Right] value.
+     *
+     * @return Result of applying [leftTransform] on [Left] or [rightTransform] on [Right].
+     */
+    abstract fun <T> fold(leftTransform: (L) -> T, rightTransform: (R) -> T): T
+
+    /**
+     * Swaps [Left] to [Right] and [Right] to [Left].
+     *
+     * @return [Left] if this is [Right] or [Right] if this is [Left].
+     */
+    abstract fun swap(): Either<R, L>
+}
+
+/**
+ * Merges [Left] and [Right] of the same type to a single value.
+ *
+ * @return Value of either [Left] or [Right].
+ */
+fun <T> Either<T, T>.merge(): T = when (this) {
+    is Left -> value
+    is Right -> value
 }
 
 data class Left<out L>(val value: L) : Either<L, Nothing>() {
@@ -32,6 +59,10 @@ data class Left<out L>(val value: L) : Either<L, Nothing>() {
 
     override val isRight: Boolean
         get() = false
+
+    override fun <T> fold(leftTransform: (L) -> T, rightTransform: (Nothing) -> T): T = leftTransform(value)
+
+    override fun swap(): Either<Nothing, L> = Right(value)
 }
 
 data class Right<out R>(val value: R) : Either<Nothing, R>() {
@@ -41,4 +72,8 @@ data class Right<out R>(val value: R) : Either<Nothing, R>() {
 
     override val isRight: Boolean
         get() = true
+
+    override fun <T> fold(leftTransform: (Nothing) -> T, rightTransform: (R) -> T): T = rightTransform(value)
+
+    override fun swap(): Either<R, Nothing> = Left(value)
 }
