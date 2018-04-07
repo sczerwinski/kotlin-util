@@ -82,4 +82,74 @@ class SuccessTest {
         // then:
         assertEquals("text", result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun mapShouldMapValueOfSuccess() {
+        // given:
+        val success = Success("123")
+        // when:
+        val result = success.map { it.toInt() }
+        // then:
+        assertEquals(Success(123), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun mapShouldMapValueOfSuccessToFailure() {
+        // given:
+        val success = Success("123")
+        val exception = NullPointerException()
+        // when:
+        val result = success.map { throw exception }
+        // then:
+        assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldReturnNewTry() {
+        // given:
+        val success = Success("123")
+        val newTry = Failure(NullPointerException())
+        // when:
+        val result = success.flatMap { newTry }
+        // then:
+        assertEquals(newTry, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldReturnFailureIfExceptionIsThrown() {
+        // given:
+        val success = Success("123")
+        val exception = RuntimeException()
+        // when:
+        val result: Try<Int> = success.flatMap { throw exception }
+        // then:
+        assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flattenShouldReturnInnerSuccess() {
+        // given:
+        val success: Try<Try<String>> = Success(Success("text"))
+        // when:
+        val result = success.flatten()
+        // then:
+        assertEquals(Success("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flattenShouldReturnInnerFailure() {
+        // given:
+        val exception = RuntimeException()
+        val success: Try<Try<String>> = Success(Failure(exception))
+        // when:
+        val result = success.flatten()
+        // then:
+        assertEquals(Failure(exception), result)
+    }
 }

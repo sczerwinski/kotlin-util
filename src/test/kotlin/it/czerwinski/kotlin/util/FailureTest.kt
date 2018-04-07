@@ -90,4 +90,50 @@ class FailureTest {
         // then:
         assertEquals("default", result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun mapShouldReturnTheSameFailure() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.map { it.toInt() }
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun mapShouldReturnTheSameFailureIfMappedWithNewException() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        val exception = NullPointerException()
+        // when:
+        val result = failure.map { throw exception }
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldReturnTheSameFailure() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        val newTry = Failure(NullPointerException())
+        // when:
+        val result = failure.flatMap { newTry }
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flattenShouldReturnTheSameFailure() {
+        // given:
+        val failure: Try<Try<String>> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.flatten()
+        // then:
+        assertEquals(failure, result)
+    }
 }
