@@ -256,4 +256,16 @@ class FailureTest {
         // then:
         assertEquals(Success(exception), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun toEitherShouldReturnLeft() {
+        // given:
+        val exception = RuntimeException("Test exception")
+        val failure: Try<Int> = Failure(exception)
+        // when:
+        val result = failure.toEither()
+        // then:
+        assertEquals(Left(exception), result)
+    }
 }

@@ -110,6 +110,8 @@ sealed class Try<out T> {
                 Failure(exception)
             }
 
+    abstract fun toEither(): Either<Throwable, T>
+
     companion object {
         /**
          * Creates a new [Try] based on the result of the [callable].
@@ -222,6 +224,8 @@ data class Success<out T>(val value: T) : Try<T>() {
             } catch (exception: Throwable) {
                 Failure(exception)
             }
+
+    override fun toEither(): Either<Throwable, T> = Right(value)
 }
 
 data class Failure(val exception: Throwable) : Try<Nothing>() {
@@ -244,4 +248,6 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
 
     override fun filter(predicate: (Nothing) -> Boolean): Try<Nothing> = this
     override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
+
+    override fun toEither(): Either<Throwable, Nothing> = Left(exception)
 }

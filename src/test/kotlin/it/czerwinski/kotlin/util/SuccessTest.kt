@@ -257,4 +257,15 @@ class SuccessTest {
         // then:
         assertTrue(result.isFailure)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun toEitherShouldReturnRight() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.toEither()
+        // then:
+        assertEquals(Right("text"), result)
+    }
 }
