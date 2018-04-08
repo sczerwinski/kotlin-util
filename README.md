@@ -14,3 +14,21 @@
 
 [![Scala documentation](https://img.shields.io/badge/scala-docs-blue.svg)](http://www.scala-lang.org/api/2.9.3/scala/util/Try.html)
 [![Scala sources](https://img.shields.io/badge/scala-sources-blue.svg)](https://github.com/scala/scala/blob/v2.9.3/src/library/scala/util/Try.scala)
+
+## Build configuration
+
+### Maven
+
+```xml
+<dependency>
+  <groupId>it.czerwinski</groupId>
+  <artifactId>kotlin-util</artifactId>
+  <version>0.1</version>
+</dependency>
+```
+
+### Gradle
+
+```groovy
+implementation 'it.czerwinski:kotlin-util:0.1'
+```
