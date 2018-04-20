@@ -12,10 +12,11 @@
 
 Implementation differences:
 
-* `toOptional` has been replaced with `getOrNull` – Kotlin uses its own null-safety mechanisms
+* `toOption` has been replaced with `getOrNull` – Kotlin uses its own null-safety mechanisms
 * `exists` has been replaced with `any` – Kotlin convention
 * `forall` has been replaced with `all` – Kotlin convention
 * `foreach` has been replaced with `forEach` – Kotlin convention
+* implemented additional functions: `filterNot`, `filterNotNull` – Kotlin convention
 
 ### `Try`
 
@@ -24,9 +25,9 @@ Implementation differences:
 
 Implementation differences:
 
-* `toOptional` has been replaced with `getOrNull` – Kotlin uses its own null-safety mechanisms
+* `toOption` has been replaced with `getOrNull` – Kotlin uses its own null-safety mechanisms
 * `foreach` has been replaced with `forEach` – Kotlin convention
-* implemented additional function `filterNot` – Kotlin convention
+* implemented additional functions: `filterNot`, `filterNotNull` – Kotlin convention
 
 ## Build configuration
 
