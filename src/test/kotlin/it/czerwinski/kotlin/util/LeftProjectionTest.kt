@@ -246,4 +246,37 @@ class LeftProjectionTest {
         // then:
         assertNull(result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnTheSameLeftIfPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Left(-1)
+        // when:
+        val result = either.left.filterNot { it > 0 }
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnNullIfPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Left(1)
+        // when:
+        val result = either.left.filterNot { it > 0 }
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnNullIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.filterNot { it > 0f }
+        // then:
+        assertNull(result)
+    }
 }
