@@ -50,6 +50,18 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun iteratorShouldProduceSingleElement() {
+        // given:
+        val option: Option<String> = Some("text")
+        val result = mutableListOf<String>()
+        // when:
+        option.iterator.forEach { result.add(it) }
+        // then:
+        assertEquals(listOf("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun getShouldReturnValue() {
         // given:
         val option: Option<String> = Some("text")
@@ -300,5 +312,16 @@ class SomeTest {
         val result = 3.14f in option
         // then:
         assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toListShouldReturnListContainingValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result = option.toList()
+        // then:
+        assertEquals(listOf(123), result)
     }
 }

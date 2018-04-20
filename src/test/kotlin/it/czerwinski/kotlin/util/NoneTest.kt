@@ -38,6 +38,17 @@ class NoneTest {
         assertFalse(result)
     }
 
+    @Test
+    @Throws(Exception::class)
+    fun iteratorShouldBeEmpty() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result = option.iterator
+        // then:
+        assertFalse(result.hasNext())
+    }
+
     @Test(expected = NoSuchElementException::class)
     @Throws(Exception::class)
     fun getShouldThrowException() {
@@ -200,5 +211,16 @@ class NoneTest {
         val result = 123 in option
         // then:
         assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toListShouldReturnEmptyList() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result = option.toList()
+        // then:
+        assertTrue(result.isEmpty())
     }
 }

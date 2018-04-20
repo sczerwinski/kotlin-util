@@ -37,6 +37,9 @@
 
 package it.czerwinski.kotlin.util
 
+import it.czerwinski.kotlin.collections.EmptyIterator
+import it.czerwinski.kotlin.collections.SingletonIterator
+
 /**
  * Representation of an optional value. The instance might be either [Some] value or [None].
  *
@@ -60,6 +63,13 @@ sealed class Option<out T> {
      */
     val isNotEmpty: Boolean
         get() = isDefined
+
+    /**
+     * Returns a singleton iterator returning the option's value if it is defined,
+     * or an empty iterator if the option is empty.
+     */
+    val iterator: Iterator<T>
+        get() = if (isEmpty) EmptyIterator else SingletonIterator(get())
 
     /**
      * Gets the value of a [Some] or throws an exception.
@@ -171,6 +181,16 @@ sealed class Option<out T> {
      */
     fun <R> fold(default: () -> R, transform: (T) -> R): R =
             if (isEmpty) default() else transform(get())
+
+    /**
+     * Returns a singleton list containing the option's value if it is defined,
+     * or an empty list if the option is empty.
+     *
+     * @return A singleton iterator returning the option's value if it is defined,
+     * or an empty iterator if the option is empty.
+     */
+    fun toList(): List<T> =
+            if (isEmpty) emptyList() else listOf(get())
 
     companion object {
 
