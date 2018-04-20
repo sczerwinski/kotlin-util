@@ -89,6 +89,15 @@ sealed class Either<out L, out R> {
      * @return [Left] if this is [Right] or [Right] if this is [Left].
      */
     abstract fun swap(): Either<R, L>
+
+    /**
+     * Returns `true` if the [element] is equal to the value of this [Either], or `false` otherwise.
+     *
+     * @param element An element of any type.
+     *
+     * @return `true` if the [element] is equal to the value of this [Either], or `false` otherwise.
+     */
+    abstract operator fun contains(element: Any): Boolean
 }
 
 /**
@@ -136,6 +145,8 @@ data class Left<out L>(val value: L) : Either<L, Nothing>() {
     override fun <T> fold(leftTransform: (L) -> T, rightTransform: (Nothing) -> T): T = leftTransform(value)
 
     override fun swap(): Either<Nothing, L> = Right(value)
+
+    override fun contains(element: Any): Boolean = value == element
 }
 
 data class Right<out R>(val value: R) : Either<Nothing, R>() {
@@ -149,6 +160,8 @@ data class Right<out R>(val value: R) : Either<Nothing, R>() {
     override fun <T> fold(leftTransform: (Nothing) -> T, rightTransform: (R) -> T): T = rightTransform(value)
 
     override fun swap(): Either<R, Nothing> = Left(value)
+
+    override fun contains(element: Any): Boolean = value == element
 }
 
 data class LeftProjection<out L, out R>(val either: Either<L, R>) {
