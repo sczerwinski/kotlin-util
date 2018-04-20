@@ -91,6 +91,26 @@ sealed class Option<out T> {
     fun <R> flatMap(transform: (T) -> Option<R>): Option<R> =
             if (isEmpty) None else transform(get())
 
+    /**
+     * Returns the same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
+     */
+    fun filter(predicate: (T) -> Boolean): Option<T> =
+            if (isEmpty || predicate(get())) this else None
+
+    /**
+     * Returns the same [Some] if the [predicate] is not satisfied for the value. Otherwise returns a [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Some] if the [predicate] is not satisfied for the value. Otherwise returns a [None].
+     */
+    fun filterNot(predicate: (T) -> Boolean): Option<T> =
+            if (isEmpty || !predicate(get())) this else None
+
     companion object {
 
         /**

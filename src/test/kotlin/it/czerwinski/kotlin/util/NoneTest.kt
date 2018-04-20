@@ -101,4 +101,26 @@ class NoneTest {
         // then:
         assertEquals(None, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterShouldReturnNone() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.filter { it > 0 }
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnNone() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.filterNot { it > 0 }
+        // then:
+        assertEquals(None, result)
+    }
 }
