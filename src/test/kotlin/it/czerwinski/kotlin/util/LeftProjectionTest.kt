@@ -312,4 +312,26 @@ class LeftProjectionTest {
         // then:
         assertNull(result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnSomeWithLeftValue() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.left.toOption()
+        // then:
+        assertEquals(Some(256), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnNoneIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.toOption()
+        // then:
+        assertEquals(None, result)
+    }
 }

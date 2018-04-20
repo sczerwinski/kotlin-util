@@ -261,6 +261,16 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> either.takeUnless { predicate(it.value) }
         is Right -> null
     }
+
+    /**
+     * Returns a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
+     *
+     * @return a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
+     */
+    fun toOption(): Option<L> = when (either) {
+        is Left -> Option(either.value)
+        is Right -> None
+    }
 }
 
 /**
@@ -393,6 +403,16 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
     fun filterNot(predicate: (R) -> Boolean): Either<L, R>? = when (either) {
         is Left -> null
         is Right -> either.takeUnless { predicate(it.value) }
+    }
+
+    /**
+     * Returns a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
+     *
+     * @return a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
+     */
+    fun toOption(): Option<R> = when (either) {
+        is Left -> None
+        is Right -> Option(either.value)
     }
 }
 
