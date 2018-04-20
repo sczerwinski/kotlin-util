@@ -56,6 +56,12 @@ sealed class Option<out T> {
         get() = !isEmpty
 
     /**
+     * Returns `true` if the option is [Some]. Otherwise returns `false`.
+     */
+    val isNotEmpty: Boolean
+        get() = isDefined
+
+    /**
      * Gets the value of a [Some] or throws an exception.
      *
      * @return Value of a [Some].

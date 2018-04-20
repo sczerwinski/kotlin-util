@@ -18,6 +18,17 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun shouldNotBeNotEmpty() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result = option.isNotEmpty
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun shouldNotBeDefined() {
         // given:
         val option: Option<String> = None

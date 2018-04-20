@@ -39,6 +39,17 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun shouldBeNotEmpty() {
+        // given:
+        val option: Option<String> = Some("text")
+        // when:
+        val result = option.isNotEmpty
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun getShouldReturnValue() {
         // given:
         val option: Option<String> = Some("text")
