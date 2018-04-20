@@ -192,6 +192,34 @@ sealed class Option<out T> {
     fun toList(): List<T> =
             if (isEmpty) emptyList() else listOf(get())
 
+    /**
+     * Returns a [Right] containing the given argument [right] if this is empty,
+     * or a [Left] containing this option's value if it is defined.
+     *
+     * @param right Producer of the fallback [Right] value.
+     *
+     * @param R The type of the [Right] value.
+     *
+     * @return a [Right] containing the given argument [right] if this is empty,
+     * or a [Left] containing this option's value if it is defined.
+     */
+    fun <R> toLeft(right: () -> R): Either<T, R> =
+            if (isEmpty) Right(right()) else Left(get())
+
+    /**
+     * Returns a [Left] containing the given argument [left] if this is empty,
+     * or a [Right] containing this option's value if it is defined.
+     *
+     * @param left Producer of the fallback [Left] value.
+     *
+     * @param L The type of the [Left] value.
+     *
+     * @return a [Left] containing the given argument [left] if this is empty,
+     * or a [Right] containing this option's value if it is defined.
+     */
+    fun <L> toRight(left: () -> L): Either<L, T> =
+            if (isEmpty) Left(left()) else Right(get())
+
     companion object {
 
         /**

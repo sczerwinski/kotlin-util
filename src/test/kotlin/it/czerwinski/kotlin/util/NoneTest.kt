@@ -223,4 +223,26 @@ class NoneTest {
         // then:
         assertTrue(result.isEmpty())
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun toLeftShouldReturnRightWithDefaultValue() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result: Either<Int, String> = option.toLeft { "text" }
+        // then:
+        assertEquals(Right("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toRightShouldReturnLeftWithDefaultValue() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result: Either<String, Int> = option.toRight { "text" }
+        // then:
+        assertEquals(Left("text"), result)
+    }
 }

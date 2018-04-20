@@ -324,4 +324,26 @@ class SomeTest {
         // then:
         assertEquals(listOf(123), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun toLeftShouldReturnLeftContainingValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Either<Int, String> = option.toLeft { "text" }
+        // then:
+        assertEquals(Left(123), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toRightShouldReturnRightContainingValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Either<String, Int> = option.toRight { "text" }
+        // then:
+        assertEquals(Right(123), result)
+    }
 }
