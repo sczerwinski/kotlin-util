@@ -287,6 +287,16 @@ fun <L, R, T> LeftProjection<L, R>.flatMap(transform: (L) -> Either<T, R>): Eith
     is Right -> either
 }
 
+/**
+ * Returns the same [Left] if its value is not `null`. Otherwise returns `null`.
+ *
+ * @return The same [Left] if its value is not `null`. Otherwise returns `null`.
+ */
+fun <L, R> LeftProjection<L?, R>.filterNotNull(): Either<L, R>? = when (either) {
+    is Left -> either.value?.let { Left(it) }
+    is Right -> null
+}
+
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
 
     /**
@@ -408,4 +418,14 @@ fun <L, R> RightProjection<L, R>.getOrElse(default: () -> R): R = when (either) 
 fun <L, R, T> RightProjection<L, R>.flatMap(transform: (R) -> Either<L, T>): Either<L, T> = when (either) {
     is Left -> either
     is Right -> transform(either.value)
+}
+
+/**
+ * Returns the same [Right] if its value is not `null`. Otherwise returns `null`.
+ *
+ * @return The same [Right] if its value is not `null`. Otherwise returns `null`.
+ */
+fun <L, R> RightProjection<L, R?>.filterNotNull(): Either<L, R>? = when (either) {
+    is Left -> null
+    is Right -> either.value?.let { Right(it) }
 }
