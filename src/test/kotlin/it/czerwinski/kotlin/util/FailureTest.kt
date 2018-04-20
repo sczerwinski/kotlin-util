@@ -161,6 +161,17 @@ class FailureTest {
 
     @Test
     @Throws(Exception::class)
+    fun filterNotNullShouldReturnTheSameFailure() {
+        // given:
+        val failure: Try<String?> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result: Try<String> = failure.filterNotNull()
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun recoverShouldReturnSuccess() {
         // given:
         val failure: Try<String> = Failure(RuntimeException("Test exception"))

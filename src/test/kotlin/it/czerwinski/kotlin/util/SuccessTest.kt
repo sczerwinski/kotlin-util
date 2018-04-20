@@ -199,6 +199,28 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
+    fun filterNotNullShouldReturnTheSameSuccessIfValueIsNotNull() {
+        // given:
+        val success: Try<String?> = Success("text")
+        // when:
+        val result: Try<String> = success.filterNotNull()
+        // then:
+        assertEquals(Success("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullShouldReturnFailureIfValueIsNull() {
+        // given:
+        val success: Try<String?> = Success(null)
+        // when:
+        val result: Try<String> = success.filterNotNull()
+        // then:
+        assertTrue(result.isFailure)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun recoverShouldReturnTheSameSuccess() {
         // given:
         val success: Try<String> = Success("text")

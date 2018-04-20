@@ -229,6 +229,21 @@ fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) 
     }
 }
 
+/**
+ * Returns the same [Success] if its value is not `null`. Otherwise returns a [Failure].
+ *
+ * @return The same [Success] if its value is not `null`. Otherwise returns a [Failure].
+ */
+fun <T> Try<T?>.filterNotNull(): Try<T> = when (this) {
+    is Success -> try {
+        if (value != null) Success(value)
+        else throw NoSuchElementException("Value is null")
+    } catch (exception: Throwable) {
+        Failure(exception)
+    }
+    is Failure -> this
+}
+
 data class Success<out T>(val value: T) : Try<T>() {
 
     override val isSuccess: Boolean
