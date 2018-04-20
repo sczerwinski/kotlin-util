@@ -82,6 +82,18 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun forEachShouldNotBeCalled() {
+        // given:
+        val option: Option<String> = None
+        var result = "default"
+        // when:
+        option.forEach { result = it }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun mapShouldReturnNone() {
         // given:
         val option: Option<Int> = None
@@ -111,6 +123,28 @@ class NoneTest {
         val result: Option<String> = option.flatten()
         // then:
         assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnTrue() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.all { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnFalse() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.any { it > 0 }
+        // then:
+        assertFalse(result)
     }
 
     @Test

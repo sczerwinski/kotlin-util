@@ -94,6 +94,18 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun forEachShouldBeCalled() {
+        // given:
+        val option: Option<String> = Some("text")
+        var result = "default"
+        // when:
+        option.forEach { result = it }
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun mapShouldReturnNewSome() {
         // given:
         val option: Option<Int> = Some(123)
@@ -145,6 +157,50 @@ class SomeTest {
         val result: Option<String> = option.flatten()
         // then:
         assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnTrueIfPredicateIsTrue() {
+        // given:
+        val option: Option<Int> = Some(1)
+        // when:
+        val result = option.all { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun allShouldReturnFalseIfPredicateIsFalse() {
+        // given:
+        val option: Option<Int> = Some(-1)
+        // when:
+        val result = option.all { it > 0 }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnTrueIfPredicateIsTrue() {
+        // given:
+        val option: Option<Int> = Some(1)
+        // when:
+        val result = option.any { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun anyShouldReturnFalseIfPredicateIsFalse() {
+        // given:
+        val option: Option<Int> = Some(-1)
+        // when:
+        val result = option.any { it > 0 }
+        // then:
+        assertFalse(result)
     }
 
     @Test

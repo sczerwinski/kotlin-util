@@ -78,6 +78,15 @@ sealed class Option<out T> {
     abstract fun getOrNull(): T?
 
     /**
+     * Runs [action] if this is a [Some]. Returns [Unit] without any action if this is [None].
+     *
+     * @param action Action to be run on a value of a [Some].
+     */
+    fun forEach(action: (T) -> Unit) {
+        if (isDefined) action(get())
+    }
+
+    /**
      * Maps value of a [Some] using [transform] or returns the same [None].
      *
      * @param transform Function transforming value of a [Some].
@@ -96,6 +105,30 @@ sealed class Option<out T> {
      */
     fun <R> flatMap(transform: (T) -> Option<R>): Option<R> =
             if (isEmpty) None else transform(get())
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Some]
+     * or `true` if this is [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Some]
+     * or `true` if this is [None].
+     */
+    fun all(predicate: (T) -> Boolean): Boolean =
+            isEmpty || predicate(get())
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Some]
+     * or `false` if this is [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Some]
+     * or `false` if this is [None].
+     */
+    fun any(predicate: (T) -> Boolean): Boolean =
+            isDefined && predicate(get())
 
     /**
      * Returns the same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
