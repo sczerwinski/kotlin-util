@@ -150,6 +150,28 @@ sealed class Option<out T> {
     fun filterNot(predicate: (T) -> Boolean): Option<T> =
             if (isEmpty || !predicate(get())) this else None
 
+    /**
+     * Returns result of applying [transform] on the value of [Some] or [default] if this is [None].
+     *
+     * @param default Value to be returned if the option is empty.
+     * @param transform Function transforming [Some] value.
+     *
+     * @return Result of applying [transform] on the value of [Some] or [default] if this is [None].
+     */
+    fun <R> fold(default: R, transform: (T) -> R): R =
+            if (isEmpty) default else transform(get())
+
+    /**
+     * Returns result of applying [transform] on the value of [Some] or [default] if this is [None].
+     *
+     * @param default Function producing value to be returned if the option is empty.
+     * @param transform Function transforming [Some] value.
+     *
+     * @return Result of applying [transform] on the value of [Some] or [default] if this is [None].
+     */
+    fun <R> fold(default: () -> R, transform: (T) -> R): R =
+            if (isEmpty) default() else transform(get())
+
     companion object {
 
         /**

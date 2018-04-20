@@ -246,4 +246,26 @@ class SomeTest {
         // then:
         assertEquals(None, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun foldShouldReturnTransformedValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result = option.fold("text") { it.toString() }
+        // then:
+        assertEquals("123", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun foldWithDefaultLambdaShouldReturnTransformedValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result = option.fold({ "text" }) { it.toString() }
+        // then:
+        assertEquals("123", result)
+    }
 }

@@ -168,4 +168,26 @@ class NoneTest {
         // then:
         assertEquals(None, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun foldShouldReturnDefaultValue() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.fold("text") { it.toString() }
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun foldShouldReturnDefaultResult() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.fold({ "text" }) { it.toString() }
+        // then:
+        assertEquals("text", result)
+    }
 }
