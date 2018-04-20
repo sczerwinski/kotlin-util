@@ -1,7 +1,6 @@
 package it.czerwinski.kotlin.util
 
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 class SomeTest {
@@ -35,5 +34,49 @@ class SomeTest {
         val result = option.isEmpty
         // then:
         assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getShouldReturnValue() {
+        // given:
+        val option: Option<String> = Some("text")
+        // when:
+        val result = option.get()
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getOrNullShouldReturnValue() {
+        // given:
+        val option: Option<String> = Some("text")
+        // when:
+        val result = option.getOrNull()
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getOrElseShouldReturnValue() {
+        // given:
+        val option: Option<String> = Some("text")
+        // when:
+        val result = option.getOrElse { "default" }
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun orElseShouldReturnThis() {
+        // given:
+        val option: Option<String> = Some("text")
+        // when:
+        val result = option.orElse { Some("default") }
+        // then:
+        assertEquals(Some("text"), result)
     }
 }

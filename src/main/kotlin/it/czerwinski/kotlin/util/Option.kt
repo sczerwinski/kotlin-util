@@ -55,6 +55,22 @@ sealed class Option<out T> {
     val isDefined: Boolean
         get() = !isEmpty
 
+    /**
+     * Gets the value of a [Some] or throws an exception.
+     *
+     * @return Value of a [Some].
+     *
+     * @throws NoSuchElementException If this is [None].
+     */
+    abstract fun get(): T
+
+    /**
+     * Gets the value of a [Some] or `null` if this is a [None].
+     *
+     * @return Value of a [Some] or `null`.
+     */
+    abstract fun getOrNull(): T?
+
     companion object {
 
         /**
@@ -83,6 +99,26 @@ sealed class Option<out T> {
 }
 
 /**
+ * Gets the value of a [Some] or [default] value if this is [None].
+ *
+ * @param default Default value provider.
+ *
+ * @return Value of a [Some] or [default] value.
+ */
+fun <T> Option<T>.getOrElse(default: () -> T): T =
+        if (isEmpty) default() else get()
+
+/**
+ * Returns this [Option] if this is a [Some] or [default] if this is [None].
+ *
+ * @param default Default [Option] provider.
+ *
+ * @return This [Some] or [default].
+ */
+fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
+        if (isEmpty) default() else this
+
+/**
  * Returns [Some] if this is not `null` or [None] if this is `null`.
  *
  * @param T Type of the nullable value.
@@ -103,6 +139,9 @@ data class Some<T>(val value: T) : Option<T>() {
     }
 
     override val isEmpty: Boolean = false
+
+    override fun get(): T = value
+    override fun getOrNull(): T? = value
 }
 
 /**
@@ -111,4 +150,7 @@ data class Some<T>(val value: T) : Option<T>() {
 object None : Option<Nothing>() {
 
     override val isEmpty: Boolean = true
+
+    override fun get(): Nothing = throw NoSuchElementException("Getting value of None")
+    override fun getOrNull(): Nothing? = null
 }
