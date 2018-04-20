@@ -167,6 +167,13 @@ sealed class Try<out T> {
      */
     abstract fun toEither(): Either<Throwable, T>
 
+    /**
+     * Converts this [Try] to [Option].
+     *
+     * @return [None] if this is [Failure] or [Some] if this is [Success].
+     */
+    abstract fun toOption(): Option<T>
+
     companion object {
         /**
          * Creates a new [Try] based on the result of the [callable].
@@ -296,6 +303,7 @@ data class Success<out T>(val value: T) : Try<T>() {
             }
 
     override fun toEither(): Either<Throwable, T> = Right(value)
+    override fun toOption(): Option<T> = Some(value)
 }
 
 data class Failure(val exception: Throwable) : Try<Nothing>() {
@@ -320,4 +328,5 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
     override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
 
     override fun toEither(): Either<Throwable, Nothing> = Left(exception)
+    override fun toOption(): Option<Nothing> = None
 }

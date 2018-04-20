@@ -303,4 +303,15 @@ class SuccessTest {
         // then:
         assertEquals(Right("text"), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnSome() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.toOption()
+        // then:
+        assertEquals(Some("text"), result)
+    }
 }

@@ -292,4 +292,16 @@ class FailureTest {
         // then:
         assertEquals(Left(exception), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnNone() {
+        // given:
+        val exception = RuntimeException("Test exception")
+        val failure: Try<Int> = Failure(exception)
+        // when:
+        val result = failure.toOption()
+        // then:
+        assertEquals(None, result)
+    }
 }
