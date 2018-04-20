@@ -43,7 +43,7 @@ class OptionTest {
         // given:
         val text: String? = "text"
         // when:
-        val result: Option<String> = text.toOption()
+        val result: Option<String> = text.asOption()
         // then:
         assertEquals(Some(text), result)
     }
@@ -54,7 +54,7 @@ class OptionTest {
         // given:
         val text: String? = null
         // when:
-        val result: Option<String> = text.toOption()
+        val result: Option<String> = text.asOption()
         // then:
         assertSame(None, result)
     }

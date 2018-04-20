@@ -89,7 +89,7 @@ sealed class Option<out T> {
  *
  * @return [Some] if this is not `null` or [None] if this is `null`.
  */
-fun <T> T?.toOption(): Option<T> = Option(this)
+fun <T> T?.asOption(): Option<T> = Option(this)
 
 /**
  * Representation of a value of type [T].
