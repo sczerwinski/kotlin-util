@@ -44,6 +44,17 @@ package it.czerwinski.kotlin.util
  */
 sealed class Option<out T> {
 
+    /**
+     * Returns `true` if the option is [None]. Otherwise returns `false`.
+     */
+    abstract val isEmpty: Boolean
+
+    /**
+     * Returns `true` if the option is [Some]. Otherwise returns `false`.
+     */
+    val isDefined: Boolean
+        get() = !isEmpty
+
     companion object {
 
         /**
@@ -85,9 +96,19 @@ fun <T> T?.toOption(): Option<T> = Option(this)
  *
  * @param T Type of the value.
  */
-data class Some<T>(val value: T) : Option<T>()
+data class Some<T>(val value: T) : Option<T>() {
+
+    init {
+        require(value != null) { "Cannot create Some(null)" }
+    }
+
+    override val isEmpty: Boolean = false
+}
 
 /**
  * Representation of a non-existent value.
  */
-object None : Option<Nothing>()
+object None : Option<Nothing>() {
+
+    override val isEmpty: Boolean = true
+}
