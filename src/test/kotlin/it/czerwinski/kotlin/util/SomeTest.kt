@@ -79,4 +79,59 @@ class SomeTest {
         // then:
         assertEquals(Some("text"), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun mapShouldReturnNewSome() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Option<String> = option.map { it.toString() }
+        // then:
+        assertEquals(Some("123"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldReturnNewSome() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Option<String> = option.flatMap { Option(it.toString()) }
+        // then:
+        assertEquals(Some("123"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldReturnNone() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Option<String> = option.flatMap { None }
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flattenShouldReturnInnerSome() {
+        // given:
+        val option: Option<Option<String>> = Some(Some("text"))
+        // when:
+        val result: Option<String> = option.flatten()
+        // then:
+        assertEquals(Some("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flattenShouldReturnInnerNone() {
+        // given:
+        val option: Option<Option<String>> = Some(None)
+        // when:
+        val result: Option<String> = option.flatten()
+        // then:
+        assertEquals(None, result)
+    }
 }

@@ -71,6 +71,26 @@ sealed class Option<out T> {
      */
     abstract fun getOrNull(): T?
 
+    /**
+     * Maps value of a [Some] using [transform] or returns the same [None].
+     *
+     * @param transform Function transforming value of a [Some].
+     *
+     * @return [Some] with a value mapped using [transform] or this object if this is a [None].
+     */
+    fun <R> map(transform: (T) -> R): Option<R> =
+            if (isEmpty) None else Some(transform(get()))
+
+    /**
+     * Maps value of a [Some] to a new [Option] using [transform] or returns the same [None].
+     *
+     * @param transform Function transforming value of a [Some] to an [Option].
+     *
+     * @return [Option] returned by [transform] or this object if this is a [None].
+     */
+    fun <R> flatMap(transform: (T) -> Option<R>): Option<R> =
+            if (isEmpty) None else transform(get())
+
     companion object {
 
         /**
@@ -117,6 +137,14 @@ fun <T> Option<T>.getOrElse(default: () -> T): T =
  */
 fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
         if (isEmpty) default() else this
+
+/**
+ * Transforms a nested [Option] to a not nested [Option].
+ *
+ * @return [Option] nested in a [Some] or [None] if this option is empty.
+ */
+fun <T> Option<Option<T>>.flatten(): Option<T> =
+        if (isEmpty) None else get()
 
 /**
  * Returns [Some] if this is not `null` or [None] if this is `null`.

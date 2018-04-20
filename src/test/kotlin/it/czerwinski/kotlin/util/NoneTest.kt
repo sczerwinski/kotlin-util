@@ -68,4 +68,37 @@ class NoneTest {
         // then:
         assertEquals(Some("default"), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun mapShouldReturnNone() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result: Option<String> = option.map { it.toString() }
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flatMapShouldReturnNone() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result: Option<String> = option.flatMap { Option(it.toString()) }
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flattenShouldReturnNone() {
+        // given:
+        val option: Option<Option<String>> = None
+        // when:
+        val result: Option<String> = option.flatten()
+        // then:
+        assertEquals(None, result)
+    }
 }
