@@ -190,4 +190,15 @@ class NoneTest {
         // then:
         assertEquals("text", result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun containsShouldReturnFalse() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = 123 in option
+        // then:
+        assertFalse(result)
+    }
 }

@@ -228,6 +228,16 @@ fun <T> Option<Option<T>>.flatten(): Option<T> =
         if (isEmpty) None else get()
 
 /**
+ * Tests whether the [Option] contains the given [element].
+ *
+ * @param element An element to be tested.
+ *
+ * @return `true` if the [element] is equal to the value of this [Some], or `false` otherwise.
+ */
+operator fun <T> Option<T>.contains(element: T): Boolean =
+        isDefined && get() == element
+
+/**
  * Returns [Some] if this is not `null` or [None] if this is `null`.
  *
  * @param T Type of the nullable value.

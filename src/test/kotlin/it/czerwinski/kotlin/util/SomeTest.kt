@@ -268,4 +268,37 @@ class SomeTest {
         // then:
         assertEquals("123", result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun containsShouldReturnTrueIfValueEqualsElement() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result = 123 in option
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun containsShouldReturnFalseIfValueNotEqualsElement() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result = 135 in option
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun containsShouldReturnFalseIfValueOfDifferentType() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result = 3.14f in option
+        // then:
+        assertFalse(result)
+    }
 }
