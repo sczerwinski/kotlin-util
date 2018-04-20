@@ -134,6 +134,19 @@ sealed class Try<out T> {
      * @param successTransform Function transforming value of a [Success] to a new [Try].
      * @param failureTransform Function transforming exception from a [Failure] to a new [Try].
      *
+     * @return Result of applying [successTransform] on [Success] or [failureTransform] on [Failure].
+     */
+    fun <R> fold(successTransform: (T) -> R, failureTransform: (Throwable) -> R): R = when (this) {
+        is Success -> successTransform(value)
+        is Failure -> failureTransform(exception)
+    }
+
+    /**
+     * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
+     *
+     * @param successTransform Function transforming value of a [Success] to a new [Try].
+     * @param failureTransform Function transforming exception from a [Failure] to a new [Try].
+     *
      * @return New [Try] being a result of a transformation of a [Success] with [successTransform]
      * or a [Failure] with [failureTransform].
      */

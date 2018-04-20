@@ -243,6 +243,19 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
+    fun foldShouldTransformSuccess() {
+        // given:
+        val failure: Try<Int> = Success(123)
+        // when:
+        val result = failure.fold(
+                { value -> value.toString() },
+                { exception -> exception.message })
+        // then:
+        assertEquals("123", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun transformShouldReturnNewSuccess() {
         // given:
         val success: Try<Int> = Success(123)

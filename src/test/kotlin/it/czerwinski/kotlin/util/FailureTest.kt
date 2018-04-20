@@ -230,6 +230,19 @@ class FailureTest {
 
     @Test
     @Throws(Exception::class)
+    fun foldShouldTransformFailure() {
+        // given:
+        val failure: Try<Int> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.fold(
+                { value -> value.toString() },
+                { exception -> exception.message })
+        // then:
+        assertEquals("Test exception", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun transformShouldReturnNewSuccess() {
         // given:
         val failure: Try<Int> = Failure(RuntimeException("Test exception"))
