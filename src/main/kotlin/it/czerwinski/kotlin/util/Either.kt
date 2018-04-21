@@ -89,6 +89,15 @@ sealed class Either<out L, out R> {
      * @return [Left] if this is [Right] or [Right] if this is [Left].
      */
     abstract fun swap(): Either<R, L>
+
+    /**
+     * Returns `true` if the [element] is equal to the value of this [Either], or `false` otherwise.
+     *
+     * @param element An element of any type.
+     *
+     * @return `true` if the [element] is equal to the value of this [Either], or `false` otherwise.
+     */
+    abstract operator fun contains(element: Any): Boolean
 }
 
 /**
@@ -136,6 +145,8 @@ data class Left<out L>(val value: L) : Either<L, Nothing>() {
     override fun <T> fold(leftTransform: (L) -> T, rightTransform: (Nothing) -> T): T = leftTransform(value)
 
     override fun swap(): Either<Nothing, L> = Right(value)
+
+    override fun contains(element: Any): Boolean = value == element
 }
 
 data class Right<out R>(val value: R) : Either<Nothing, R>() {
@@ -149,6 +160,8 @@ data class Right<out R>(val value: R) : Either<Nothing, R>() {
     override fun <T> fold(leftTransform: (Nothing) -> T, rightTransform: (R) -> T): T = rightTransform(value)
 
     override fun swap(): Either<R, Nothing> = Left(value)
+
+    override fun contains(element: Any): Boolean = value == element
 }
 
 data class LeftProjection<out L, out R>(val either: Either<L, R>) {
@@ -236,6 +249,28 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> either.takeIf { predicate(it.value) }
         is Right -> null
     }
+
+    /**
+     * Returns the same [Left] if the [predicate] is not satisfied for the value. Otherwise returns `null`.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Left] if the [predicate] is not satisfied for the value. Otherwise returns `null`.
+     */
+    fun filterNot(predicate: (L) -> Boolean): Either<L, R>? = when (either) {
+        is Left -> either.takeUnless { predicate(it.value) }
+        is Right -> null
+    }
+
+    /**
+     * Returns a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
+     *
+     * @return a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
+     */
+    fun toOption(): Option<L> = when (either) {
+        is Left -> Option(either.value)
+        is Right -> None
+    }
 }
 
 /**
@@ -260,6 +295,16 @@ fun <L, R> LeftProjection<L, R>.getOrElse(default: () -> L): L = when (either) {
 fun <L, R, T> LeftProjection<L, R>.flatMap(transform: (L) -> Either<T, R>): Either<T, R> = when (either) {
     is Left -> transform(either.value)
     is Right -> either
+}
+
+/**
+ * Returns the same [Left] if its value is not `null`. Otherwise returns `null`.
+ *
+ * @return The same [Left] if its value is not `null`. Otherwise returns `null`.
+ */
+fun <L, R> LeftProjection<L?, R>.filterNotNull(): Either<L, R>? = when (either) {
+    is Left -> either.value?.let { Left(it) }
+    is Right -> null
 }
 
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
@@ -347,6 +392,28 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> null
         is Right -> either.takeIf { predicate(it.value) }
     }
+
+    /**
+     * Returns the same [Right] if the [predicate] is not satisfied for the value. Otherwise returns `null`.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Right] if the [predicate] is not satisfied for the value. Otherwise returns `null`.
+     */
+    fun filterNot(predicate: (R) -> Boolean): Either<L, R>? = when (either) {
+        is Left -> null
+        is Right -> either.takeUnless { predicate(it.value) }
+    }
+
+    /**
+     * Returns a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
+     *
+     * @return a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
+     */
+    fun toOption(): Option<R> = when (either) {
+        is Left -> None
+        is Right -> Option(either.value)
+    }
 }
 
 /**
@@ -371,4 +438,14 @@ fun <L, R> RightProjection<L, R>.getOrElse(default: () -> R): R = when (either) 
 fun <L, R, T> RightProjection<L, R>.flatMap(transform: (R) -> Either<L, T>): Either<L, T> = when (either) {
     is Left -> either
     is Right -> transform(either.value)
+}
+
+/**
+ * Returns the same [Right] if its value is not `null`. Otherwise returns `null`.
+ *
+ * @return The same [Right] if its value is not `null`. Otherwise returns `null`.
+ */
+fun <L, R> RightProjection<L, R?>.filterNotNull(): Either<L, R>? = when (either) {
+    is Left -> null
+    is Right -> either.value?.let { Right(it) }
 }

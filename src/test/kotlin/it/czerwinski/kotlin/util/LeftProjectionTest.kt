@@ -246,4 +246,92 @@ class LeftProjectionTest {
         // then:
         assertNull(result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnTheSameLeftIfPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Left(-1)
+        // when:
+        val result = either.left.filterNot { it > 0 }
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnNullIfPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Left(1)
+        // when:
+        val result = either.left.filterNot { it > 0 }
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotShouldReturnNullIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.filterNot { it > 0f }
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullShouldReturnTheSameLeftIfValueIsNotNull() {
+        // given:
+        val either: Either<Int?, Float> = Left(1)
+        // when:
+        val result: Either<Int, Float>? = either.left.filterNotNull()
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullShouldReturnNullIfValueIsNull() {
+        // given:
+        val either: Either<Int?, Float> = Left(null)
+        // when:
+        val result: Either<Int, Float>? = either.left.filterNotNull()
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullShouldReturnNullIfRight() {
+        // given:
+        val either: Either<Int?, Float> = Right(3.14f)
+        // when:
+        val result: Either<Int, Float>? = either.left.filterNotNull()
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnSomeWithLeftValue() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.left.toOption()
+        // then:
+        assertEquals(Some(256), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnNoneIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.toOption()
+        // then:
+        assertEquals(None, result)
+    }
 }

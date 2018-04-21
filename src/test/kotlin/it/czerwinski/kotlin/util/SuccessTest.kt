@@ -199,6 +199,28 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
+    fun filterNotNullShouldReturnTheSameSuccessIfValueIsNotNull() {
+        // given:
+        val success: Try<String?> = Success("text")
+        // when:
+        val result: Try<String> = success.filterNotNull()
+        // then:
+        assertEquals(Success("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullShouldReturnFailureIfValueIsNull() {
+        // given:
+        val success: Try<String?> = Success(null)
+        // when:
+        val result: Try<String> = success.filterNotNull()
+        // then:
+        assertTrue(result.isFailure)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun recoverShouldReturnTheSameSuccess() {
         // given:
         val success: Try<String> = Success("text")
@@ -217,6 +239,19 @@ class SuccessTest {
         val result = success.recoverWith { exception -> Success(exception.message) }
         // then:
         assertEquals(Success("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun foldShouldTransformSuccess() {
+        // given:
+        val failure: Try<Int> = Success(123)
+        // when:
+        val result = failure.fold(
+                { value -> value.toString() },
+                { exception -> exception.message })
+        // then:
+        assertEquals("123", result)
     }
 
     @Test
@@ -267,5 +302,16 @@ class SuccessTest {
         val result = success.toEither()
         // then:
         assertEquals(Right("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnSome() {
+        // given:
+        val success: Try<String> = Success("text")
+        // when:
+        val result = success.toOption()
+        // then:
+        assertEquals(Some("text"), result)
     }
 }

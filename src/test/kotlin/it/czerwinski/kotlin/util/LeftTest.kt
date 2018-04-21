@@ -95,4 +95,37 @@ class LeftTest {
         // then:
         assertEquals(Left(123), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun containsShouldReturnTrueIfTheSameElementOfTypeLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(12)
+        // when:
+        val result = 12 in either
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun containsShouldReturnFalseIfDifferentElementOfTypeLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(12)
+        // when:
+        val result = 13 in either
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun containsShouldReturnFalseIfElementOfTypeRight() {
+        // given:
+        val either: Either<Int, Float> = Left(12)
+        // when:
+        val result = 3.14f in either
+        // then:
+        assertFalse(result)
+    }
 }

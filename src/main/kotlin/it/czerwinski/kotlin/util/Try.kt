@@ -134,6 +134,19 @@ sealed class Try<out T> {
      * @param successTransform Function transforming value of a [Success] to a new [Try].
      * @param failureTransform Function transforming exception from a [Failure] to a new [Try].
      *
+     * @return Result of applying [successTransform] on [Success] or [failureTransform] on [Failure].
+     */
+    fun <R> fold(successTransform: (T) -> R, failureTransform: (Throwable) -> R): R = when (this) {
+        is Success -> successTransform(value)
+        is Failure -> failureTransform(exception)
+    }
+
+    /**
+     * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
+     *
+     * @param successTransform Function transforming value of a [Success] to a new [Try].
+     * @param failureTransform Function transforming exception from a [Failure] to a new [Try].
+     *
      * @return New [Try] being a result of a transformation of a [Success] with [successTransform]
      * or a [Failure] with [failureTransform].
      */
@@ -153,6 +166,13 @@ sealed class Try<out T> {
      * @return [Left] if this is [Failure] or [Right] if this is [Success].
      */
     abstract fun toEither(): Either<Throwable, T>
+
+    /**
+     * Converts this [Try] to [Option].
+     *
+     * @return [None] if this is [Failure] or [Some] if this is [Success].
+     */
+    abstract fun toOption(): Option<T>
 
     companion object {
         /**
@@ -229,6 +249,21 @@ fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) 
     }
 }
 
+/**
+ * Returns the same [Success] if its value is not `null`. Otherwise returns a [Failure].
+ *
+ * @return The same [Success] if its value is not `null`. Otherwise returns a [Failure].
+ */
+fun <T> Try<T?>.filterNotNull(): Try<T> = when (this) {
+    is Success -> try {
+        if (value != null) Success(value)
+        else throw NoSuchElementException("Value is null")
+    } catch (exception: Throwable) {
+        Failure(exception)
+    }
+    is Failure -> this
+}
+
 data class Success<out T>(val value: T) : Try<T>() {
 
     override val isSuccess: Boolean
@@ -268,6 +303,7 @@ data class Success<out T>(val value: T) : Try<T>() {
             }
 
     override fun toEither(): Either<Throwable, T> = Right(value)
+    override fun toOption(): Option<T> = Some(value)
 }
 
 data class Failure(val exception: Throwable) : Try<Nothing>() {
@@ -292,4 +328,5 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
     override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
 
     override fun toEither(): Either<Throwable, Nothing> = Left(exception)
+    override fun toOption(): Option<Nothing> = None
 }

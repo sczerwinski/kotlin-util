@@ -161,6 +161,17 @@ class FailureTest {
 
     @Test
     @Throws(Exception::class)
+    fun filterNotNullShouldReturnTheSameFailure() {
+        // given:
+        val failure: Try<String?> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result: Try<String> = failure.filterNotNull()
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun recoverShouldReturnSuccess() {
         // given:
         val failure: Try<String> = Failure(RuntimeException("Test exception"))
@@ -219,6 +230,19 @@ class FailureTest {
 
     @Test
     @Throws(Exception::class)
+    fun foldShouldTransformFailure() {
+        // given:
+        val failure: Try<Int> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.fold(
+                { value -> value.toString() },
+                { exception -> exception.message })
+        // then:
+        assertEquals("Test exception", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun transformShouldReturnNewSuccess() {
         // given:
         val failure: Try<Int> = Failure(RuntimeException("Test exception"))
@@ -267,5 +291,17 @@ class FailureTest {
         val result = failure.toEither()
         // then:
         assertEquals(Left(exception), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun toOptionShouldReturnNone() {
+        // given:
+        val exception = RuntimeException("Test exception")
+        val failure: Try<Int> = Failure(exception)
+        // when:
+        val result = failure.toOption()
+        // then:
+        assertEquals(None, result)
     }
 }
