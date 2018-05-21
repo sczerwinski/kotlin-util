@@ -161,6 +161,16 @@ sealed class Option<out T> {
             if (isEmpty || !predicate(get())) this else None
 
     /**
+     * Returns the same [Some] casted to type [R] if it is [R]. Otherwise returns a [None].
+     *
+     * @param R Required type of the optional value.
+     *
+     * @return The same [Some] casted to type [R] if it is [R]. Otherwise returns a [None].
+     */
+    inline fun <reified R> filterIsInstance(): Option<R> =
+            (getOrNull() as? R).asOption()
+
+    /**
      * Returns result of applying [transform] on the value of [Some] or [default] if this is [None].
      *
      * @param default Value to be returned if the option is empty.

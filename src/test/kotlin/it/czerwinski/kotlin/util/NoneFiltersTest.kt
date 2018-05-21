@@ -26,4 +26,15 @@ class NoneFiltersTest {
         // then:
         assertEquals(None, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnNone() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.filterIsInstance<Int>()
+        // then:
+        assertEquals(None, result)
+    }
 }
