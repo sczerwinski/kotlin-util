@@ -129,6 +129,23 @@ sealed class Try<out T> {
     abstract fun filterNot(predicate: (T) -> Boolean): Try<T>
 
     /**
+     * Returns the same [Success] casted to type [R] if it is [R]. Otherwise returns a [Failure].
+     *
+     * @param R Required type of the optional value.
+     *
+     * @return The same [Success] casted to type [R] if it is [R]. Otherwise returns a [Failure].
+     */
+    inline fun <reified R> filterIsInstance(): Try<R> = when (this) {
+        is Success -> try {
+            if (value is R) Success<R>(value)
+            else throw NoSuchElementException("Value is not ${R::class.java}")
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
+        is Failure -> this
+    }
+
+    /**
      * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
      *
      * @param successTransform Function transforming value of a [Success] to a new [Try].

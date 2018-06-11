@@ -37,4 +37,15 @@ class FailureFiltersTest {
         // then:
         assertEquals(failure, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnTheSameFailure() {
+        // given:
+        val failure: Try<Number> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result: Try<Int> = failure.filterIsInstance()
+        // then:
+        assertEquals(failure, result)
+    }
 }

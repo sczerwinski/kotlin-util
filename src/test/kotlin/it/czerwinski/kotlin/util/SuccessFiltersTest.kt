@@ -71,4 +71,26 @@ class SuccessFiltersTest {
         // then:
         assertTrue(result.isFailure)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnSuccessIfIsInstance() {
+        // given:
+        val success: Try<Number> = Success(1)
+        // when:
+        val result: Try<Int> = success.filterIsInstance()
+        // then:
+        assertEquals(Success(1), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnFailureIfIsNotInstance() {
+        // given:
+        val success: Try<Number> = Success(1f)
+        // when:
+        val result: Try<Int> = success.filterIsInstance()
+        // then:
+        assertTrue(result.isFailure)
+    }
 }
