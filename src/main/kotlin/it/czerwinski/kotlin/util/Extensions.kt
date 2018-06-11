@@ -25,3 +25,11 @@ fun <T> Option<Try<T>>.flatten(): Option<T> =
  */
 fun <T> Option<Iterable<T>>.flatten(): List<T> =
     if (isEmpty) emptyList() else get().toList()
+
+/**
+ * Returns [List] of values of each [Some] in this [Iterable].
+ *
+ * @return [List] of values of each [Some] in this [Iterable].
+ */
+fun <T> Iterable<Option<T>>.flatten(): List<T> =
+    flatMap { it.toList() }
