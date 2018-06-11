@@ -103,7 +103,7 @@ sealed class Option<out T> {
      * @return [Some] with a value mapped using [transform] or this object if this is a [None].
      */
     inline fun <R> map(transform: (T) -> R): Option<R> =
-            if (isEmpty) None else Some(transform(get()))
+        if (isEmpty) None else Some(transform(get()))
 
     /**
      * Maps value of a [Some] to a new [Option] using [transform] or returns the same [None].
@@ -113,7 +113,7 @@ sealed class Option<out T> {
      * @return [Option] returned by [transform] or this object if this is a [None].
      */
     inline fun <R> flatMap(transform: (T) -> Option<R>): Option<R> =
-            if (isEmpty) None else transform(get())
+        if (isEmpty) None else transform(get())
 
     /**
      * Returns the result of applying the [predicate] to the value if this is [Some]
@@ -125,7 +125,7 @@ sealed class Option<out T> {
      * or `true` if this is [None].
      */
     inline fun all(predicate: (T) -> Boolean): Boolean =
-            isEmpty || predicate(get())
+        isEmpty || predicate(get())
 
     /**
      * Returns the result of applying the [predicate] to the value if this is [Some]
@@ -137,7 +137,7 @@ sealed class Option<out T> {
      * or `false` if this is [None].
      */
     inline fun any(predicate: (T) -> Boolean): Boolean =
-            isDefined && predicate(get())
+        isDefined && predicate(get())
 
     /**
      * Returns the same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
@@ -147,7 +147,7 @@ sealed class Option<out T> {
      * @return The same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
      */
     inline fun filter(predicate: (T) -> Boolean): Option<T> =
-            if (isEmpty || predicate(get())) this else None
+        if (isEmpty || predicate(get())) this else None
 
     /**
      * Returns the same [Some] if the [predicate] is not satisfied for the value. Otherwise returns a [None].
@@ -157,7 +157,7 @@ sealed class Option<out T> {
      * @return The same [Some] if the [predicate] is not satisfied for the value. Otherwise returns a [None].
      */
     inline fun filterNot(predicate: (T) -> Boolean): Option<T> =
-            if (isEmpty || !predicate(get())) this else None
+        if (isEmpty || !predicate(get())) this else None
 
     /**
      * Returns the same [Some] casted to type [R] if it is [R]. Otherwise returns a [None].
@@ -167,7 +167,7 @@ sealed class Option<out T> {
      * @return The same [Some] casted to type [R] if it is [R]. Otherwise returns a [None].
      */
     inline fun <reified R> filterIsInstance(): Option<R> =
-            (getOrNull() as? R).asOption()
+        (getOrNull() as? R).asOption()
 
     /**
      * Returns result of applying [transform] on the value of [Some] or [default] if this is [None].
@@ -178,7 +178,7 @@ sealed class Option<out T> {
      * @return Result of applying [transform] on the value of [Some] or [default] if this is [None].
      */
     inline fun <R> fold(default: R, transform: (T) -> R): R =
-            if (isEmpty) default else transform(get())
+        if (isEmpty) default else transform(get())
 
     /**
      * Returns result of applying [transform] on the value of [Some] or [default] if this is [None].
@@ -189,7 +189,7 @@ sealed class Option<out T> {
      * @return Result of applying [transform] on the value of [Some] or [default] if this is [None].
      */
     inline fun <R> fold(default: () -> R, transform: (T) -> R): R =
-            if (isEmpty) default() else transform(get())
+        if (isEmpty) default() else transform(get())
 
     /**
      * Returns a singleton list containing the option's value if it is defined,
@@ -199,7 +199,7 @@ sealed class Option<out T> {
      * or an empty iterator if the option is empty.
      */
     fun toList(): List<T> =
-            if (isEmpty) emptyList() else listOf(get())
+        if (isEmpty) emptyList() else listOf(get())
 
     /**
      * Returns a [Right] containing the given argument [right] if this is empty,
@@ -213,7 +213,7 @@ sealed class Option<out T> {
      * or a [Left] containing this option's value if it is defined.
      */
     inline fun <R> toLeft(right: () -> R): Either<T, R> =
-            if (isEmpty) Right(right()) else Left(get())
+        if (isEmpty) Right(right()) else Left(get())
 
     /**
      * Returns a [Left] containing the given argument [left] if this is empty,
@@ -227,7 +227,7 @@ sealed class Option<out T> {
      * or a [Right] containing this option's value if it is defined.
      */
     inline fun <L> toRight(left: () -> L): Either<L, T> =
-            if (isEmpty) Left(left()) else Right(get())
+        if (isEmpty) Left(left()) else Right(get())
 
     companion object {
 
@@ -264,7 +264,7 @@ sealed class Option<out T> {
  * @return Value of a [Some] or [default] value.
  */
 inline fun <T> Option<T>.getOrElse(default: () -> T): T =
-        if (isEmpty) default() else get()
+    if (isEmpty) default() else get()
 
 /**
  * Returns this [Option] if this is a [Some] or [default] if this is [None].
@@ -274,7 +274,7 @@ inline fun <T> Option<T>.getOrElse(default: () -> T): T =
  * @return This [Some] or [default].
  */
 inline fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
-        if (isEmpty) default() else this
+    if (isEmpty) default() else this
 
 /**
  * Transforms a nested [Option] to a not nested [Option].
@@ -282,7 +282,7 @@ inline fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
  * @return [Option] nested in a [Some] or [None] if this option is empty.
  */
 fun <T> Option<Option<T>>.flatten(): Option<T> =
-        if (isEmpty) None else get()
+    if (isEmpty) None else get()
 
 /**
  * Tests whether the [Option] contains the given [element].
@@ -292,7 +292,7 @@ fun <T> Option<Option<T>>.flatten(): Option<T> =
  * @return `true` if the [element] is equal to the value of this [Some], or `false` otherwise.
  */
 operator fun <T> Option<T>.contains(element: T): Boolean =
-        isDefined && get() == element
+    isDefined && get() == element
 
 /**
  * Returns [Some] if this is not `null` or [None] if this is `null`.

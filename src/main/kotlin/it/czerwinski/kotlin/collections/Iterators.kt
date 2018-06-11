@@ -59,6 +59,10 @@ class SingletonIterator<T>(private val element: T) : Iterator<T> {
 
     override fun hasNext(): Boolean = hasNext
     override fun next(): T =
-            if (hasNext) { hasNext = false; element }
-            else throw NoSuchElementException("Only one element available")
+        if (hasNext) {
+            hasNext = false
+            element
+        } else {
+            throw NoSuchElementException("Only one element available")
+        }
 }

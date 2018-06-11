@@ -151,14 +151,14 @@ sealed class Try<out T> {
      * or a [Failure] with [failureTransform].
      */
     inline fun <R> transform(successTransform: (T) -> Try<R>, failureTransform: (Throwable) -> Try<R>): Try<R> =
-            try {
-                when (this) {
-                    is Success -> successTransform(value)
-                    is Failure -> failureTransform(exception)
-                }
-            } catch (exception: Throwable) {
-                Failure(exception)
+        try {
+            when (this) {
+                is Success -> successTransform(value)
+                is Failure -> failureTransform(exception)
             }
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
 
     /**
      * Converts this [Try] to [Either].
@@ -183,11 +183,11 @@ sealed class Try<out T> {
          * @return An instance of [Success] or [Failure], depending on whether the operation.
          */
         inline operator fun <T> invoke(callable: () -> T): Try<T> =
-                try {
-                    Success(callable())
-                } catch (exception: Throwable) {
-                    Failure(exception)
-                }
+            try {
+                Success(callable())
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
     }
 }
 
@@ -199,7 +199,7 @@ sealed class Try<out T> {
  * @return Value of a [Success] or [default] value.
  */
 inline fun <T> Try<T>.getOrElse(default: () -> T): T =
-        if (isSuccess) get() else default()
+    if (isSuccess) get() else default()
 
 /**
  * Returns this [Try] if this is a [Success] or [default] if this is a [Failure].
@@ -209,7 +209,7 @@ inline fun <T> Try<T>.getOrElse(default: () -> T): T =
  * @return This [Success] or [default].
  */
 inline fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
-        if (isSuccess) this else default()
+    if (isSuccess) this else default()
 
 /**
  * Transforms a nested [Try] to a not nested [Try].
@@ -281,26 +281,27 @@ data class Success<out T>(val value: T) : Try<T>() {
     override fun forEach(action: (T) -> Unit) = action(value)
     override fun <R> map(transform: (T) -> R): Try<R> = Try { transform(value) }
     override fun <R> flatMap(transform: (T) -> Try<R>): Try<R> =
-            try {
-                transform(value)
-            } catch (exception: Throwable) {
-                Failure(exception)
-            }
+        try {
+            transform(value)
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
 
     override fun filter(predicate: (T) -> Boolean): Try<T> =
-            try {
-                if (predicate(value)) this
-                else throw NoSuchElementException("Predicate not satisfied for $value")
-            } catch (exception: Throwable) {
-                Failure(exception)
-            }
+        try {
+            if (predicate(value)) this
+            else throw NoSuchElementException("Predicate not satisfied for $value")
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
+
     override fun filterNot(predicate: (T) -> Boolean): Try<T> =
-            try {
-                if (!predicate(value)) this
-                else throw NoSuchElementException("Predicate not satisfied for $value")
-            } catch (exception: Throwable) {
-                Failure(exception)
-            }
+        try {
+            if (!predicate(value)) this
+            else throw NoSuchElementException("Predicate not satisfied for $value")
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
 
     override fun toEither(): Either<Throwable, T> = Right(value)
     override fun toOption(): Option<T> = Some(value)

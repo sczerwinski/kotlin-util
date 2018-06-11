@@ -182,8 +182,9 @@ class SuccessTest {
         val failure: Try<Int> = Success(123)
         // when:
         val result = failure.fold(
-                { value -> value.toString() },
-                { exception -> exception.message })
+            { value -> value.toString() },
+            { exception -> exception.message }
+        )
         // then:
         assertEquals("123", result)
     }
@@ -195,8 +196,9 @@ class SuccessTest {
         val success: Try<Int> = Success(123)
         // when:
         val result = success.transform(
-                { value -> Success(value.toString()) },
-                { exception -> Success(exception.message) })
+            { value -> Success(value.toString()) },
+            { exception -> Success(exception.message) }
+        )
         // then:
         assertEquals(Success("123"), result)
     }
@@ -210,8 +212,9 @@ class SuccessTest {
         val failureException = NullPointerException()
         // when:
         val result: Try<String> = success.transform(
-                { _ -> throw successException },
-                { _ -> throw failureException })
+            { _ -> throw successException },
+            { _ -> throw failureException }
+        )
         // then:
         assertEquals(Failure(successException), result)
     }
