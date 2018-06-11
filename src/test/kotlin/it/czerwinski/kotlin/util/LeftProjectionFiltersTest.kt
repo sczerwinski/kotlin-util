@@ -104,4 +104,37 @@ class LeftProjectionFiltersTest {
         // then:
         assertNull(result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnTheSameLeftIfIsInstance() {
+        // given:
+        val either: Either<Number, String> = Left(1)
+        // when:
+        val result: Either<Int, String>? = either.left.filterIsInstance()
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnNullIfIsNotInstance() {
+        // given:
+        val either: Either<Number, String> = Left(1f)
+        // when:
+        val result: Either<Int, String>? = either.left.filterIsInstance()
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnNullIfRight() {
+        // given:
+        val either: Either<Number, String> = Right("text")
+        // when:
+        val result: Either<Int, String>? = either.left.filterIsInstance()
+        // then:
+        assertNull(result)
+    }
 }

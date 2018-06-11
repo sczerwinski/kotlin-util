@@ -104,4 +104,37 @@ class RightProjectionFiltersTest {
         // then:
         assertNull(result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnTheSameRightIfIsInstance() {
+        // given:
+        val either: Either<String, Number> = Right(1)
+        // when:
+        val result: Either<String, Int>? = either.right.filterIsInstance()
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnNullIfIsNotInstance() {
+        // given:
+        val either: Either<String, Number> = Right(1f)
+        // when:
+        val result: Either<String, Int>? = either.right.filterIsInstance()
+        // then:
+        assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceShouldReturnNullIfLeft() {
+        // given:
+        val either: Either<String, Number> = Left("text")
+        // when:
+        val result: Either<String, Int>? = either.right.filterIsInstance()
+        // then:
+        assertNull(result)
+    }
 }

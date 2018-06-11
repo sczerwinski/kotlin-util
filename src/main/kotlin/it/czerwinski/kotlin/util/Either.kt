@@ -263,6 +263,18 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
     }
 
     /**
+     * Returns the same [Left] casted to type [T] if it is [T]. Otherwise returns `null`.
+     *
+     * @param T Required type of the optional value.
+     *
+     * @return The same [Left] casted to type [T] if it is [T]. Otherwise returns `null`.
+     */
+    inline fun <reified T> filterIsInstance(): Either<T, R>? = when (either) {
+        is Left -> (either.value as? T)?.let { Left(it) }
+        is Right -> null
+    }
+
+    /**
      * Returns a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
      *
      * @return a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
@@ -403,6 +415,18 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
     inline fun filterNot(predicate: (R) -> Boolean): Either<L, R>? = when (either) {
         is Left -> null
         is Right -> either.takeUnless { predicate(it.value) }
+    }
+
+    /**
+     * Returns the same [Right] casted to type [T] if it is [T]. Otherwise returns `null`.
+     *
+     * @param T Required type of the optional value.
+     *
+     * @return The same [Right] casted to type [T] if it is [T]. Otherwise returns `null`.
+     */
+    inline fun <reified T> filterIsInstance(): Either<L, T>? = when (either) {
+        is Left -> null
+        is Right -> (either.value as? T)?.let { Right(it) }
     }
 
     /**
