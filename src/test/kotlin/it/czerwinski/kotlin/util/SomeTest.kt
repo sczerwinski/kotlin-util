@@ -206,6 +206,17 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun flattenOptionWithListShouldReturnInnerList() {
+        // given:
+        val option: Option<List<String>> = Some(listOf("text1", "text2", "text3"))
+        // when:
+        val result: List<String> = option.flatten()
+        // then:
+        assertEquals(listOf("text1", "text2", "text3"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun allShouldReturnTrueIfPredicateIsTrue() {
         // given:
         val option: Option<Int> = Some(1)

@@ -17,3 +17,11 @@ fun <T> Try<Option<T>>.flatten(): Option<T> = when (this) {
  */
 fun <T> Option<Try<T>>.flatten(): Option<T> =
     if (isEmpty) None else get().toOption()
+
+/**
+ * Returns nested [List] if this is [Some]. Otherwise returns an empty [List].
+ *
+ * @return Nested [List] if this is [Some]. Otherwise returns an empty [List].
+ */
+fun <T> Option<Iterable<T>>.flatten(): List<T> =
+    if (isEmpty) emptyList() else get().toList()
