@@ -136,7 +136,7 @@ sealed class Try<out T> {
      *
      * @return Result of applying [successTransform] on [Success] or [failureTransform] on [Failure].
      */
-    fun <R> fold(successTransform: (T) -> R, failureTransform: (Throwable) -> R): R = when (this) {
+    inline fun <R> fold(successTransform: (T) -> R, failureTransform: (Throwable) -> R): R = when (this) {
         is Success -> successTransform(value)
         is Failure -> failureTransform(exception)
     }
@@ -150,7 +150,7 @@ sealed class Try<out T> {
      * @return New [Try] being a result of a transformation of a [Success] with [successTransform]
      * or a [Failure] with [failureTransform].
      */
-    fun <R> transform(successTransform: (T) -> Try<R>, failureTransform: (Throwable) -> Try<R>): Try<R> =
+    inline fun <R> transform(successTransform: (T) -> Try<R>, failureTransform: (Throwable) -> Try<R>): Try<R> =
             try {
                 when (this) {
                     is Success -> successTransform(value)
@@ -182,7 +182,7 @@ sealed class Try<out T> {
          *
          * @return An instance of [Success] or [Failure], depending on whether the operation.
          */
-        operator fun <T> invoke(callable: () -> T): Try<T> =
+        inline operator fun <T> invoke(callable: () -> T): Try<T> =
                 try {
                     Success(callable())
                 } catch (exception: Throwable) {
@@ -198,7 +198,7 @@ sealed class Try<out T> {
  *
  * @return Value of a [Success] or [default] value.
  */
-fun <T> Try<T>.getOrElse(default: () -> T): T =
+inline fun <T> Try<T>.getOrElse(default: () -> T): T =
         if (isSuccess) get() else default()
 
 /**
@@ -208,7 +208,7 @@ fun <T> Try<T>.getOrElse(default: () -> T): T =
  *
  * @return This [Success] or [default].
  */
-fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
+inline fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
         if (isSuccess) this else default()
 
 /**
@@ -228,7 +228,7 @@ fun <T> Try<Try<T>>.flatten(): Try<T> = when (this) {
  *
  * @return This [Try] if this is a [Success] or a [Try] created for the [rescue] operation if this is a [Failure].
  */
-fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
+inline fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
     is Success -> this
     is Failure -> Try { rescue(exception) }
 }
@@ -240,7 +240,7 @@ fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
  *
  * @return This [Try] if this is a [Success] or a [Try] created by the [rescue] function if this is a [Failure].
  */
-fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) {
+inline fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) {
     is Success -> this
     is Failure -> try {
         rescue(exception)
