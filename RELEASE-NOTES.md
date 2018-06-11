@@ -1,5 +1,29 @@
 # Kotlin Utilities Release Notes
 
+## Version 1.0
+🔖 `kotlin-util-1.0`
+
+### New features
+
+* ✨ New methods in `Option`:
+  * `filterIsInstance()`
+* ✨ New methods in `LeftProjection` and `RightProjection`:
+  * `filterIsInstance()`
+  * `filterToOption()`
+  * `filterNotToOption()`
+  * `filterNotNullToOption()`
+* ✨ New methods in `Try`:
+  * `filterIsInstance()`
+* ✨ New `flatten()` methods for:
+  * `Try<Option<T>>` 
+  * `Option<Try<T>>`
+  * `Iterable<Option<T>>`
+  * `Option<Iterable<T>>`
+
+### Bug fixes
+
+* 🐛 Correct implementation of `None::toString()`
+
 ## Version 0.2
 
 🔖 `kotlin-util-0.2`
