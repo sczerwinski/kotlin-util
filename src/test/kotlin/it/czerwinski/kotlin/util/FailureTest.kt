@@ -139,39 +139,6 @@ class FailureTest {
 
     @Test
     @Throws(Exception::class)
-    fun filterShouldReturnTheSameFailure() {
-        // given:
-        val failure: Try<String> = Failure(RuntimeException("Test exception"))
-        // when:
-        val result = failure.filter { it == "text" }
-        // then:
-        assertEquals(failure, result)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun filterNotShouldReturnTheSameFailure() {
-        // given:
-        val failure: Try<String> = Failure(RuntimeException("Test exception"))
-        // when:
-        val result = failure.filterNot { it == "text" }
-        // then:
-        assertEquals(failure, result)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun filterNotNullShouldReturnTheSameFailure() {
-        // given:
-        val failure: Try<String?> = Failure(RuntimeException("Test exception"))
-        // when:
-        val result: Try<String> = failure.filterNotNull()
-        // then:
-        assertEquals(failure, result)
-    }
-
-    @Test
-    @Throws(Exception::class)
     fun recoverShouldReturnSuccess() {
         // given:
         val failure: Try<String> = Failure(RuntimeException("Test exception"))
@@ -235,8 +202,9 @@ class FailureTest {
         val failure: Try<Int> = Failure(RuntimeException("Test exception"))
         // when:
         val result = failure.fold(
-                { value -> value.toString() },
-                { exception -> exception.message })
+            { value -> value.toString() },
+            { exception -> exception.message }
+        )
         // then:
         assertEquals("Test exception", result)
     }
@@ -248,8 +216,9 @@ class FailureTest {
         val failure: Try<Int> = Failure(RuntimeException("Test exception"))
         // when:
         val result = failure.transform(
-                { value -> Success(value.toString()) },
-                { exception -> Success(exception.message) })
+            { value -> Success(value.toString()) },
+            { exception -> Success(exception.message) }
+        )
         // then:
         assertEquals(Success("Test exception"), result)
     }
@@ -263,8 +232,9 @@ class FailureTest {
         val failureException = NullPointerException()
         // when:
         val result: Try<String> = failure.transform(
-                { _ -> throw successException },
-                { _ -> throw failureException })
+            { _ -> throw successException },
+            { _ -> throw failureException }
+        )
         // then:
         assertEquals(Failure(failureException), result)
     }

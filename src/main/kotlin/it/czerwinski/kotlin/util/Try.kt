@@ -129,6 +129,23 @@ sealed class Try<out T> {
     abstract fun filterNot(predicate: (T) -> Boolean): Try<T>
 
     /**
+     * Returns the same [Success] casted to type [R] if it is [R]. Otherwise returns a [Failure].
+     *
+     * @param R Required type of the optional value.
+     *
+     * @return The same [Success] casted to type [R] if it is [R]. Otherwise returns a [Failure].
+     */
+    inline fun <reified R> filterIsInstance(): Try<R> = when (this) {
+        is Success -> try {
+            if (value is R) Success<R>(value)
+            else throw NoSuchElementException("Value is not ${R::class.java}")
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
+        is Failure -> this
+    }
+
+    /**
      * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
      *
      * @param successTransform Function transforming value of a [Success] to a new [Try].
@@ -136,7 +153,7 @@ sealed class Try<out T> {
      *
      * @return Result of applying [successTransform] on [Success] or [failureTransform] on [Failure].
      */
-    fun <R> fold(successTransform: (T) -> R, failureTransform: (Throwable) -> R): R = when (this) {
+    inline fun <R> fold(successTransform: (T) -> R, failureTransform: (Throwable) -> R): R = when (this) {
         is Success -> successTransform(value)
         is Failure -> failureTransform(exception)
     }
@@ -150,15 +167,15 @@ sealed class Try<out T> {
      * @return New [Try] being a result of a transformation of a [Success] with [successTransform]
      * or a [Failure] with [failureTransform].
      */
-    fun <R> transform(successTransform: (T) -> Try<R>, failureTransform: (Throwable) -> Try<R>): Try<R> =
-            try {
-                when (this) {
-                    is Success -> successTransform(value)
-                    is Failure -> failureTransform(exception)
-                }
-            } catch (exception: Throwable) {
-                Failure(exception)
+    inline fun <R> transform(successTransform: (T) -> Try<R>, failureTransform: (Throwable) -> Try<R>): Try<R> =
+        try {
+            when (this) {
+                is Success -> successTransform(value)
+                is Failure -> failureTransform(exception)
             }
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
 
     /**
      * Converts this [Try] to [Either].
@@ -182,12 +199,12 @@ sealed class Try<out T> {
          *
          * @return An instance of [Success] or [Failure], depending on whether the operation.
          */
-        operator fun <T> invoke(callable: () -> T): Try<T> =
-                try {
-                    Success(callable())
-                } catch (exception: Throwable) {
-                    Failure(exception)
-                }
+        inline operator fun <T> invoke(callable: () -> T): Try<T> =
+            try {
+                Success(callable())
+            } catch (exception: Throwable) {
+                Failure(exception)
+            }
     }
 }
 
@@ -198,8 +215,8 @@ sealed class Try<out T> {
  *
  * @return Value of a [Success] or [default] value.
  */
-fun <T> Try<T>.getOrElse(default: () -> T): T =
-        if (isSuccess) get() else default()
+inline fun <T> Try<T>.getOrElse(default: () -> T): T =
+    if (isSuccess) get() else default()
 
 /**
  * Returns this [Try] if this is a [Success] or [default] if this is a [Failure].
@@ -208,8 +225,8 @@ fun <T> Try<T>.getOrElse(default: () -> T): T =
  *
  * @return This [Success] or [default].
  */
-fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
-        if (isSuccess) this else default()
+inline fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
+    if (isSuccess) this else default()
 
 /**
  * Transforms a nested [Try] to a not nested [Try].
@@ -228,7 +245,7 @@ fun <T> Try<Try<T>>.flatten(): Try<T> = when (this) {
  *
  * @return This [Try] if this is a [Success] or a [Try] created for the [rescue] operation if this is a [Failure].
  */
-fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
+inline fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
     is Success -> this
     is Failure -> Try { rescue(exception) }
 }
@@ -240,7 +257,7 @@ fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
  *
  * @return This [Try] if this is a [Success] or a [Try] created by the [rescue] function if this is a [Failure].
  */
-fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) {
+inline fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when (this) {
     is Success -> this
     is Failure -> try {
         rescue(exception)
@@ -281,26 +298,27 @@ data class Success<out T>(val value: T) : Try<T>() {
     override fun forEach(action: (T) -> Unit) = action(value)
     override fun <R> map(transform: (T) -> R): Try<R> = Try { transform(value) }
     override fun <R> flatMap(transform: (T) -> Try<R>): Try<R> =
-            try {
-                transform(value)
-            } catch (exception: Throwable) {
-                Failure(exception)
-            }
+        try {
+            transform(value)
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
 
     override fun filter(predicate: (T) -> Boolean): Try<T> =
-            try {
-                if (predicate(value)) this
-                else throw NoSuchElementException("Predicate not satisfied for $value")
-            } catch (exception: Throwable) {
-                Failure(exception)
-            }
+        try {
+            if (predicate(value)) this
+            else throw NoSuchElementException("Predicate not satisfied for $value")
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
+
     override fun filterNot(predicate: (T) -> Boolean): Try<T> =
-            try {
-                if (!predicate(value)) this
-                else throw NoSuchElementException("Predicate not satisfied for $value")
-            } catch (exception: Throwable) {
-                Failure(exception)
-            }
+        try {
+            if (!predicate(value)) this
+            else throw NoSuchElementException("Predicate not satisfied for $value")
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
 
     override fun toEither(): Either<Throwable, T> = Right(value)
     override fun toOption(): Option<T> = Some(value)

@@ -56,20 +56,19 @@ sealed class Option<out T> {
      * Returns `true` if the option is [Some]. Otherwise returns `false`.
      */
     val isDefined: Boolean
-        get() = !isEmpty
+        inline get() = !isEmpty
 
     /**
      * Returns `true` if the option is [Some]. Otherwise returns `false`.
      */
     val isNotEmpty: Boolean
-        get() = isDefined
+        inline get() = isDefined
 
     /**
      * Returns a singleton iterator returning the option's value if it is defined,
      * or an empty iterator if the option is empty.
      */
-    val iterator: Iterator<T>
-        get() = if (isEmpty) EmptyIterator else SingletonIterator(get())
+    abstract val iterator: Iterator<T>
 
     /**
      * Gets the value of a [Some] or throws an exception.
@@ -92,7 +91,7 @@ sealed class Option<out T> {
      *
      * @param action Action to be run on a value of a [Some].
      */
-    fun forEach(action: (T) -> Unit) {
+    inline fun forEach(action: (T) -> Unit) {
         if (isDefined) action(get())
     }
 
@@ -103,8 +102,8 @@ sealed class Option<out T> {
      *
      * @return [Some] with a value mapped using [transform] or this object if this is a [None].
      */
-    fun <R> map(transform: (T) -> R): Option<R> =
-            if (isEmpty) None else Some(transform(get()))
+    inline fun <R> map(transform: (T) -> R): Option<R> =
+        if (isEmpty) None else Some(transform(get()))
 
     /**
      * Maps value of a [Some] to a new [Option] using [transform] or returns the same [None].
@@ -113,8 +112,8 @@ sealed class Option<out T> {
      *
      * @return [Option] returned by [transform] or this object if this is a [None].
      */
-    fun <R> flatMap(transform: (T) -> Option<R>): Option<R> =
-            if (isEmpty) None else transform(get())
+    inline fun <R> flatMap(transform: (T) -> Option<R>): Option<R> =
+        if (isEmpty) None else transform(get())
 
     /**
      * Returns the result of applying the [predicate] to the value if this is [Some]
@@ -125,8 +124,8 @@ sealed class Option<out T> {
      * @return The result of applying the [predicate] to the value if this is [Some]
      * or `true` if this is [None].
      */
-    fun all(predicate: (T) -> Boolean): Boolean =
-            isEmpty || predicate(get())
+    inline fun all(predicate: (T) -> Boolean): Boolean =
+        isEmpty || predicate(get())
 
     /**
      * Returns the result of applying the [predicate] to the value if this is [Some]
@@ -137,8 +136,8 @@ sealed class Option<out T> {
      * @return The result of applying the [predicate] to the value if this is [Some]
      * or `false` if this is [None].
      */
-    fun any(predicate: (T) -> Boolean): Boolean =
-            isDefined && predicate(get())
+    inline fun any(predicate: (T) -> Boolean): Boolean =
+        isDefined && predicate(get())
 
     /**
      * Returns the same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
@@ -147,8 +146,8 @@ sealed class Option<out T> {
      *
      * @return The same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
      */
-    fun filter(predicate: (T) -> Boolean): Option<T> =
-            if (isEmpty || predicate(get())) this else None
+    inline fun filter(predicate: (T) -> Boolean): Option<T> =
+        if (isEmpty || predicate(get())) this else None
 
     /**
      * Returns the same [Some] if the [predicate] is not satisfied for the value. Otherwise returns a [None].
@@ -157,8 +156,18 @@ sealed class Option<out T> {
      *
      * @return The same [Some] if the [predicate] is not satisfied for the value. Otherwise returns a [None].
      */
-    fun filterNot(predicate: (T) -> Boolean): Option<T> =
-            if (isEmpty || !predicate(get())) this else None
+    inline fun filterNot(predicate: (T) -> Boolean): Option<T> =
+        if (isEmpty || !predicate(get())) this else None
+
+    /**
+     * Returns the same [Some] casted to type [R] if it is [R]. Otherwise returns a [None].
+     *
+     * @param R Required type of the optional value.
+     *
+     * @return The same [Some] casted to type [R] if it is [R]. Otherwise returns a [None].
+     */
+    inline fun <reified R> filterIsInstance(): Option<R> =
+        (getOrNull() as? R).asOption()
 
     /**
      * Returns result of applying [transform] on the value of [Some] or [default] if this is [None].
@@ -168,8 +177,8 @@ sealed class Option<out T> {
      *
      * @return Result of applying [transform] on the value of [Some] or [default] if this is [None].
      */
-    fun <R> fold(default: R, transform: (T) -> R): R =
-            if (isEmpty) default else transform(get())
+    inline fun <R> fold(default: R, transform: (T) -> R): R =
+        if (isEmpty) default else transform(get())
 
     /**
      * Returns result of applying [transform] on the value of [Some] or [default] if this is [None].
@@ -179,8 +188,8 @@ sealed class Option<out T> {
      *
      * @return Result of applying [transform] on the value of [Some] or [default] if this is [None].
      */
-    fun <R> fold(default: () -> R, transform: (T) -> R): R =
-            if (isEmpty) default() else transform(get())
+    inline fun <R> fold(default: () -> R, transform: (T) -> R): R =
+        if (isEmpty) default() else transform(get())
 
     /**
      * Returns a singleton list containing the option's value if it is defined,
@@ -190,7 +199,7 @@ sealed class Option<out T> {
      * or an empty iterator if the option is empty.
      */
     fun toList(): List<T> =
-            if (isEmpty) emptyList() else listOf(get())
+        if (isEmpty) emptyList() else listOf(get())
 
     /**
      * Returns a [Right] containing the given argument [right] if this is empty,
@@ -203,8 +212,8 @@ sealed class Option<out T> {
      * @return a [Right] containing the given argument [right] if this is empty,
      * or a [Left] containing this option's value if it is defined.
      */
-    fun <R> toLeft(right: () -> R): Either<T, R> =
-            if (isEmpty) Right(right()) else Left(get())
+    inline fun <R> toLeft(right: () -> R): Either<T, R> =
+        if (isEmpty) Right(right()) else Left(get())
 
     /**
      * Returns a [Left] containing the given argument [left] if this is empty,
@@ -217,8 +226,8 @@ sealed class Option<out T> {
      * @return a [Left] containing the given argument [left] if this is empty,
      * or a [Right] containing this option's value if it is defined.
      */
-    fun <L> toRight(left: () -> L): Either<L, T> =
-            if (isEmpty) Left(left()) else Right(get())
+    inline fun <L> toRight(left: () -> L): Either<L, T> =
+        if (isEmpty) Left(left()) else Right(get())
 
     companion object {
 
@@ -254,8 +263,8 @@ sealed class Option<out T> {
  *
  * @return Value of a [Some] or [default] value.
  */
-fun <T> Option<T>.getOrElse(default: () -> T): T =
-        if (isEmpty) default() else get()
+inline fun <T> Option<T>.getOrElse(default: () -> T): T =
+    if (isEmpty) default() else get()
 
 /**
  * Returns this [Option] if this is a [Some] or [default] if this is [None].
@@ -264,8 +273,8 @@ fun <T> Option<T>.getOrElse(default: () -> T): T =
  *
  * @return This [Some] or [default].
  */
-fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
-        if (isEmpty) default() else this
+inline fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
+    if (isEmpty) default() else this
 
 /**
  * Transforms a nested [Option] to a not nested [Option].
@@ -273,7 +282,7 @@ fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
  * @return [Option] nested in a [Some] or [None] if this option is empty.
  */
 fun <T> Option<Option<T>>.flatten(): Option<T> =
-        if (isEmpty) None else get()
+    if (isEmpty) None else get()
 
 /**
  * Tests whether the [Option] contains the given [element].
@@ -283,7 +292,7 @@ fun <T> Option<Option<T>>.flatten(): Option<T> =
  * @return `true` if the [element] is equal to the value of this [Some], or `false` otherwise.
  */
 operator fun <T> Option<T>.contains(element: T): Boolean =
-        isDefined && get() == element
+    isDefined && get() == element
 
 /**
  * Returns [Some] if this is not `null` or [None] if this is `null`.
@@ -307,6 +316,8 @@ data class Some<T>(val value: T) : Option<T>() {
 
     override val isEmpty: Boolean = false
 
+    override val iterator: Iterator<T> = SingletonIterator(value)
+
     override fun get(): T = value
     override fun getOrNull(): T? = value
 }
@@ -318,6 +329,10 @@ object None : Option<Nothing>() {
 
     override val isEmpty: Boolean = true
 
+    override val iterator: Iterator<Nothing> = EmptyIterator
+
     override fun get(): Nothing = throw NoSuchElementException("Getting value of None")
     override fun getOrNull(): Nothing? = null
+
+    override fun toString(): String = "None"
 }

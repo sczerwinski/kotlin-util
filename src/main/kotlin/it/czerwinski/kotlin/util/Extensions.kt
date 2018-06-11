@@ -35,34 +35,38 @@
  *
  */
 
-package it.czerwinski.kotlin.collections
+package it.czerwinski.kotlin.util
 
 /**
- * Iterator producing no values.
+ * Extracts an [Option] nested in the [Try] to a not nested [Option].
+ *
+ * @return [Option] nested in a [Success] or [None] if this is a [Failure].
  */
-object EmptyIterator : Iterator<Nothing> {
-
-    override fun hasNext(): Boolean = false
-    override fun next(): Nothing = throw NoSuchElementException("Empty iterator")
+fun <T> Try<Option<T>>.flatten(): Option<T> = when (this) {
+    is Success -> value
+    is Failure -> None
 }
 
 /**
- * Iterator producing a single [element].
+ * Returns [Some] if this [Some] contains a [Success]. Otherwise returns [None].
  *
- * @param element The element to be produced by the iterator.
- *
- * @param T Type of the [element].
+ * @return [Some] if this [Some] contains a [Success]. Otherwise returns [None].
  */
-class SingletonIterator<T>(private val element: T) : Iterator<T> {
+fun <T> Option<Try<T>>.flatten(): Option<T> =
+    if (isEmpty) None else get().toOption()
 
-    private var hasNext = true
+/**
+ * Returns nested [List] if this is [Some]. Otherwise returns an empty [List].
+ *
+ * @return Nested [List] if this is [Some]. Otherwise returns an empty [List].
+ */
+fun <T> Option<Iterable<T>>.flatten(): List<T> =
+    if (isEmpty) emptyList() else get().toList()
 
-    override fun hasNext(): Boolean = hasNext
-    override fun next(): T =
-        if (hasNext) {
-            hasNext = false
-            element
-        } else {
-            throw NoSuchElementException("Only one element available")
-        }
-}
+/**
+ * Returns [List] of values of each [Some] in this [Iterable].
+ *
+ * @return [List] of values of each [Some] in this [Iterable].
+ */
+fun <T> Iterable<Option<T>>.flatten(): List<T> =
+    flatMap { it.toList() }

@@ -35,8 +35,9 @@ class RightTest {
         val either: Either<Int, Float> = Right(1.2f)
         // when:
         val result = either.fold(
-                { left -> "%03d".format(Locale.US, left) },
-                { right -> "%.2f".format(Locale.US, right) })
+            { left -> "%03d".format(Locale.US, left) },
+            { right -> "%.2f".format(Locale.US, right) }
+        )
         // then:
         assertEquals("1.20", result)
     }

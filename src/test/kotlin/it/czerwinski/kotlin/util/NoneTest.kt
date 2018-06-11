@@ -7,6 +7,17 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun toStringShouldReturnNone() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result = option.toString()
+        // then:
+        assertEquals("None", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun shouldBeEmpty() {
         // given:
         val option: Option<String> = None
@@ -156,28 +167,6 @@ class NoneTest {
         val result = option.any { it > 0 }
         // then:
         assertFalse(result)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun filterShouldReturnNone() {
-        // given:
-        val option: Option<Int> = None
-        // when:
-        val result = option.filter { it > 0 }
-        // then:
-        assertEquals(None, result)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun filterNotShouldReturnNone() {
-        // given:
-        val option: Option<Int> = None
-        // when:
-        val result = option.filterNot { it > 0 }
-        // then:
-        assertEquals(None, result)
     }
 
     @Test
