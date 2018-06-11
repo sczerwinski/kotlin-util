@@ -5,6 +5,17 @@ import org.junit.Test
 
 class SomeTest {
 
+    @Test
+    @Throws(Exception::class)
+    fun toStringShouldReturnSomeOfValue() {
+        // given:
+        val option: Option<String> = Some("text")
+        // when:
+        val result = option.toString()
+        // then:
+        assertEquals("Some(value=text)", result)
+    }
+
     @Test(expected = IllegalArgumentException::class)
     @Throws(Exception::class)
     fun shouldFailToCreateSomeWithNull() {

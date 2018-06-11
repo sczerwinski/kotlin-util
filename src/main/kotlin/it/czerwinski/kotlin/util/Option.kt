@@ -333,4 +333,6 @@ object None : Option<Nothing>() {
 
     override fun get(): Nothing = throw NoSuchElementException("Getting value of None")
     override fun getOrNull(): Nothing? = null
+
+    override fun toString(): String = "None"
 }

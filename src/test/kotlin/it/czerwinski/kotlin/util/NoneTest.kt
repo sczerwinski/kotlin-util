@@ -7,6 +7,17 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun toStringShouldReturnNone() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result = option.toString()
+        // then:
+        assertEquals("None", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun shouldBeEmpty() {
         // given:
         val option: Option<String> = None
