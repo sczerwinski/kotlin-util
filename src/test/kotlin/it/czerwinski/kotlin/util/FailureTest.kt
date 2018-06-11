@@ -139,17 +139,6 @@ class FailureTest {
 
     @Test
     @Throws(Exception::class)
-    fun flattenShouldReturnNone() {
-        // given:
-        val failure: Try<Option<String>> = Failure(RuntimeException("Test exception"))
-        // when:
-        val result = failure.flatten()
-        // then:
-        assertSame(None, result)
-    }
-
-    @Test
-    @Throws(Exception::class)
     fun recoverShouldReturnSuccess() {
         // given:
         val failure: Try<String> = Failure(RuntimeException("Test exception"))

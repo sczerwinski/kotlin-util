@@ -155,28 +155,6 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
-    fun flattenShouldReturnInnerSome() {
-        // given:
-        val success: Try<Option<String>> = Success(Some("text"))
-        // when:
-        val result = success.flatten()
-        // then:
-        assertEquals(Some("text"), result)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun flattenShouldReturnInnerNone() {
-        // given:
-        val success: Try<Option<String>> = Success(None)
-        // when:
-        val result = success.flatten()
-        // then:
-        assertSame(None, result)
-    }
-
-    @Test
-    @Throws(Exception::class)
     fun recoverShouldReturnTheSameSuccess() {
         // given:
         val success: Try<String> = Success("text")
