@@ -239,6 +239,16 @@ fun <T> Try<Try<T>>.flatten(): Try<T> = when (this) {
 }
 
 /**
+ * Extracts an [Option] nested in the [Try] to a not nested [Option].
+ *
+ * @return [Option] nested in a [Success] or [None] if this is a [Failure].
+ */
+fun <T> Try<Option<T>>.flatten(): Option<T> = when (this) {
+    is Success -> value
+    is Failure -> None
+}
+
+/**
  * Returns this [Try] if this is a [Success] or a [Try] created for the [rescue] operation if this is a [Failure].
  *
  * @param rescue Function creating a new value from the exception of a [Failure].
