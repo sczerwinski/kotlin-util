@@ -275,6 +275,46 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
     }
 
     /**
+     * Returns [Some] containing the same [Left] if the [predicate] is satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return [Some] containing the same [Left] if the [predicate] is satisfied for the value.
+     * Otherwise returns [None].
+     */
+    inline fun filterToOption(predicate: (L) -> Boolean): Option<Either<L, R>> = when (either) {
+        is Left -> if (predicate(either.value)) Some(either) else None
+        is Right -> None
+    }
+
+    /**
+     * Returns [Some] containing the same [Left] if the [predicate] is not satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return [Some] containing the same [Left] if the [predicate] is not satisfied for the value.
+     * Otherwise returns [None].
+     */
+    inline fun filterNotToOption(predicate: (L) -> Boolean): Option<Either<L, R>> = when (either) {
+        is Left -> if (predicate(either.value)) None else Some(either)
+        is Right -> None
+    }
+
+    /**
+     * Returns [Some] containing the same [Left] casted to type [T] if it is [T]. Otherwise returns [None].
+     *
+     * @param T Required type of the optional value.
+     *
+     * @return [Some] containing the same [Left] casted to type [T] if it is [T]. Otherwise returns [None].
+     */
+    inline fun <reified T> filterIsInstanceToOption(): Option<Either<T, R>> = when (either) {
+        is Left -> (either.value as? T)?.let { Left(it) }.asOption()
+        is Right -> None
+    }
+
+    /**
      * Returns a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
      *
      * @return a [Some] containing the [Left] value if it exists, or a [None] if this is a [Right].
@@ -317,6 +357,16 @@ inline fun <L, R, T> LeftProjection<L, R>.flatMap(transform: (L) -> Either<T, R>
 fun <L, R> LeftProjection<L?, R>.filterNotNull(): Either<L, R>? = when (either) {
     is Left -> either.value?.let { Left(it) }
     is Right -> null
+}
+
+/**
+ * Returns [Some] containing the same [Left] if its value is not `null`. Otherwise returns [None].
+ *
+ * @return [Some] containing the same [Left] if its value is not `null`. Otherwise returns [None].
+ */
+fun <L, R> LeftProjection<L?, R>.filterNotNullToOption(): Option<Either<L, R>> = when (either) {
+    is Left -> either.value?.let { Left(it) }.asOption()
+    is Right -> None
 }
 
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
@@ -430,6 +480,46 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
     }
 
     /**
+     * Returns [Some] containing the same [Right] if the [predicate] is satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return [Some] containing the same [Right] if the [predicate] is satisfied for the value.
+     * Otherwise returns [None].
+     */
+    inline fun filterToOption(predicate: (R) -> Boolean): Option<Either<L, R>> = when (either) {
+        is Left -> None
+        is Right -> if (predicate(either.value)) Some(either) else None
+    }
+
+    /**
+     * Returns [Some] containing the same [Right] if the [predicate] is not satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return [Some] containing the same [Right] if the [predicate] is not satisfied for the value.
+     * Otherwise returns [None].
+     */
+    inline fun filterNotToOption(predicate: (R) -> Boolean): Option<Either<L, R>> = when (either) {
+        is Left -> None
+        is Right -> if (predicate(either.value)) None else Some(either)
+    }
+
+    /**
+     * Returns [Some] containing the same [Right] casted to type [T] if it is [T]. Otherwise returns [None].
+     *
+     * @param T Required type of the optional value.
+     *
+     * @return [Some] containing the same [Right] casted to type [T] if it is [T]. Otherwise returns [None].
+     */
+    inline fun <reified T> filterIsInstanceToOption(): Option<Either<L, T>> = when (either) {
+        is Left -> None
+        is Right -> (either.value as? T)?.let { Right(it) }.asOption()
+    }
+
+    /**
      * Returns a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
      *
      * @return a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
@@ -472,4 +562,14 @@ inline fun <L, R, T> RightProjection<L, R>.flatMap(transform: (R) -> Either<L, T
 fun <L, R> RightProjection<L, R?>.filterNotNull(): Either<L, R>? = when (either) {
     is Left -> null
     is Right -> either.value?.let { Right(it) }
+}
+
+/**
+ * Returns [Some] containing the same [Right] if its value is not `null`. Otherwise returns [None].
+ *
+ * @return [Some] containing the same [Right] if its value is not `null`. Otherwise returns [None].
+ */
+fun <L, R> RightProjection<L, R?>.filterNotNullToOption(): Option<Either<L, R>> = when (either) {
+    is Left -> None
+    is Right -> either.value?.let { Right(it) }.asOption()
 }

@@ -1,7 +1,6 @@
 package it.czerwinski.kotlin.util
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.junit.Assert.*
 import org.junit.Test
 
 class RightProjectionFiltersTest {
@@ -136,5 +135,137 @@ class RightProjectionFiltersTest {
         val result: Either<String, Int>? = either.right.filterIsInstance()
         // then:
         assertNull(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterToOptionShouldReturnNoneIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.right.filterToOption { it > 0 }
+        // then:
+        assertSame(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterToOptionShouldReturnSomeWithTheSameRightIfPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Right(1f)
+        // when:
+        val result = either.right.filterToOption { it > 0f }
+        // then:
+        assertEquals(Some(either), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterToOptionShouldReturnNoneIfPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Right(-1f)
+        // when:
+        val result = either.right.filterToOption { it > 0f }
+        // then:
+        assertSame(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotToOptionShouldReturnNoneIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.right.filterNotToOption { it > 0 }
+        // then:
+        assertSame(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotToOptionShouldReturnSomeWithTheSameRightIfPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Right(-1f)
+        // when:
+        val result = either.right.filterNotToOption { it > 0f }
+        // then:
+        assertEquals(Some(either), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotToOptionShouldReturnNoneIfPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Right(1f)
+        // when:
+        val result = either.right.filterNotToOption { it > 0f }
+        // then:
+        assertSame(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullToOptionShouldReturnSomeWithTheSameRightIfValueIsNotNull() {
+        // given:
+        val either: Either<Int, Float?> = Right(3.14f)
+        // when:
+        val result: Option<Either<Int, Float>> = either.right.filterNotNullToOption()
+        // then:
+        assertEquals(Some(either), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullToOptionShouldReturnNoneIfValueIsNull() {
+        // given:
+        val either: Either<Int, Float?> = Right(null)
+        // when:
+        val result: Option<Either<Int, Float>> = either.right.filterNotNullToOption()
+        // then:
+        assertSame(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterNotNullToOptionShouldReturnNoneIfLeft() {
+        // given:
+        val either: Either<Int, Float?> = Left(1)
+        // when:
+        val result: Option<Either<Int, Float>> = either.right.filterNotNullToOption()
+        // then:
+        assertSame(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceToOptionShouldReturnSomeWithTheSameRightIfIsInstance() {
+        // given:
+        val either: Either<String, Number> = Right(1)
+        // when:
+        val result: Option<Either<String, Int>> = either.right.filterIsInstanceToOption()
+        // then:
+        assertEquals(Some(either), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceToOptionShouldReturnNoneIfIsNotInstance() {
+        // given:
+        val either: Either<String, Number> = Right(1f)
+        // when:
+        val result: Option<Either<String, Int>> = either.right.filterIsInstanceToOption()
+        // then:
+        assertSame(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterIsInstanceToOptionShouldReturnNoneIfLeft() {
+        // given:
+        val either: Either<String, Number> = Left("text")
+        // when:
+        val result: Option<Either<String, Int>> = either.right.filterIsInstanceToOption()
+        // then:
+        assertSame(None, result)
     }
 }
