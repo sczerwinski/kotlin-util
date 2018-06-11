@@ -184,6 +184,28 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun flattenOptionWithSuccessShouldReturnSome() {
+        // given:
+        val option: Option<Try<String>> = Some(Success("text"))
+        // when:
+        val result: Option<String> = option.flatten()
+        // then:
+        assertEquals(Some("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun flattenOptionWithFailureShouldReturnNone() {
+        // given:
+        val option: Option<Try<String>> = Some(Failure(RuntimeException()))
+        // when:
+        val result: Option<String> = option.flatten()
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun allShouldReturnTrueIfPredicateIsTrue() {
         // given:
         val option: Option<Int> = Some(1)

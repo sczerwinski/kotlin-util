@@ -9,3 +9,11 @@ fun <T> Try<Option<T>>.flatten(): Option<T> = when (this) {
     is Success -> value
     is Failure -> None
 }
+
+/**
+ * Returns [Some] if this [Some] contains a [Success]. Otherwise returns [None].
+ *
+ * @return [Some] if this [Some] contains a [Success]. Otherwise returns [None].
+ */
+fun <T> Option<Try<T>>.flatten(): Option<T> =
+    if (isEmpty) None else get().toOption()

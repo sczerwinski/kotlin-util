@@ -149,6 +149,17 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun flattenOptionWithTryShouldReturnNone() {
+        // given:
+        val option: Option<Try<String>> = None
+        // when:
+        val result: Option<String> = option.flatten()
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun allShouldReturnTrue() {
         // given:
         val option: Option<Int> = None
