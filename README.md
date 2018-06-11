@@ -38,7 +38,7 @@ Implementation differences:
 * `forall` has been replaced with `all` – Kotlin convention
 * `foreach` has been replaced with `forEach` – Kotlin convention
 * `orNull` has been replaced with `getOrNull` – Kotlin convention
-* implemented additional function `filterNotNull` – Kotlin convention
+* implemented additional functions: `filterNotNull`, `filterIsInstance` – Kotlin convention
 
 Kotlin introduces its own null-safety mechanisms.
 Most of the times, `Option`s can be replaced by nullable types in Kotlin, e.g.:
@@ -70,7 +70,8 @@ Implementation differences:
 * `exists` has been replaced with `any` – Kotlin convention
 * `forall` has been replaced with `all` – Kotlin convention
 * `foreach` has been replaced with `forEach` – Kotlin convention
-* implemented additional functions: `filterNot`, `filterNotNull` – Kotlin convention
+* implemented additional functions: `filterNot`, `filterNotNull`, `filterIsInstance` – Kotlin convention
+* implemented additional functions: `filterToOption`, `filterNotToOption`, `filterNotNullToOption`, `filterIsInstanceToOption`
 * implemented additional function `getOrNull` in addition to `toOption` – Kotlin uses its own null-safety mechanisms
 
 Unlike in Scala, this implementation is not right-biased,
@@ -86,7 +87,7 @@ However, the Scala convention that “dictates that `Left` is used for failure a
 Implementation differences:
 
 * `foreach` has been replaced with `forEach` – Kotlin convention
-* implemented additional functions: `filterNot`, `filterNotNull` – Kotlin convention
+* implemented additional functions: `filterNot`, `filterNotNull`, `filterIsInstance` – Kotlin convention
 * implemented additional function `getOrNull` in addition to `toOption` – Kotlin uses its own null-safety mechanisms
 
 ## Build configuration
