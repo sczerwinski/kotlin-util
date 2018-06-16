@@ -71,6 +71,34 @@ uploadArchives {
         pom.artifactId = "$artifactId"
         pom.version = "$libVersion"
 
+        pom.project {
+            name libName
+            packaging 'jar'
+            description libDescription
+            url libUrl
+
+            scm {
+                connection 'scm:git:https://github.com/sczerwinski/kotlin-util.git'
+                developerConnection 'scm:git:https://github.com/sczerwinski/kotlin-util.git'
+                url 'https://github.com/sczerwinski/kotlin-util'
+            }
+
+            licenses {
+                license {
+                    name 'BSD 3-Clause License'
+                    url 'https://opensource.org/licenses/BSD-3-Clause'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'sczerwinski'
+                    name 'Slawomir Czerwinski'
+                    email 'slawomir@czerwinski.it'
+                }
+            }
+        }
+
         repository(url: "file://${buildDir}/release/$libVersion")
     }
 }
