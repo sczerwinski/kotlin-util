@@ -72,12 +72,13 @@ signing {
 
 uploadArchives {
     repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
         pom.groupId = "$groupId"
         pom.artifactId = "$artifactId"
         pom.version = "$libVersion"
 
         pom.project {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             name libName
             packaging 'jar'
@@ -106,6 +107,12 @@ uploadArchives {
             }
         }
 
-        repository(url: "file://${buildDir}/release/$libVersion")
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
     }
 }
