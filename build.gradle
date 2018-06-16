@@ -16,6 +16,7 @@ buildscript {
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 repositories {
     mavenCentral()
@@ -65,12 +66,59 @@ artifacts {
     archives dokkaJar
 }
 
+if (hasProperty('signing.keyId')) {
+    signing {
+        sign configurations.archives
+    }
+}
+
 uploadArchives {
     repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
         pom.groupId = "$groupId"
         pom.artifactId = "$artifactId"
         pom.version = "$libVersion"
 
-        repository(url: "file://${buildDir}/release/$libVersion")
+        pom.project {
+
+            name libName
+            packaging 'jar'
+            description libDescription
+            url libUrl
+
+            scm {
+                connection 'scm:git:https://github.com/sczerwinski/kotlin-util.git'
+                developerConnection 'scm:git:https://github.com/sczerwinski/kotlin-util.git'
+                url 'https://github.com/sczerwinski/kotlin-util'
+            }
+
+            licenses {
+                license {
+                    name 'BSD 3-Clause License'
+                    url 'https://opensource.org/licenses/BSD-3-Clause'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'sczerwinski'
+                    name 'Slawomir Czerwinski'
+                    email 'slawomir@czerwinski.it'
+                }
+            }
+        }
+
+        if (hasProperty('ossrhUsername')) {
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+        } else {
+            repository(url: "file://${buildDir}/release/$libVersion")
+        }
     }
 }
