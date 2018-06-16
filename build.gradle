@@ -66,8 +66,10 @@ artifacts {
     archives dokkaJar
 }
 
-signing {
-    sign configurations.archives
+if (hasProperty('signing.keyId')) {
+    signing {
+        sign configurations.archives
+    }
 }
 
 uploadArchives {
@@ -107,12 +109,16 @@ uploadArchives {
             }
         }
 
-        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-            authentication(userName: ossrhUsername, password: ossrhPassword)
-        }
+        if (hasProperty('ossrhUsername')) {
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
 
-        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-            authentication(userName: ossrhUsername, password: ossrhPassword)
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+        } else {
+            repository(url: "file://${buildDir}/release/$libVersion")
         }
     }
 }
