@@ -192,6 +192,31 @@ sealed class Option<out T> {
         if (isEmpty) default() else transform(get())
 
     /**
+     * Returns [Some] containing a `Pair` of values of this and [other] [Option] if both [Option]s are [Some].
+     * Otherwise returns [None].
+     *
+     * @param other Other [Option].
+     *
+     * @return [Some] containing a `Pair` of values of this and [other] [Option] if both [Option]s are [Some].
+     * Otherwise returns [None].
+     */
+    infix fun <R> zip(other: Option<R>): Option<Pair<T, R>> =
+        if (isDefined && other.isDefined) Some(get() to other.get()) else None
+
+    /**
+     * Returns [Some] containing the result of applying [transform] to both values of this and [other] [Option]
+     * if both [Option]s are [Some]. Otherwise returns [None].
+     *
+     * @param other Other [Option].
+     * @param transform Function transforming values of both [Some].
+     *
+     * @return [Some] containing the result of applying [transform] to both values of this and [other] [Option]
+     * if both [Option]s are [Some]. Otherwise returns [None].
+     */
+    inline fun <T1, R> zip(other: Option<T1>, transform: (T, T1) -> R): Option<R> =
+        if (isDefined && other.isDefined) Some(transform(get(), other.get())) else None
+
+    /**
      * Returns a singleton list containing the option's value if it is defined,
      * or an empty list if the option is empty.
      *
