@@ -179,9 +179,9 @@ class SuccessTest {
     @Throws(Exception::class)
     fun foldShouldTransformSuccess() {
         // given:
-        val failure: Try<Int> = Success(123)
+        val success: Try<Int> = Success(123)
         // when:
-        val result = failure.fold(
+        val result = success.fold(
             { value -> value.toString() },
             { exception -> exception.message }
         )
@@ -217,6 +217,31 @@ class SuccessTest {
         )
         // then:
         assertEquals(Failure(successException), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipSuccessShouldReturnSuccess() {
+        // given:
+        val try1: Try<Int> = Success(123)
+        val try2: Try<String> = Success("text")
+        // when:
+        val result = try1 zip try2
+        // then:
+        assertEquals(Success(123 to "text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipFailureShouldReturnFailure() {
+        // given:
+        val exception = NullPointerException()
+        val try1: Try<Int> = Success(123)
+        val try2: Try<String> = Failure(exception)
+        // when:
+        val result = try1 zip try2
+        // then:
+        assertEquals(Failure(exception), result)
     }
 
     @Test

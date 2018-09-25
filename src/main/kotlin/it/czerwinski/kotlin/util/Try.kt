@@ -178,6 +178,17 @@ sealed class Try<out T> {
         }
 
     /**
+     * Returns [Success] containing a `Pair` of values of this and [other] [Try]
+     * if both instances of [Try] are [Success]. Otherwise returns first [Failure].
+     *
+     * @param other Other [Try].
+     *
+     * @return [Success] containing a `Pair` of values of this and [other] [Try]
+     * if both instances of [Try] are [Success]. Otherwise returns first [Failure].
+     */
+    infix fun <R> zip(other: Try<R>): Try<Pair<T, R>> = Try { get() to other.get() }
+
+    /**
      * Converts this [Try] to [Either].
      *
      * @return [Left] if this is [Failure] or [Right] if this is [Success].
