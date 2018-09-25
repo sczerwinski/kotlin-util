@@ -217,6 +217,30 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun zipSomeWithTransformShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<Float> = Some(3.14f)
+        // when:
+        val result = option1.zip(option2) { a, b -> a * b }
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipNoneWithTransformShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<Float> = None
+        // when:
+        val result = option1.zip(option2) { a, b -> a * b }
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun containsShouldReturnFalse() {
         // given:
         val option: Option<Int> = None
