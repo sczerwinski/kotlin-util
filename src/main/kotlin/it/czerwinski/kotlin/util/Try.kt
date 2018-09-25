@@ -189,6 +189,18 @@ sealed class Try<out T> {
     infix fun <R> zip(other: Try<R>): Try<Pair<T, R>> = Try { get() to other.get() }
 
     /**
+     * Returns [Success] containing the result of applying [transform] to both values of this and [other] [Try]
+     * if both instances of [Try] are [Success]. Otherwise returns first [Failure].
+     *
+     * @param other Other [Try].
+     * @param transform Function transforming values of both instances of [Success].
+     *
+     * @return [Success] containing the result of applying [transform] to both values of this and [other] [Try]
+     * if both instances of [Try] are [Success]. Otherwise returns first [Failure].
+     */
+    inline fun <T1, R> zip(other: Try<T1>, transform: (T, T1) -> R): Try<R> = Try { transform(get(), other.get()) }
+
+    /**
      * Converts this [Try] to [Either].
      *
      * @return [Left] if this is [Failure] or [Right] if this is [Success].

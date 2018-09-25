@@ -246,6 +246,31 @@ class SuccessTest {
 
     @Test
     @Throws(Exception::class)
+    fun zipSuccessWithTransformShouldReturnSuccess() {
+        // given:
+        val try1: Try<Int> = Success(2)
+        val try2: Try<Float> = Success(3.14f)
+        // when:
+        val result = try1.zip(try2) { a, b -> a * b }
+        // then:
+        assertEquals(Success(6.28f), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipFailureWithTransformShouldReturnFailure() {
+        // given:
+        val exception = NullPointerException()
+        val try1: Try<Int> = Success(123)
+        val try2: Try<Float> = Failure(exception)
+        // when:
+        val result = try1.zip(try2) { a, b -> a * b }
+        // then:
+        assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun failedShouldReturnFailure() {
         // given:
         val success: Try<String> = Success("text")
