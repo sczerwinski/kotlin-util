@@ -250,6 +250,30 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun zipSomeShouldReturnSome() {
+        // given:
+        val option1: Option<Int> = Some(123)
+        val option2: Option<String> = Some("text")
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(Some(123 to "text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipNoneShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = Some(123)
+        val option2: Option<String> = None
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun containsShouldReturnTrueIfValueEqualsElement() {
         // given:
         val option: Option<Int> = Some(123)

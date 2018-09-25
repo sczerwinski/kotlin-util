@@ -193,6 +193,30 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun zipSomeShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<String> = Some("text")
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipNoneShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<String> = None
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun containsShouldReturnFalse() {
         // given:
         val option: Option<Int> = None
