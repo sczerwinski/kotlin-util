@@ -223,8 +223,7 @@ sealed class Option<out T> {
      * @return A singleton list returning the option's value if it is defined,
      * or an empty iterator if the option is empty.
      */
-    fun toList(): List<T> =
-        if (isEmpty) emptyList() else listOf(get())
+    abstract fun toList(): List<T>
 
     /**
      * Returns a [Right] containing the given argument [right] if this is empty,
@@ -364,6 +363,8 @@ data class Some<T>(val value: T) : Option<T>() {
     override fun get(): T = value
     override fun getOrNull(): T? = value
 
+    override fun toList(): List<T> = listOf(value)
+
     override fun asIterable(): Iterable<T> = Iterable { iterator }
     override fun asSequence(): Sequence<T> = Sequence { iterator }
 }
@@ -379,6 +380,8 @@ object None : Option<Nothing>() {
 
     override fun get(): Nothing = throw NoSuchElementException("Getting value of None")
     override fun getOrNull(): Nothing? = null
+
+    override fun toList(): List<Nothing> = emptyList()
 
     override fun asIterable(): Iterable<Nothing> = emptyList()
     override fun asSequence(): Sequence<Nothing> = emptySequence()
