@@ -361,4 +361,26 @@ class SomeTest {
         // then:
         assertEquals(Right(123), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun asIterableShouldReturnIterableReturningValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Iterable<Int> = option.asIterable()
+        // then:
+        assertEquals(listOf(123), result.toList())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun asSequenceShouldReturnSequenceReturningValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Sequence<Int> = option.asSequence()
+        // then:
+        assertEquals(listOf(123), result.toList())
+    }
 }
