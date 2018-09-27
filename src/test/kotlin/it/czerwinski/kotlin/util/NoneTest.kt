@@ -282,4 +282,26 @@ class NoneTest {
         // then:
         assertEquals(Left("text"), result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun asIterableShouldReturnEmptyIterable() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result: Iterable<String> = option.asIterable()
+        // then:
+        assertFalse(result.iterator().hasNext())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun asSequenceShouldReturnEmptySequence() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result: Sequence<String> = option.asSequence()
+        // then:
+        assertFalse(result.iterator().hasNext())
+    }
 }
