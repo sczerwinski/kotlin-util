@@ -145,6 +145,8 @@ sealed class Option<out T> {
      * @param predicate Predicate function.
      *
      * @return `false` if the [predicate] is met by the value if this is [Some] or `true` otherwise.
+     *
+     * @since 1.1
      */
     inline fun none(predicate: (T) -> Boolean): Boolean =
         isEmpty || !predicate(get())
@@ -209,6 +211,8 @@ sealed class Option<out T> {
      *
      * @return [Some] containing a `Pair` of values of this and [other] [Option] if both [Option]s are [Some].
      * Otherwise returns [None].
+     *
+     * @since 1.1
      */
     infix fun <R> zip(other: Option<R>): Option<Pair<T, R>> =
         if (isDefined && other.isDefined) Some(get() to other.get()) else None
@@ -222,6 +226,8 @@ sealed class Option<out T> {
      *
      * @return [Some] containing the result of applying [transform] to both values of this and [other] [Option]
      * if both [Option]s are [Some]. Otherwise returns [None].
+     *
+     * @since 1.1
      */
     inline fun <T1, R> zip(other: Option<T1>, transform: (T, T1) -> R): Option<R> =
         if (isDefined && other.isDefined) Some(transform(get(), other.get())) else None
@@ -269,6 +275,8 @@ sealed class Option<out T> {
      *
      * @return An iterable that wraps this [Option] returning its value if it is defined,
      * or an empty iterable if the option is empty.
+     *
+     * @since 1.1
      */
     abstract fun asIterable(): Iterable<T>
 
@@ -278,6 +286,8 @@ sealed class Option<out T> {
      *
      * @return A sequence that wraps this [Option] returning its value if it is defined,
      * or an empty sequence if the option is empty.
+     *
+     * @since 1.1
      */
     abstract fun asSequence(): Sequence<T>
 
