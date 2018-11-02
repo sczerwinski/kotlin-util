@@ -171,6 +171,17 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun noneShouldReturnTrue() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.none { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun foldShouldReturnDefaultValue() {
         // given:
         val option: Option<Int> = None

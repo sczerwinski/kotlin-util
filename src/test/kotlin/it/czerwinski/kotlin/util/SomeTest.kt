@@ -228,6 +228,28 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun noneShouldReturnFalseIfPredicateIsTrue() {
+        // given:
+        val option: Option<Int> = Some(1)
+        // when:
+        val result = option.none { it > 0 }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun noneShouldReturnTrueIfPredicateIsFalse() {
+        // given:
+        val option: Option<Int> = Some(-1)
+        // when:
+        val result = option.none { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun foldShouldReturnTransformedValue() {
         // given:
         val option: Option<Int> = Some(123)
