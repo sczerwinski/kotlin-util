@@ -39,6 +39,8 @@ package it.czerwinski.kotlin.util
 
 import it.czerwinski.kotlin.collections.EmptyIterator
 import it.czerwinski.kotlin.collections.SingletonIterator
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 /**
  * Representation of an optional value. The instance might be either [Some] value or [None].
@@ -315,6 +317,22 @@ sealed class Option<out T> {
          * @return [None].
          */
         fun <T> empty(): Option<T> = None
+    }
+}
+
+/**
+ * Returns `true` if the option is [None]. Otherwise returns `false`.
+ */
+@ExperimentalContracts
+fun <T> Option<T>.isEmpty(): Boolean {
+    contract {
+        returns(true) implies (this@isEmpty is None)
+        returns(false) implies (this@isEmpty is Some<T>)
+    }
+
+    return when (this) {
+        is Some -> false
+        is None -> true
     }
 }
 
