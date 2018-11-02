@@ -100,12 +100,12 @@ Implementation differences:
 <dependency>
   <groupId>it.czerwinski</groupId>
   <artifactId>kotlin-util</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'it.czerwinski:kotlin-util:1.0'
+implementation 'it.czerwinski:kotlin-util:1.1'
 ```
