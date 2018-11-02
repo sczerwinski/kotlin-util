@@ -161,7 +161,7 @@ class RightProjectionTest {
 
     @Test
     @Throws(Exception::class)
-    fun allShouldReturnFalseIfRightAndPredicateIsTrue() {
+    fun allShouldReturnTrueIfRightAndPredicateIsTrue() {
         // given:
         val either: Either<Int, Float> = Right(1f)
         // when:
