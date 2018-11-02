@@ -127,7 +127,7 @@ uploadArchives {
                 )
             }
 
-        } else if (hasProperty('ossrhUsername')) {
+        } else if (project.hasProperty('ossrhUsername')) {
 
             println("Uploading to Sonatype")
 
