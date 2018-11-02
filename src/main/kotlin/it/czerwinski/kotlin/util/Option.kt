@@ -140,6 +140,16 @@ sealed class Option<out T> {
         isDefined && predicate(get())
 
     /**
+     * Returns `false` if the [predicate] is met by the value if this is [Some] or `true` otherwise.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return `false` if the [predicate] is met by the value if this is [Some] or `true` otherwise.
+     */
+    inline fun none(predicate: (T) -> Boolean): Boolean =
+        isEmpty || !predicate(get())
+
+    /**
      * Returns the same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
      *
      * @param predicate Predicate function.
