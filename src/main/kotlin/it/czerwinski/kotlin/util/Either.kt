@@ -239,6 +239,18 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
     }
 
     /**
+     * Returns `false` if the [predicate] is met by the value if this is [Left] or `true` otherwise.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return `false` if the [predicate] is met by the value if this is [Left] or `true` otherwise.
+     */
+    inline fun none(predicate: (L) -> Boolean): Boolean = when (either) {
+        is Left -> !predicate(either.value)
+        is Right -> true
+    }
+
+    /**
      * Returns the same [Left] if the [predicate] is satisfied for the value. Otherwise returns `null`.
      *
      * @param predicate Predicate function.
@@ -441,6 +453,18 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
     inline fun any(predicate: (R) -> Boolean): Boolean = when (either) {
         is Left -> false
         is Right -> predicate(either.value)
+    }
+
+    /**
+     * Returns `false` if the [predicate] is met by the value if this is [Right] or `true` otherwise.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return `false` if the [predicate] is met by the value if this is [Right] or `true` otherwise.
+     */
+    inline fun none(predicate: (R) -> Boolean): Boolean = when (either) {
+        is Left -> true
+        is Right -> !predicate(either.value)
     }
 
     /**

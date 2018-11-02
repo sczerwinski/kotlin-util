@@ -171,6 +171,17 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun noneShouldReturnTrue() {
+        // given:
+        val option: Option<Int> = None
+        // when:
+        val result = option.none { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun foldShouldReturnDefaultValue() {
         // given:
         val option: Option<Int> = None
@@ -189,6 +200,54 @@ class NoneTest {
         val result = option.fold({ "text" }) { it.toString() }
         // then:
         assertEquals("text", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipSomeShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<String> = Some("text")
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipNoneShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<String> = None
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipSomeWithTransformShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<Float> = Some(3.14f)
+        // when:
+        val result = option1.zip(option2) { a, b -> a * b }
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipNoneWithTransformShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = None
+        val option2: Option<Float> = None
+        // when:
+        val result = option1.zip(option2) { a, b -> a * b }
+        // then:
+        assertEquals(None, result)
     }
 
     @Test
@@ -233,5 +292,27 @@ class NoneTest {
         val result: Either<String, Int> = option.toRight { "text" }
         // then:
         assertEquals(Left("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun asIterableShouldReturnEmptyIterable() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result: Iterable<String> = option.asIterable()
+        // then:
+        assertFalse(result.iterator().hasNext())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun asSequenceShouldReturnEmptySequence() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result: Sequence<String> = option.asSequence()
+        // then:
+        assertFalse(result.iterator().hasNext())
     }
 }

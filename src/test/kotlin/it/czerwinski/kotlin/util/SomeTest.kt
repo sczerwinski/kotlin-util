@@ -228,6 +228,28 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun noneShouldReturnFalseIfPredicateIsTrue() {
+        // given:
+        val option: Option<Int> = Some(1)
+        // when:
+        val result = option.none { it > 0 }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun noneShouldReturnTrueIfPredicateIsFalse() {
+        // given:
+        val option: Option<Int> = Some(-1)
+        // when:
+        val result = option.none { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun foldShouldReturnTransformedValue() {
         // given:
         val option: Option<Int> = Some(123)
@@ -246,6 +268,54 @@ class SomeTest {
         val result = option.fold({ "text" }) { it.toString() }
         // then:
         assertEquals("123", result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipSomeShouldReturnSome() {
+        // given:
+        val option1: Option<Int> = Some(123)
+        val option2: Option<String> = Some("text")
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(Some(123 to "text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipNoneShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = Some(123)
+        val option2: Option<String> = None
+        // when:
+        val result = option1 zip option2
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipSomeWithTransformShouldReturnSome() {
+        // given:
+        val option1: Option<Int> = Some(2)
+        val option2: Option<Float> = Some(3.14f)
+        // when:
+        val result = option1.zip(option2) { a, b -> a * b }
+        // then:
+        assertEquals(Some(6.28f), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipNoneWithTransformShouldReturnNone() {
+        // given:
+        val option1: Option<Int> = Some(2)
+        val option2: Option<Float> = None
+        // when:
+        val result = option1.zip(option2) { a, b -> a * b }
+        // then:
+        assertEquals(None, result)
     }
 
     @Test
@@ -312,5 +382,27 @@ class SomeTest {
         val result: Either<String, Int> = option.toRight { "text" }
         // then:
         assertEquals(Right(123), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun asIterableShouldReturnIterableReturningValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Iterable<Int> = option.asIterable()
+        // then:
+        assertEquals(listOf(123), result.toList())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun asSequenceShouldReturnSequenceReturningValue() {
+        // given:
+        val option: Option<Int> = Some(123)
+        // when:
+        val result: Sequence<Int> = option.asSequence()
+        // then:
+        assertEquals(listOf(123), result.toList())
     }
 }

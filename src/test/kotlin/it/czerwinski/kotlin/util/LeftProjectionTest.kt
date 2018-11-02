@@ -216,6 +216,39 @@ class LeftProjectionTest {
 
     @Test
     @Throws(Exception::class)
+    fun noneShouldReturnFalseIfLeftAndPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Left(1)
+        // when:
+        val result = either.left.none { it > 0 }
+        // then:
+        assertFalse(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun noneShouldReturnTrueIfLeftAndPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Left(-1)
+        // when:
+        val result = either.left.none { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun noneShouldReturnTrueIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.none { it > 0 }
+        // then:
+        assertTrue(result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun toOptionShouldReturnSomeWithLeftValue() {
         // given:
         val either: Either<Int, Float> = Left(256)

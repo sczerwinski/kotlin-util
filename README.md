@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/sczerwinski/kotlin-util.svg?branch=develop)](https://travis-ci.org/sczerwinski/kotlin-util)
 [ ![Download](https://api.bintray.com/packages/sczerwinski/kotlin/kotlin-util/images/download.svg) ](https://bintray.com/sczerwinski/kotlin/kotlin-util/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/it.czerwinski/kotlin-util.svg)](https://repo1.maven.org/maven2/it/czerwinski/kotlin-util/)
+[![Sonatype Snapshot](https://img.shields.io/nexus/s/https/oss.sonatype.org/it.czerwinski/kotlin-util.svg)](https://oss.sonatype.org/content/repositories/snapshots/it/czerwinski/kotlin-util/)
 
 # Kotlin Utilities
 
@@ -99,12 +100,12 @@ Implementation differences:
 <dependency>
   <groupId>it.czerwinski</groupId>
   <artifactId>kotlin-util</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'it.czerwinski:kotlin-util:1.0'
+implementation 'it.czerwinski:kotlin-util:1.1'
 ```

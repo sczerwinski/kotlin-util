@@ -241,6 +241,60 @@ class FailureTest {
 
     @Test
     @Throws(Exception::class)
+    fun zipSuccessShouldReturnFailure() {
+        // given:
+        val exception = IllegalStateException()
+        val try1: Try<Int> = Failure(exception)
+        val try2: Try<String> = Success("text")
+        // when:
+        val result = try1 zip try2
+        // then:
+        assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipFailureShouldReturnFailure() {
+        // given:
+        val exception1 = IllegalStateException()
+        val exception2 = NullPointerException()
+        val try1: Try<Int> = Failure(exception1)
+        val try2: Try<String> = Failure(exception2)
+        // when:
+        val result = try1 zip try2
+        // then:
+        assertEquals(Failure(exception1), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipSuccessWithTransformShouldReturnFailure() {
+        // given:
+        val exception = IllegalStateException()
+        val try1: Try<Int> = Failure(exception)
+        val try2: Try<Float> = Success(3.14f)
+        // when:
+        val result = try1.zip(try2) { a, b -> a * b }
+        // then:
+        assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun zipFailureWithTransformShouldReturnFailure() {
+        // given:
+        val exception1 = IllegalStateException()
+        val exception2 = NullPointerException()
+        val try1: Try<Int> = Failure(exception1)
+        val try2: Try<Float> = Failure(exception2)
+        // when:
+        val result = try1.zip(try2) { a, b -> a * b }
+        // then:
+        assertEquals(Failure(exception1), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun failedShouldReturnSuccessWithTheSameException() {
         // given:
         val exception = RuntimeException("Test exception")

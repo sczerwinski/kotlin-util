@@ -140,6 +140,16 @@ sealed class Option<out T> {
         isDefined && predicate(get())
 
     /**
+     * Returns `false` if the [predicate] is met by the value if this is [Some] or `true` otherwise.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return `false` if the [predicate] is met by the value if this is [Some] or `true` otherwise.
+     */
+    inline fun none(predicate: (T) -> Boolean): Boolean =
+        isEmpty || !predicate(get())
+
+    /**
      * Returns the same [Some] if the [predicate] is satisfied for the value. Otherwise returns a [None].
      *
      * @param predicate Predicate function.
@@ -192,14 +202,38 @@ sealed class Option<out T> {
         if (isEmpty) default() else transform(get())
 
     /**
+     * Returns [Some] containing a `Pair` of values of this and [other] [Option] if both [Option]s are [Some].
+     * Otherwise returns [None].
+     *
+     * @param other Other [Option].
+     *
+     * @return [Some] containing a `Pair` of values of this and [other] [Option] if both [Option]s are [Some].
+     * Otherwise returns [None].
+     */
+    infix fun <R> zip(other: Option<R>): Option<Pair<T, R>> =
+        if (isDefined && other.isDefined) Some(get() to other.get()) else None
+
+    /**
+     * Returns [Some] containing the result of applying [transform] to both values of this and [other] [Option]
+     * if both [Option]s are [Some]. Otherwise returns [None].
+     *
+     * @param other Other [Option].
+     * @param transform Function transforming values of both [Some].
+     *
+     * @return [Some] containing the result of applying [transform] to both values of this and [other] [Option]
+     * if both [Option]s are [Some]. Otherwise returns [None].
+     */
+    inline fun <T1, R> zip(other: Option<T1>, transform: (T, T1) -> R): Option<R> =
+        if (isDefined && other.isDefined) Some(transform(get(), other.get())) else None
+
+    /**
      * Returns a singleton list containing the option's value if it is defined,
      * or an empty list if the option is empty.
      *
-     * @return A singleton iterator returning the option's value if it is defined,
+     * @return A singleton list returning the option's value if it is defined,
      * or an empty iterator if the option is empty.
      */
-    fun toList(): List<T> =
-        if (isEmpty) emptyList() else listOf(get())
+    abstract fun toList(): List<T>
 
     /**
      * Returns a [Right] containing the given argument [right] if this is empty,
@@ -228,6 +262,24 @@ sealed class Option<out T> {
      */
     inline fun <L> toRight(left: () -> L): Either<L, T> =
         if (isEmpty) Left(left()) else Right(get())
+
+    /**
+     * Returns an iterable that wraps this [Option] returning its value if it is defined,
+     * or an empty iterable if the option is empty.
+     *
+     * @return An iterable that wraps this [Option] returning its value if it is defined,
+     * or an empty iterable if the option is empty.
+     */
+    abstract fun asIterable(): Iterable<T>
+
+    /**
+     * Returns a sequence that wraps this [Option] returning its value if it is defined,
+     * or an empty sequence if the option is empty.
+     *
+     * @return A sequence that wraps this [Option] returning its value if it is defined,
+     * or an empty sequence if the option is empty.
+     */
+    abstract fun asSequence(): Sequence<T>
 
     companion object {
 
@@ -320,6 +372,11 @@ data class Some<T>(val value: T) : Option<T>() {
 
     override fun get(): T = value
     override fun getOrNull(): T? = value
+
+    override fun toList(): List<T> = listOf(value)
+
+    override fun asIterable(): Iterable<T> = Iterable { iterator }
+    override fun asSequence(): Sequence<T> = Sequence { iterator }
 }
 
 /**
@@ -333,6 +390,11 @@ object None : Option<Nothing>() {
 
     override fun get(): Nothing = throw NoSuchElementException("Getting value of None")
     override fun getOrNull(): Nothing? = null
+
+    override fun toList(): List<Nothing> = emptyList()
+
+    override fun asIterable(): Iterable<Nothing> = emptyList()
+    override fun asSequence(): Sequence<Nothing> = emptySequence()
 
     override fun toString(): String = "None"
 }
