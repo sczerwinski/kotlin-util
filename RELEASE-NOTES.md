@@ -1,5 +1,20 @@
 # Kotlin Utilities Release Notes
 
+## Version 1.1
+🔖 `kotlin-util-1.1`
+
+### New features
+
+* ✨ New methods in `Option`:
+  * `none()`
+  * `zip()`
+  * `asIterable()`
+  * `asSequence()`
+* ✨ New methods in `LeftProjection` and `RightProjection`:
+  * `none()`
+* ✨ New methods in `Try`:
+  * `zip()`
+
 ## Version 1.0
 🔖 `kotlin-util-1.0`
 
