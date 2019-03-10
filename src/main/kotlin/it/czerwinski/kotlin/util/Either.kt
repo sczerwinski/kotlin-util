@@ -364,6 +364,26 @@ fun <L, R> LeftProjection<L?, R>.filterNotNullToOption(): Option<Either<L, R>> =
     is Right -> None
 }
 
+/**
+ * Returns the same [Left] if the [predicate] is satisfied for the value,
+ * `Right(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Right] if this is [Right].
+ *
+ * @param predicate Predicate function.
+ * @param zero Provider of the value used if the [predicate] is not satisfied.
+ *
+ * @return The same [Left] if the [predicate] is satisfied for the value,
+ * `Right(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Right] if this is [Right].
+ *
+ * @since 1.2
+ */
+inline fun <L, R> LeftProjection<L, R>.filterOrElse(predicate: (L) -> Boolean, zero: () -> R): Either<L, R>? =
+    when (either) {
+        is Left -> if (predicate(either.value)) either else Right(zero())
+        is Right -> either
+    }
+
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
 
     /**
@@ -582,3 +602,23 @@ fun <L, R> RightProjection<L, R?>.filterNotNullToOption(): Option<Either<L, R>> 
     is Left -> None
     is Right -> either.value?.let { Right(it) }.asOption()
 }
+
+/**
+ * Returns the same [Right] if the [predicate] is satisfied for the value,
+ * `Left(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Left] if this is [Left].
+ *
+ * @param predicate Predicate function.
+ * @param zero Provider of the value used if the [predicate] is not satisfied.
+ *
+ * @return The same [Right] if the [predicate] is satisfied for the value,
+ * `Left(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Left] if this is [Left].
+ *
+ * @since 1.2
+ */
+inline fun <L, R> RightProjection<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R>? =
+    when (either) {
+        is Right -> if (predicate(either.value)) either else Left(zero())
+        is Left -> either
+    }

@@ -127,6 +127,20 @@ sealed class Try<out T> {
     }
 
     /**
+     * Returns the same [Success] if the [predicate] is satisfied for the value.
+     * Otherwise returns a [Failure] containing the given [throwable].
+     *
+     * @param predicate Predicate function.
+     * @param throwable Function providing a throwable to be used when the [predicate] is not satisfied.
+     *
+     * @return The same [Success] if the [predicate] is satisfied for the value.
+     * Otherwise returns a [Failure] containing the given [throwable].
+     *
+     * @since 1.2
+     */
+    abstract fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T>
+
+    /**
      * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
      *
      * @param successTransform Function transforming value of a [Success] to a new [Try].
@@ -328,6 +342,14 @@ data class Success<out T>(val value: T) : Try<T>() {
             Failure(exception)
         }
 
+    override fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T> =
+        try {
+            if (predicate(value)) this
+            else throw throwable(value)
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
+
     override fun toEither(): Either<Throwable, T> = Right(value)
     override fun toOption(): Option<T> = Some(value)
 }
@@ -352,6 +374,7 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
 
     override fun filter(predicate: (Nothing) -> Boolean): Try<Nothing> = this
     override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
+    override fun filterOrElse(predicate: (Nothing) -> Boolean, throwable: (Nothing) -> Throwable): Try<Nothing> = this
 
     override fun toEither(): Either<Throwable, Nothing> = Left(exception)
     override fun toOption(): Option<Nothing> = None
