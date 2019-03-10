@@ -66,7 +66,7 @@ class SomeTest {
         val option: Option<String> = Some("text")
         val result = mutableListOf<String>()
         // when:
-        option.iterator.forEach { result.add(it) }
+        option.iterator().forEach { result.add(it) }
         // then:
         assertEquals(listOf("text"), result)
     }
