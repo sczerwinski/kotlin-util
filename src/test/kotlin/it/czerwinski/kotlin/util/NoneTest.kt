@@ -55,7 +55,7 @@ class NoneTest {
         // given:
         val option: Option<String> = None
         // when:
-        val result = option.iterator
+        val result = option.iterator()
         // then:
         assertFalse(result.hasNext())
     }

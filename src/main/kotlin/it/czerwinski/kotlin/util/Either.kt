@@ -4,34 +4,15 @@
  *
  * ===== SCALA LICENSE =====
  *
- * Copyright (c) 2002-2018 EPFL
- * Copyright (c) 2011-2018 Lightbend, Inc.
+ * Scala (https://www.scala-lang.org)
  *
- * All rights reserved.
+ * Copyright EPFL and Lightbend, Inc.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Licensed under Apache License 2.0
+ * (http://www.apache.org/licenses/LICENSE-2.0).
  *
- *   * Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright notice,
- *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
- *   * Neither the name of the EPFL nor the names of its contributors
- *     may be used to endorse or promote products derived from this software
- *     without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * See the NOTICE file distributed with this work for
+ * additional information regarding copyright ownership.
  *
  */
 
@@ -244,6 +225,8 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
      * @param predicate Predicate function.
      *
      * @return `false` if the [predicate] is met by the value if this is [Left] or `true` otherwise.
+     *
+     * @since 1.1
      */
     inline fun none(predicate: (L) -> Boolean): Boolean = when (either) {
         is Left -> !predicate(either.value)
@@ -381,6 +364,26 @@ fun <L, R> LeftProjection<L?, R>.filterNotNullToOption(): Option<Either<L, R>> =
     is Right -> None
 }
 
+/**
+ * Returns the same [Left] if the [predicate] is satisfied for the value,
+ * `Right(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Right] if this is [Right].
+ *
+ * @param predicate Predicate function.
+ * @param zero Provider of the value used if the [predicate] is not satisfied.
+ *
+ * @return The same [Left] if the [predicate] is satisfied for the value,
+ * `Right(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Right] if this is [Right].
+ *
+ * @since 1.2
+ */
+inline fun <L, R> LeftProjection<L, R>.filterOrElse(predicate: (L) -> Boolean, zero: () -> R): Either<L, R>? =
+    when (either) {
+        is Left -> if (predicate(either.value)) either else Right(zero())
+        is Right -> either
+    }
+
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
 
     /**
@@ -461,6 +464,8 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
      * @param predicate Predicate function.
      *
      * @return `false` if the [predicate] is met by the value if this is [Right] or `true` otherwise.
+     *
+     * @since 1.1
      */
     inline fun none(predicate: (R) -> Boolean): Boolean = when (either) {
         is Left -> true
@@ -597,3 +602,23 @@ fun <L, R> RightProjection<L, R?>.filterNotNullToOption(): Option<Either<L, R>> 
     is Left -> None
     is Right -> either.value?.let { Right(it) }.asOption()
 }
+
+/**
+ * Returns the same [Right] if the [predicate] is satisfied for the value,
+ * `Left(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Left] if this is [Left].
+ *
+ * @param predicate Predicate function.
+ * @param zero Provider of the value used if the [predicate] is not satisfied.
+ *
+ * @return The same [Right] if the [predicate] is satisfied for the value,
+ * `Left(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Left] if this is [Left].
+ *
+ * @since 1.2
+ */
+inline fun <L, R> RightProjection<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R>? =
+    when (either) {
+        is Right -> if (predicate(either.value)) either else Left(zero())
+        is Left -> either
+    }

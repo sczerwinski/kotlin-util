@@ -4,34 +4,15 @@
  *
  * ===== SCALA LICENSE =====
  *
- * Copyright (c) 2002-2018 EPFL
- * Copyright (c) 2011-2018 Lightbend, Inc.
+ * Scala (https://www.scala-lang.org)
  *
- * All rights reserved.
+ * Copyright EPFL and Lightbend, Inc.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Licensed under Apache License 2.0
+ * (http://www.apache.org/licenses/LICENSE-2.0).
  *
- *   * Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright notice,
- *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
- *   * Neither the name of the EPFL nor the names of its contributors
- *     may be used to endorse or promote products derived from this software
- *     without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * See the NOTICE file distributed with this work for
+ * additional information regarding copyright ownership.
  *
  */
 
@@ -67,7 +48,13 @@ sealed class Option<out T> {
     /**
      * Returns a singleton iterator returning the option's value if it is defined,
      * or an empty iterator if the option is empty.
+     *
+     * Deprecated in 1.2, use [iterator] method instead.
      */
+    @Deprecated(
+        message = "Use iterator() method instead",
+        replaceWith = ReplaceWith(expression = "iterator()")
+    )
     abstract val iterator: Iterator<T>
 
     /**
@@ -85,6 +72,14 @@ sealed class Option<out T> {
      * @return Value of a [Some] or `null`.
      */
     abstract fun getOrNull(): T?
+
+    /**
+     * Returns a singleton iterator returning the option's value if it is defined,
+     * or an empty iterator if the option is empty.
+     *
+     * @since 1.2
+     */
+    abstract fun iterator(): Iterator<T>
 
     /**
      * Runs [action] if this is a [Some]. Returns [Unit] without any action if this is [None].
@@ -145,6 +140,8 @@ sealed class Option<out T> {
      * @param predicate Predicate function.
      *
      * @return `false` if the [predicate] is met by the value if this is [Some] or `true` otherwise.
+     *
+     * @since 1.1
      */
     inline fun none(predicate: (T) -> Boolean): Boolean =
         isEmpty || !predicate(get())
@@ -209,6 +206,8 @@ sealed class Option<out T> {
      *
      * @return [Some] containing a `Pair` of values of this and [other] [Option] if both [Option]s are [Some].
      * Otherwise returns [None].
+     *
+     * @since 1.1
      */
     infix fun <R> zip(other: Option<R>): Option<Pair<T, R>> =
         if (isDefined && other.isDefined) Some(get() to other.get()) else None
@@ -222,6 +221,8 @@ sealed class Option<out T> {
      *
      * @return [Some] containing the result of applying [transform] to both values of this and [other] [Option]
      * if both [Option]s are [Some]. Otherwise returns [None].
+     *
+     * @since 1.1
      */
     inline fun <T1, R> zip(other: Option<T1>, transform: (T, T1) -> R): Option<R> =
         if (isDefined && other.isDefined) Some(transform(get(), other.get())) else None
@@ -269,6 +270,8 @@ sealed class Option<out T> {
      *
      * @return An iterable that wraps this [Option] returning its value if it is defined,
      * or an empty iterable if the option is empty.
+     *
+     * @since 1.1
      */
     abstract fun asIterable(): Iterable<T>
 
@@ -278,6 +281,8 @@ sealed class Option<out T> {
      *
      * @return A sequence that wraps this [Option] returning its value if it is defined,
      * or an empty sequence if the option is empty.
+     *
+     * @since 1.1
      */
     abstract fun asSequence(): Sequence<T>
 
@@ -368,15 +373,21 @@ data class Some<T>(val value: T) : Option<T>() {
 
     override val isEmpty: Boolean = false
 
+    @Deprecated(
+        message = "Use iterator() method instead",
+        replaceWith = ReplaceWith(expression = "iterator()")
+    )
     override val iterator: Iterator<T> = SingletonIterator(value)
 
     override fun get(): T = value
     override fun getOrNull(): T? = value
 
+    override fun iterator(): Iterator<T> = SingletonIterator(value)
+
     override fun toList(): List<T> = listOf(value)
 
-    override fun asIterable(): Iterable<T> = Iterable { iterator }
-    override fun asSequence(): Sequence<T> = Sequence { iterator }
+    override fun asIterable(): Iterable<T> = Iterable { iterator() }
+    override fun asSequence(): Sequence<T> = Sequence { iterator() }
 }
 
 /**
@@ -386,10 +397,16 @@ object None : Option<Nothing>() {
 
     override val isEmpty: Boolean = true
 
+    @Deprecated(
+        message = "Use iterator() method instead",
+        replaceWith = ReplaceWith(expression = "iterator()")
+    )
     override val iterator: Iterator<Nothing> = EmptyIterator
 
     override fun get(): Nothing = throw NoSuchElementException("Getting value of None")
     override fun getOrNull(): Nothing? = null
+
+    override fun iterator(): Iterator<Nothing> = EmptyIterator
 
     override fun toList(): List<Nothing> = emptyList()
 

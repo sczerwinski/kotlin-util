@@ -13,3 +13,6 @@ build/
 .idea/
 classes/
 out/
+
+# Other
+.DS_Store

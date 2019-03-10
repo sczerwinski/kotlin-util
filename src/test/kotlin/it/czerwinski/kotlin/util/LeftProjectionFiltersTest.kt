@@ -268,4 +268,46 @@ class LeftProjectionFiltersTest {
         // then:
         assertSame(None, result)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterOrElseShouldReturnTheSameLeftIfPredicateIsTrue() {
+        // given:
+        val either: Either<Int, Float> = Left(1)
+        // when:
+        val result = either.left.filterOrElse(
+            predicate = { it > 0 },
+            zero = { 0f }
+        )
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterOrElseShouldReturnNewRightIfPredicateIsFalse() {
+        // given:
+        val either: Either<Int, Float> = Left(-1)
+        // when:
+        val result = either.left.filterOrElse(
+            predicate = { it > 0 },
+            zero = { 0f }
+        )
+        // then:
+        assertEquals(Right(0f), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun filterOrElseShouldReturnTheSameRightIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.filterOrElse(
+            predicate = { it > 0 },
+            zero = { 0f }
+        )
+        // then:
+        assertEquals(either, result)
+    }
 }

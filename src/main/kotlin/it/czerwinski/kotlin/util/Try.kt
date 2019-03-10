@@ -4,34 +4,15 @@
  *
  * ===== SCALA LICENSE =====
  *
- * Copyright (c) 2002-2018 EPFL
- * Copyright (c) 2011-2018 Lightbend, Inc.
+ * Scala (https://www.scala-lang.org)
  *
- * All rights reserved.
+ * Copyright EPFL and Lightbend, Inc.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Licensed under Apache License 2.0
+ * (http://www.apache.org/licenses/LICENSE-2.0).
  *
- *   * Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright notice,
- *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
- *   * Neither the name of the EPFL nor the names of its contributors
- *     may be used to endorse or promote products derived from this software
- *     without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * See the NOTICE file distributed with this work for
+ * additional information regarding copyright ownership.
  *
  */
 
@@ -146,6 +127,20 @@ sealed class Try<out T> {
     }
 
     /**
+     * Returns the same [Success] if the [predicate] is satisfied for the value.
+     * Otherwise returns a [Failure] containing the given [throwable].
+     *
+     * @param predicate Predicate function.
+     * @param throwable Function providing a throwable to be used when the [predicate] is not satisfied.
+     *
+     * @return The same [Success] if the [predicate] is satisfied for the value.
+     * Otherwise returns a [Failure] containing the given [throwable].
+     *
+     * @since 1.2
+     */
+    abstract fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T>
+
+    /**
      * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
      *
      * @param successTransform Function transforming value of a [Success] to a new [Try].
@@ -185,6 +180,8 @@ sealed class Try<out T> {
      *
      * @return [Success] containing a `Pair` of values of this and [other] [Try]
      * if both instances of [Try] are [Success]. Otherwise returns first [Failure].
+     *
+     * @since 1.1
      */
     infix fun <R> zip(other: Try<R>): Try<Pair<T, R>> = Try { get() to other.get() }
 
@@ -197,6 +194,8 @@ sealed class Try<out T> {
      *
      * @return [Success] containing the result of applying [transform] to both values of this and [other] [Try]
      * if both instances of [Try] are [Success]. Otherwise returns first [Failure].
+     *
+     * @since 1.1
      */
     inline fun <T1, R> zip(other: Try<T1>, transform: (T, T1) -> R): Try<R> = Try { transform(get(), other.get()) }
 
@@ -343,6 +342,14 @@ data class Success<out T>(val value: T) : Try<T>() {
             Failure(exception)
         }
 
+    override fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T> =
+        try {
+            if (predicate(value)) this
+            else throw throwable(value)
+        } catch (exception: Throwable) {
+            Failure(exception)
+        }
+
     override fun toEither(): Either<Throwable, T> = Right(value)
     override fun toOption(): Option<T> = Some(value)
 }
@@ -367,6 +374,7 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
 
     override fun filter(predicate: (Nothing) -> Boolean): Try<Nothing> = this
     override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
+    override fun filterOrElse(predicate: (Nothing) -> Boolean, throwable: (Nothing) -> Throwable): Try<Nothing> = this
 
     override fun toEither(): Either<Throwable, Nothing> = Left(exception)
     override fun toOption(): Option<Nothing> = None
