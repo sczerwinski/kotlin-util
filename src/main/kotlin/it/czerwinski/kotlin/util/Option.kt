@@ -48,7 +48,13 @@ sealed class Option<out T> {
     /**
      * Returns a singleton iterator returning the option's value if it is defined,
      * or an empty iterator if the option is empty.
+     *
+     * Deprecated in 1.2, use [iterator] method instead.
      */
+    @Deprecated(
+        message = "Use iterator() method instead",
+        replaceWith = ReplaceWith(expression = "iterator()")
+    )
     abstract val iterator: Iterator<T>
 
     /**
@@ -66,6 +72,14 @@ sealed class Option<out T> {
      * @return Value of a [Some] or `null`.
      */
     abstract fun getOrNull(): T?
+
+    /**
+     * Returns a singleton iterator returning the option's value if it is defined,
+     * or an empty iterator if the option is empty.
+     *
+     * @since 1.2
+     */
+    abstract fun iterator(): Iterator<T>
 
     /**
      * Runs [action] if this is a [Some]. Returns [Unit] without any action if this is [None].
@@ -359,15 +373,21 @@ data class Some<T>(val value: T) : Option<T>() {
 
     override val isEmpty: Boolean = false
 
+    @Deprecated(
+        message = "Use iterator() method instead",
+        replaceWith = ReplaceWith(expression = "iterator()")
+    )
     override val iterator: Iterator<T> = SingletonIterator(value)
 
     override fun get(): T = value
     override fun getOrNull(): T? = value
 
+    override fun iterator(): Iterator<T> = SingletonIterator(value)
+
     override fun toList(): List<T> = listOf(value)
 
-    override fun asIterable(): Iterable<T> = Iterable { iterator }
-    override fun asSequence(): Sequence<T> = Sequence { iterator }
+    override fun asIterable(): Iterable<T> = Iterable { iterator() }
+    override fun asSequence(): Sequence<T> = Sequence { iterator() }
 }
 
 /**
@@ -377,10 +397,16 @@ object None : Option<Nothing>() {
 
     override val isEmpty: Boolean = true
 
+    @Deprecated(
+        message = "Use iterator() method instead",
+        replaceWith = ReplaceWith(expression = "iterator()")
+    )
     override val iterator: Iterator<Nothing> = EmptyIterator
 
     override fun get(): Nothing = throw NoSuchElementException("Getting value of None")
     override fun getOrNull(): Nothing? = null
+
+    override fun iterator(): Iterator<Nothing> = EmptyIterator
 
     override fun toList(): List<Nothing> = emptyList()
 
