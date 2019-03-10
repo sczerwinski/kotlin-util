@@ -1,7 +1,32 @@
 # Kotlin Utilities Release Notes
 
+## Version 1.2
+🔖 `kotlin-util-1.2`
+
+### Dependencies
+
+* Kotlin 1.3.21
+
+### New features
+
+* ✨ New methods in `Option`:
+  * `iterator()`
+* ✨ New methods in `LeftProjection` and `RightProjection`:
+  * `filterOrElse()`
+* ✨ New methods in `Try`:
+  * `filterOrElse()`
+
+### Deprecations
+
+* 🚫 Deprecated properties in `Option`:
+  * `iterator`
+
 ## Version 1.1
 🔖 `kotlin-util-1.1`
+
+### Dependencies
+
+* Kotlin 1.2.71
 
 ### New features
 
