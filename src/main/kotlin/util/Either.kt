@@ -1,6 +1,6 @@
 /*
  *
- * This Kotlin code is based on Scala, licensed under the BSD 3-Clause License.
+ * This Kotlin code is based on Scala, licensed under the Apache License 2.0.
  *
  * ===== SCALA LICENSE =====
  *
