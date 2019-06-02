@@ -50,9 +50,10 @@ test {
 }
 
 dokka {
-    moduleName = libDescription
+    moduleName = libName
     outputFormat = 'javadoc'
     outputDirectory = "$buildDir/javadoc"
+    includes = ['packages.md']
 }
 
 task sourcesJar(type: Jar, dependsOn: project.classes) {
