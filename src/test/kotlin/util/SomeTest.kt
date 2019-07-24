@@ -331,6 +331,17 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun unzipSomeTripleShouldReturnTripleOfSome() {
+        // given:
+        val option: Option<Triple<Int, String, Float>> = Some(Triple(123, "text", 4.5f))
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Triple(Some(123), Some("text"), Some(4.5f)), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun containsShouldReturnTrueIfValueEqualsElement() {
         // given:
         val option: Option<Int> = Some(123)

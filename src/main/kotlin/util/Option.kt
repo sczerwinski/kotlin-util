@@ -351,6 +351,16 @@ fun <A, B> Option<Pair<A, B>>.unzip(): Pair<Option<A>, Option<B>> =
     if (isEmpty) None to None else Some(get().first) to Some(get().second)
 
 /**
+ * Transforms an [Option] of a `Triple` into a `Triple` of an [Option] of the first value,
+ * an [Option] of the second value, and an [Option] of the third value.
+ *
+ * @return A `Triple` of an [Option] of the first value, an [Option] of the second value,
+ * and an [Option] of the third value.
+ */
+fun <A, B, C> Option<Triple<A, B, C>>.unzip(): Triple<Option<A>, Option<B>, Option<C>> =
+    if (isEmpty) Triple(None, None, None) else Triple(Some(get().first), Some(get().second), Some(get().third))
+
+/**
  * Tests whether the [Option] contains the given [element].
  *
  * @param element An element to be tested.
