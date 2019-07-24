@@ -1,5 +1,25 @@
 # Kotlin Utilities Release Notes
 
+## Version 1.3
+🔖 `kotlin-util-1.3`
+
+### Dependencies
+
+* Kotlin 1.3.41
+
+### New features
+
+* ✨ New methods in `Option`:
+  * `unzip()` – for `Option<Pair>` and `Option<Triple>`
+* ✨ New methods in `Either`:
+  * all methods previously defined in `RightProjection`
+
+### Deprecations
+
+* 🚫 Deprecated properties in `Either`:
+  * `right`
+* 🚫 Deprecated `RightProjection`
+
 ## Version 1.2
 🔖 `kotlin-util-1.2`
 
