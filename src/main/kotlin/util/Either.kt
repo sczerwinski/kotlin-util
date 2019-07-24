@@ -51,6 +51,11 @@ sealed class Either<out L, out R> {
     /**
      * Projects [Either] as [Right].
      */
+    @Suppress("DeprecatedCallableAddReplaceWith")
+    @Deprecated(
+        message = "Either is right-biased. All methods from `RightProjection` should be called directly on `Either`.",
+        level = DeprecationLevel.WARNING
+    )
     val right: RightProjection<L, R>
         inline get() = RightProjection(this)
 
@@ -654,6 +659,10 @@ inline fun <L, R> LeftProjection<L, R>.filterOrElse(predicate: (L) -> Boolean, z
         is Right -> either
     }
 
+@Deprecated(
+    message = "Either is right-biased. All methods from `RightProjection` should be called directly on `Either`.",
+    level = DeprecationLevel.WARNING
+)
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
 
     /**
