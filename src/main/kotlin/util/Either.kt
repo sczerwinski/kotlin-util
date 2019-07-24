@@ -51,8 +51,211 @@ sealed class Either<out L, out R> {
     /**
      * Projects [Either] as [Right].
      */
+    @Suppress("DeprecatedCallableAddReplaceWith")
+    @Deprecated(
+        message = "Either is right-biased. All methods from `RightProjection` should be called directly on `Either`.",
+        level = DeprecationLevel.WARNING
+    )
     val right: RightProjection<L, R>
         inline get() = RightProjection(this)
+
+    /**
+     * Gets value of this [Right].
+     *
+     * @return Value of this [Right].
+     *
+     * @throws NoSuchElementException If this is [Left].
+     *
+     * @since 1.3
+     */
+    fun get(): R = when (this) {
+        is Left -> throw NoSuchElementException("Getting Right value from Left")
+        is Right -> value
+    }
+
+    /**
+     * Gets value of this [Right] or `null` if this is [Left].
+     *
+     * @return Value of this [Right] or `null`.
+     *
+     * @since 1.3
+     */
+    fun getOrNull(): R? = when (this) {
+        is Left -> null
+        is Right -> value
+    }
+
+    /**
+     * Runs [action] if this is a [Right]. Returns [Unit] without any action if this is a [Left].
+     *
+     * @param action Action to be run on a [Right].
+     *
+     * @since 1.3
+     */
+    inline fun forEach(action: (R) -> Unit) = when (this) {
+        is Left -> Unit
+        is Right -> action(value)
+    }
+
+    /**
+     * Maps value of this [Right] using [transform].
+     *
+     * @param transform Function transforming a [Right].
+     *
+     * @return [Right] mapped using [transform] or this object if this is a [Left].
+     *
+     * @since 1.3
+     */
+    inline fun <T> map(transform: (R) -> T): Either<L, T> = when (this) {
+        is Left -> this
+        is Right -> Right(transform(value))
+    }
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Right]
+     * or `true` if this is [Left].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Right]
+     * or `true` if this is [Left].
+     *
+     * @since 1.3
+     */
+    inline fun all(predicate: (R) -> Boolean): Boolean = when (this) {
+        is Left -> true
+        is Right -> predicate(value)
+    }
+
+    /**
+     * Returns the result of applying the [predicate] to the value if this is [Right]
+     * or `false` if this is [Left].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The result of applying the [predicate] to the value if this is [Right]
+     * or `false` if this is [Left].
+     *
+     * @since 1.3
+     */
+    inline fun any(predicate: (R) -> Boolean): Boolean = when (this) {
+        is Left -> false
+        is Right -> predicate(value)
+    }
+
+    /**
+     * Returns `false` if the [predicate] is met by the value if this is [Right] or `true` otherwise.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return `false` if the [predicate] is met by the value if this is [Right] or `true` otherwise.
+     *
+     * @since 1.3
+     */
+    inline fun none(predicate: (R) -> Boolean): Boolean = when (this) {
+        is Left -> true
+        is Right -> !predicate(value)
+    }
+
+    /**
+     * Returns the same [Right] if the [predicate] is satisfied for the value. Otherwise returns `null`.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Right] if the [predicate] is satisfied for the value. Otherwise returns `null`.
+     *
+     * @since 1.3
+     */
+    inline fun filter(predicate: (R) -> Boolean): Either<L, R>? = when (this) {
+        is Left -> null
+        is Right -> takeIf { predicate(value) }
+    }
+
+    /**
+     * Returns the same [Right] if the [predicate] is not satisfied for the value. Otherwise returns `null`.
+     *
+     * @param predicate Predicate function.
+     *
+     * @return The same [Right] if the [predicate] is not satisfied for the value. Otherwise returns `null`.
+     *
+     * @since 1.3
+     */
+    inline fun filterNot(predicate: (R) -> Boolean): Either<L, R>? = when (this) {
+        is Left -> null
+        is Right -> takeUnless { predicate(value) }
+    }
+
+    /**
+     * Returns the same [Right] casted to type [T] if it is [T]. Otherwise returns `null`.
+     *
+     * @param T Required type of the optional value.
+     *
+     * @return The same [Right] casted to type [T] if it is [T]. Otherwise returns `null`.
+     *
+     * @since 1.3
+     */
+    inline fun <reified T> filterIsInstance(): Either<L, T>? = when (this) {
+        is Left -> null
+        is Right -> (value as? T)?.let { Right(it) }
+    }
+
+    /**
+     * Returns [Some] containing the same [Right] if the [predicate] is satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return [Some] containing the same [Right] if the [predicate] is satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @since 1.3
+     */
+    inline fun filterToOption(predicate: (R) -> Boolean): Option<Either<L, R>> = when (this) {
+        is Left -> None
+        is Right -> if (predicate(value)) Some(this) else None
+    }
+
+    /**
+     * Returns [Some] containing the same [Right] if the [predicate] is not satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @param predicate Predicate function.
+     *
+     * @return [Some] containing the same [Right] if the [predicate] is not satisfied for the value.
+     * Otherwise returns [None].
+     *
+     * @since 1.3
+     */
+    inline fun filterNotToOption(predicate: (R) -> Boolean): Option<Either<L, R>> = when (this) {
+        is Left -> None
+        is Right -> if (predicate(value)) None else Some(this)
+    }
+
+    /**
+     * Returns [Some] containing the same [Right] casted to type [T] if it is [T]. Otherwise returns [None].
+     *
+     * @param T Required type of the optional value.
+     *
+     * @return [Some] containing the same [Right] casted to type [T] if it is [T]. Otherwise returns [None].
+     *
+     * @since 1.3
+     */
+    inline fun <reified T> filterIsInstanceToOption(): Option<Either<L, T>> = when (this) {
+        is Left -> None
+        is Right -> (value as? T)?.let { Right(it) }.asOption()
+    }
+
+    /**
+     * Returns a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
+     *
+     * @return a [Some] containing the [Right] value if it exists, or a [None] if this is a [Left].
+     *
+     * @since 1.3
+     */
+    fun toOption(): Option<R> = when (this) {
+        is Left -> None
+        is Right -> Option(value)
+    }
 
     /**
      * Transforms [Left] with [leftTransform] or [Right] with [rightTransform].
@@ -84,6 +287,78 @@ sealed class Either<out L, out R> {
      */
     abstract operator fun contains(element: Any): Boolean
 }
+
+/**
+ * Gets value of this [Right] or [default] value if this is [Left].
+ *
+ * @param default Default value provider.
+ *
+ * @return Value of this [Right] or [default].
+ *
+ * @since 1.3
+ */
+inline fun <L, R> Either<L, R>.getOrElse(default: () -> R): R = when (this) {
+    is Left -> default()
+    is Right -> value
+}
+
+/**
+ * Maps value of this [Right] to a new [Either] using [transform].
+ *
+ * @param transform Function transforming a [Right] to an [Either].
+ *
+ * @return [Either] mapped using [transform] or this object if this is a [Left].
+ *
+ * @since 1.3
+ */
+inline fun <L, R, T> Either<L, R>.flatMap(transform: (R) -> Either<L, T>): Either<L, T> = when (this) {
+    is Left -> this
+    is Right -> transform(value)
+}
+
+/**
+ * Returns the same [Right] if its value is not `null`. Otherwise returns `null`.
+ *
+ * @return The same [Right] if its value is not `null`. Otherwise returns `null`.
+ *
+ * @since 1.3
+ */
+fun <L, R> Either<L, R?>.filterNotNull(): Either<L, R>? = when (this) {
+    is Left -> null
+    is Right -> value?.let { Right(it) }
+}
+
+/**
+ * Returns [Some] containing the same [Right] if its value is not `null`. Otherwise returns [None].
+ *
+ * @return [Some] containing the same [Right] if its value is not `null`. Otherwise returns [None].
+ *
+ * @since 1.3
+ */
+fun <L, R> Either<L, R?>.filterNotNullToOption(): Option<Either<L, R>> = when (this) {
+    is Left -> None
+    is Right -> value?.let { Right(it) }.asOption()
+}
+
+/**
+ * Returns the same [Right] if the [predicate] is satisfied for the value,
+ * `Left(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Left] if this is [Left].
+ *
+ * @param predicate Predicate function.
+ * @param zero Provider of the value used if the [predicate] is not satisfied.
+ *
+ * @return The same [Right] if the [predicate] is satisfied for the value,
+ * `Left(zero)` if the [predicate] is not satisfied for the value,
+ * or the same [Left] if this is [Left].
+ *
+ * @since 1.3
+ */
+inline fun <L, R> Either<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R>? =
+    when (this) {
+        is Right -> if (predicate(value)) this else Left(zero())
+        is Left -> this
+    }
 
 /**
  * Merges [Left] and [Right] of the same type to a single value.
@@ -384,6 +659,10 @@ inline fun <L, R> LeftProjection<L, R>.filterOrElse(predicate: (L) -> Boolean, z
         is Right -> either
     }
 
+@Deprecated(
+    message = "Either is right-biased. All methods from `RightProjection` should be called directly on `Either`.",
+    level = DeprecationLevel.WARNING
+)
 data class RightProjection<out L, out R>(val either: Either<L, R>) {
 
     /**
