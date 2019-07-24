@@ -1,6 +1,6 @@
 /*
  *
- * This Kotlin code is based on Scala, licensed under the BSD 3-Clause License.
+ * This Kotlin code is based on Scala, licensed under the Apache License 2.0.
  *
  * ===== SCALA LICENSE =====
  *
@@ -340,6 +340,26 @@ inline fun <T> Option<T>.orElse(default: () -> Option<T>): Option<T> =
  */
 fun <T> Option<Option<T>>.flatten(): Option<T> =
     if (isEmpty) None else get()
+
+/**
+ * Transforms an [Option] of a `Pair` into a `Pair` of an [Option] of the first value
+ * and an [Option] of the second value.
+ *
+ * @return A `Pair` of an [Option] of the first value and an [Option] of the second value.
+ */
+fun <A, B> Option<Pair<A, B>>.unzip(): Pair<Option<A>, Option<B>> =
+    if (isEmpty) None to None else with(get()) { Option(first) to Option(second) }
+
+/**
+ * Transforms an [Option] of a `Triple` into a `Triple` of an [Option] of the first value,
+ * an [Option] of the second value, and an [Option] of the third value.
+ *
+ * @return A `Triple` of an [Option] of the first value, an [Option] of the second value,
+ * and an [Option] of the third value.
+ */
+fun <A, B, C> Option<Triple<A, B, C>>.unzip(): Triple<Option<A>, Option<B>, Option<C>> =
+    if (isEmpty) Triple(None, None, None)
+    else with(get()) { Triple(Option(first), Option(second), Option(third)) }
 
 /**
  * Tests whether the [Option] contains the given [element].

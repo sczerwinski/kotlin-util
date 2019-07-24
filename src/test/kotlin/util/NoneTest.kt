@@ -252,6 +252,28 @@ class NoneTest {
 
     @Test
     @Throws(Exception::class)
+    fun unzipNonePairShouldReturnPairOfNone() {
+        // given:
+        val option: Option<Pair<Int, String>> = None
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(None to None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unzipNoneTripleShouldReturnTripleOfNone() {
+        // given:
+        val option: Option<Triple<Int, String, Float>> = None
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Triple(None, None, None), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun containsShouldReturnFalse() {
         // given:
         val option: Option<Int> = None

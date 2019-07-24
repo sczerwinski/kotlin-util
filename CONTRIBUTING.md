@@ -8,7 +8,7 @@ that Kotlin was missing.
 ## Usage
 
 Everyone is welcome to use this library provided that the conditions of the original
-BSD 3-Clause License of the Scala project are met.
+Apache License 2.0 of the Scala project are met.
 
 ## Contributions
 
