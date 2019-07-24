@@ -331,6 +331,39 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun unzipSomePairWithNullFirstShouldReturnPairOfNoneAndSome() {
+        // given:
+        val option: Option<Pair<Int?, String?>> = Some(null to "text")
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(None to Some("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unzipSomePairWithNullSecondShouldReturnPairOfSomeAndNone() {
+        // given:
+        val option: Option<Pair<Int?, String?>> = Some(123 to null)
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Some(123) to None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unzipSomePairWithNullsShouldReturnPairOfNone() {
+        // given:
+        val option: Option<Pair<Int?, String?>> = Some(null to null)
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(None to None, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun unzipSomeTripleShouldReturnTripleOfSome() {
         // given:
         val option: Option<Triple<Int, String, Float>> = Some(Triple(123, "text", 4.5f))
@@ -338,6 +371,50 @@ class SomeTest {
         val result = option.unzip()
         // then:
         assertEquals(Triple(Some(123), Some("text"), Some(4.5f)), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unzipSomeTripleWithNullFirstShouldReturnTripleOfNoneSomeAndSome() {
+        // given:
+        val option: Option<Triple<Int?, String?, Float?>> = Some(Triple(null, "text", 4.5f))
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Triple(None, Some("text"), Some(4.5f)), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unzipSomeTripleWithNullSecondShouldReturnTripleOfSomeNoneAndSome() {
+        // given:
+        val option: Option<Triple<Int?, String?, Float?>> = Some(Triple(123, null, 4.5f))
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Triple(Some(123), None, Some(4.5f)), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unzipSomeTripleWithNullThirdShouldReturnTripleOfSomeSomeAndNone() {
+        // given:
+        val option: Option<Triple<Int?, String?, Float?>> = Some(Triple(123, "text", null))
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Triple(Some(123), Some("text"), None), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unzipSomeTripleWithNullsShouldReturnTripleOfNone() {
+        // given:
+        val option: Option<Triple<Int?, String?, Float?>> = Some(Triple(null, null, null))
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Triple(None, None, None), result)
     }
 
     @Test

@@ -348,7 +348,7 @@ fun <T> Option<Option<T>>.flatten(): Option<T> =
  * @return A `Pair` of an [Option] of the first value and an [Option] of the second value.
  */
 fun <A, B> Option<Pair<A, B>>.unzip(): Pair<Option<A>, Option<B>> =
-    if (isEmpty) None to None else with(get()) { Some(first) to Some(second) }
+    if (isEmpty) None to None else with(get()) { Option(first) to Option(second) }
 
 /**
  * Transforms an [Option] of a `Triple` into a `Triple` of an [Option] of the first value,
@@ -358,7 +358,8 @@ fun <A, B> Option<Pair<A, B>>.unzip(): Pair<Option<A>, Option<B>> =
  * and an [Option] of the third value.
  */
 fun <A, B, C> Option<Triple<A, B, C>>.unzip(): Triple<Option<A>, Option<B>, Option<C>> =
-    if (isEmpty) Triple(None, None, None) else with(get()) { Triple(Some(first), Some(second), Some(third)) }
+    if (isEmpty) Triple(None, None, None)
+    else with(get()) { Triple(Option(first), Option(second), Option(third)) }
 
 /**
  * Tests whether the [Option] contains the given [element].
