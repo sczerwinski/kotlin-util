@@ -50,6 +50,9 @@ sealed class Either<out L, out R> {
 
     /**
      * Projects [Either] as [Right].
+     *
+     * Deprecated in 1.3. [Either] is right-biased.
+     * All methods from [RightProjection] should be called directly on [Either].
      */
     @Suppress("DeprecatedCallableAddReplaceWith")
     @Deprecated(
