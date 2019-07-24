@@ -342,6 +342,15 @@ fun <T> Option<Option<T>>.flatten(): Option<T> =
     if (isEmpty) None else get()
 
 /**
+ * Transforms an [Option] of a `Pair` into a `Pair` of an [Option] of the first value
+ * and an [Option] of the second value.
+ *
+ * @return A `Pair` of an [Option] of the first value and an [Option] of the second value.
+ */
+fun <A, B> Option<Pair<A, B>>.unzip(): Pair<Option<A>, Option<B>> =
+    if (isEmpty) None to None else Some(get().first) to Some(get().second)
+
+/**
  * Tests whether the [Option] contains the given [element].
  *
  * @param element An element to be tested.

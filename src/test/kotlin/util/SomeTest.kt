@@ -320,6 +320,17 @@ class SomeTest {
 
     @Test
     @Throws(Exception::class)
+    fun unzipSomePairShouldReturnPairOfSome() {
+        // given:
+        val option: Option<Pair<Int, String>> = Some(123 to "text")
+        // when:
+        val result = option.unzip()
+        // then:
+        assertEquals(Some(123) to Some("text"), result)
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun containsShouldReturnTrueIfValueEqualsElement() {
         // given:
         val option: Option<Int> = Some(123)
