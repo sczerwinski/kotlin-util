@@ -8,8 +8,7 @@ plugins {
 group = "it.czerwinski"
 version = "1.4.0-SNAPSHOT"
 
-val signingKeyId: String? by project
-val isWithSigning = signingKeyId != null
+val isWithSigning = hasProperty("signing.keyId")
 val isSnapshot = version.toString().endsWith("SNAPSHOT")
 
 tasks {
@@ -182,10 +181,10 @@ publishing {
 
 if (isWithSigning) {
     signing {
-        val signingKeyId: String? by project
-        val signingKey: String? by project
-        val signingPassword: String? by project
-        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-        sign(configurations.archives.get())
+        sign(
+            *publishing.publications
+                .filterIsInstance<MavenPublication>()
+                .toTypedArray()
+        )
     }
 }
