@@ -5,6 +5,9 @@
 ## [Unreleased]
 ### Added
 - Multiplatform Kotlin project
+- New `evert()` methods for:
+  - `Try<Option<T>>` 
+  - `Option<Try<T>>`
 
 ### Changed
 - Kotlin 1.4.0

@@ -51,3 +51,27 @@ fun <T> Option<Iterable<T>>.flatten(): List<T> =
  */
 fun <T> Iterable<Option<T>>.flatten(): List<T> =
     flatMap { it.toList() }
+
+/**
+ * Moves inner [Option] outside of the outer [Try].
+ *
+ * @return [Try] nested in an [Option] for an [Option] nested in a [Try].
+ *
+ * @since 1.4.0
+ */
+fun <T> Try<Option<T>>.evert(): Option<Try<T>> = when (this) {
+    is Success -> value.map { Success(it) }
+    is Failure -> Some(this)
+}
+
+/**
+ * Moves inner [Try] outside of the outer [Option].
+ *
+ * @return [Option] nested in a [Try] for a [Try] nested in an [Option].
+ *
+ * @since 1.4.0
+ */
+fun <T> Option<Try<T>>.evert(): Try<Option<T>> = when (this) {
+    is Some -> value.map { Some(it) }
+    is None -> Success(None)
+}
