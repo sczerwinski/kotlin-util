@@ -6,7 +6,7 @@ plugins {
     signing
 }
 group = "it.czerwinski"
-version = "1.4.0-RC"
+version = "1.4.0-SNAPSHOT"
 
 val signingKeyId: String? by project
 val isWithSigning = signingKeyId != null
