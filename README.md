@@ -11,13 +11,13 @@ Maven:
 <dependency>
   <groupId>it.czerwinski</groupId>
   <artifactId>kotlin-util</artifactId>
-  <version>1.3</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
 Gradle:
 ```groovy
-implementation 'it.czerwinski:kotlin-util:1.3'
+implementation 'it.czerwinski:kotlin-util:1.4.0'
 ```
 
 ## Supported Types
