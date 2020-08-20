@@ -1,0 +1,10 @@
+# Allow bigger complexity in utility classes:
+complexity:
+  TooManyFunctions:
+    thresholdInFiles: 30
+    thresholdInClasses: 30
+
+# Allow catching any Throwable in Try:
+exceptions:
+  TooGenericExceptionCaught:
+    allowedExceptionNameRegex: exception
