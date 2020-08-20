@@ -96,4 +96,66 @@ class ExtensionsTest {
         // then:
         assertEquals(listOf("text1", "text3", "text4"), result)
     }
+
+    @Test
+    fun evertSuccessOfSomeShouldReturnSomeOfSuccess() {
+        // given:
+        val success: Try<Option<String>> = Success(Some("text"))
+        // when:
+        val result = success.evert()
+        // then:
+        assertEquals(Some(Success("text")), result)
+    }
+
+    @Test
+    fun evertSuccessOfNoneShouldReturnNone() {
+        // given:
+        val success: Try<Option<String>> = Success(None)
+        // when:
+        val result = success.evert()
+        // then:
+        assertEquals(None, result)
+    }
+
+    @Test
+    fun evertFailureShouldReturnSomeOfFailure() {
+        // given:
+        val exception = RuntimeException("Test exception")
+        val success: Try<Option<String>> = Failure(exception)
+        // when:
+        val result = success.evert()
+        // then:
+        assertEquals(Some(Failure(exception)), result)
+    }
+
+    @Test
+    fun evertSomeOfSuccessShouldReturnSuccessOfSome() {
+        // given:
+        val success: Option<Try<String>> = Some(Success("text"))
+        // when:
+        val result = success.evert()
+        // then:
+        assertEquals(Success(Some("text")), result)
+    }
+
+    @Test
+    fun evertSomeOfFailureShouldReturnFailure() {
+        // given:
+        val exception = RuntimeException("Test exception")
+        val success: Option<Try<String>> = Some(Failure(exception))
+        // when:
+        val result = success.evert()
+        // then:
+        assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    fun evertNoneShouldReturnSuccessOfNone() {
+        // given:
+        val success: Option<Try<String>> = None
+        // when:
+        val result = success.evert()
+        // then:
+        assertEquals(Success(None), result)
+    }
 }
