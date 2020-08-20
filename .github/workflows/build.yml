@@ -28,7 +28,7 @@ jobs:
         run: ./gradlew check
 
       - name: Generate Documentation
-        run: ./gradlew dokka
+        run: ./gradlew dokkaJavadoc dokkaJekyll
 
       - name: Build Library
         run: ./gradlew build

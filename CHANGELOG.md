@@ -3,6 +3,17 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Added
+- Multiplatform Kotlin project
+
+### Changed
+- Kotlin 1.4.0
+- Multiplatform Kotlin tests
+- JVM tests using JUnit 5
+
+### Removed
+- Properties in `Option` deprecated since 1.2 (due to name clashes in JavaScript):
+  - `iterator`
 
 ## [1.3]
 ### Added
