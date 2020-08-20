@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.4.0"
+    id("io.gitlab.arturbosch.detekt") version "1.11.2"
     id("org.jetbrains.dokka") version "1.4.0-rc"
     `maven-publish`
     signing
@@ -101,6 +102,22 @@ kotlin {
     configure(targets) {
         mavenPublication {
             artifact(tasks["javadocJar"])
+        }
+    }
+}
+
+detekt {
+    input = files(kotlin.sourceSets.flatMap { it.kotlin.sourceDirectories })
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+    reports {
+        xml {
+            enabled = true
+            destination = file("$buildDir/reports/detekt.xml")
+        }
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/detekt.html")
         }
     }
 }
