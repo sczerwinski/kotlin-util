@@ -6,7 +6,7 @@ plugins {
     signing
 }
 group = "it.czerwinski"
-version = "1.4.10"
+version = "1.4.20-SNAPSHOT"
 
 val isWithSigning = hasProperty("signing.keyId")
 val isSnapshot = version.toString().endsWith("SNAPSHOT")
