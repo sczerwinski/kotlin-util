@@ -3,6 +3,12 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+
+## [v1.4.10]
+### Changed
+- Kotlin 1.4.10
+
+## [v1.4.0]
 ### Added
 - Multiplatform Kotlin project
 - New `evert()` methods for:

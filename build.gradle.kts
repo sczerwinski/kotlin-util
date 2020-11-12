@@ -1,12 +1,12 @@
 plugins {
-    kotlin("multiplatform") version "1.4.0"
-    id("io.gitlab.arturbosch.detekt") version "1.11.2"
-    id("org.jetbrains.dokka") version "1.4.0-rc"
+    kotlin("multiplatform") version "1.4.10"
+    id("io.gitlab.arturbosch.detekt") version "1.14.2"
+    id("org.jetbrains.dokka") version "1.4.10"
     `maven-publish`
     signing
 }
 group = "it.czerwinski"
-version = "1.4.0"
+version = "1.4.10"
 
 val isWithSigning = hasProperty("signing.keyId")
 val isSnapshot = version.toString().endsWith("SNAPSHOT")
@@ -14,21 +14,21 @@ val isSnapshot = version.toString().endsWith("SNAPSHOT")
 tasks {
 
     dokkaJavadoc {
-        outputDirectory = "$buildDir/javadoc"
+        outputDirectory.set(buildDir.resolve("javadoc"))
         dokkaSourceSets {
-            val commonMain by creating {
-                displayName = "Kotlin utilities"
-                includes = listOf("packages.md")
+            named("commonMain") {
+                moduleName.set("Kotlin utilities")
+                includes.from(files("packages.md"))
             }
         }
     }
 
     dokkaJekyll {
-        outputDirectory = "$buildDir/jekyll"
+        outputDirectory.set(buildDir.resolve("jekyll"))
         dokkaSourceSets {
-            val commonMain by creating {
-                displayName = "Kotlin utilities"
-                includes = listOf("packages.md")
+            named("commonMain") {
+                moduleName.set("Kotlin utilities")
+                includes.from(files("packages.md"))
             }
         }
     }
