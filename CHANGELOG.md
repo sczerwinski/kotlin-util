@@ -3,6 +3,8 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Changed
+- Kotlin 1.4.10
 
 ## [v1.4.0]
 ### Added
