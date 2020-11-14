@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+gpg --quiet --batch --yes --decrypt \
+    --passphrase="${SIGNING_KEY_FILE_PASSPHRASE}" \
+    --output secring.gpg secring.gpg.gpg
