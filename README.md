@@ -9,12 +9,22 @@
 
 ## Project Setup
 
-Gradle:
+### Gradle
+
+#### Kotlin
+
+```kotlin
+implementation("it.czerwinski:kotlin-util:1.4.20")
+```
+
+#### Groovy
+
 ```groovy
 implementation 'it.czerwinski:kotlin-util:1.4.20'
 ```
 
-Maven:
+### Maven
+
 ```xml
 <dependency>
   <groupId>it.czerwinski</groupId>
@@ -22,6 +32,10 @@ Maven:
   <version>1.4.20</version>
 </dependency>
 ```
+
+### Kotlin Multiplatform Projects
+
+In multiplatform projects, the library can be used as `commonMain` dependency.
 
 ## Supported Types
 
