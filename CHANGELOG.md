@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [v1.4.20]
+### Added
+- Publish artifacts for all native targets
+
+### Changed
+- Kotlin 1.4.20
+
 ## [v1.4.10]
 ### Changed
 - Kotlin 1.4.10
