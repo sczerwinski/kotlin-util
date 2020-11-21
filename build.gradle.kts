@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 
 plugins {
-    kotlin("multiplatform") version "1.4.10"
+    kotlin("multiplatform") version "1.4.20"
     id("io.gitlab.arturbosch.detekt") version "1.14.2"
     id("org.jetbrains.dokka") version "1.4.10"
     `maven-publish`
@@ -164,7 +164,16 @@ publishing {
                         id.set("sczerwinski")
                         name.set("Slawomir Czerwinski")
                         email.set("slawomir@czerwinski.it")
+                        url.set("https://czerwinski.it/")
                     }
+                }
+                issueManagement {
+                    system.set("GitHub Issues")
+                    url.set("https://github.com/sczerwinski/kotlin-util/issues")
+                }
+                ciManagement {
+                    system.set("GitHub Actions")
+                    url.set("https://github.com/sczerwinski/kotlin-util/actions")
                 }
             }
         }
