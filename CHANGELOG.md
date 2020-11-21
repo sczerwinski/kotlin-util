@@ -3,6 +3,8 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+
+## [v1.4.20]
 ### Added
 - Publish artifacts for all native targets
 
