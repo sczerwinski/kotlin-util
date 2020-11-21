@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+BUILD_OS=$1
+
+echo "Publishing for ${BUILD_OS}"
+
+case "$1" in
+  ubuntu*)
+    TASKS="publishLinuxMips32PublicationToMavenRepository publishLinuxMipsel32PublicationToMavenRepository"
+    ;;
+  windows*)
+    TASKS="publishMingwX64PublicationToMavenRepository publishMingwX86PublicationToMavenRepository"
+    ;;
+  macos*)
+    TASKS="publish"
+    ;;
+esac
+
+echo "Running tasks ${TASKS}"
+
+./gradlew ${TASKS} \
+    -Psigning.secretKeyRingFile=secring.gpg \
+    -Psigning.password="${SIGNING_PASS}" \
+    -Psigning.keyId="${SIGNING_KEY_ID}" \
+    --stacktrace

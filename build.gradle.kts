@@ -1,12 +1,14 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
+
 plugins {
-    kotlin("multiplatform") version "1.4.10"
+    kotlin("multiplatform") version "1.4.20"
     id("io.gitlab.arturbosch.detekt") version "1.14.2"
     id("org.jetbrains.dokka") version "1.4.10"
     `maven-publish`
     signing
 }
 group = "it.czerwinski"
-version = "1.4.10"
+version = "1.4.20"
 
 val isWithSigning = hasProperty("signing.keyId")
 val isSnapshot = version.toString().endsWith("SNAPSHOT")
@@ -49,29 +51,46 @@ repositories {
     jcenter()
 }
 
+val hostOs = System.getProperty("os.name")
+val isLinux = hostOs == "Linux"
+val isWindows = hostOs.startsWith("Windows")
+val isMacOs = hostOs == "Mac OS X"
+
 kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-    js {
-        browser {
-            testTask {
-                useKarma {
-                    useChromeHeadless()
-                    webpackConfig.cssSupport.enabled = true
+
+    when {
+
+        isLinux -> {
+            linuxMips32()
+            linuxMipsel32()
+        }
+
+        isWindows -> {
+            mingwX64()
+            mingwX86()
+        }
+
+        isMacOs -> {
+            js {
+                browser {
+                    testTask {
+                        useKarma {
+                            useChromeHeadless()
+                            webpackConfig.cssSupport.enabled = true
+                        }
+                    }
                 }
             }
+
+            presets.withType<AbstractKotlinNativeTargetPreset<*>>().forEach {
+                targetFromPreset(it)
+            }
         }
-    }
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
     sourceSets {
@@ -88,14 +107,14 @@ kotlin {
                 implementation(kotlin("test-junit5"))
             }
         }
-        val jsMain by getting
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
+        if (isMacOs) {
+            val jsMain by getting
+            val jsTest by getting {
+                dependencies {
+                    implementation(kotlin("test-js"))
+                }
             }
         }
-        val nativeMain by getting
-        val nativeTest by getting
     }
 
     configure(targets) {
@@ -124,6 +143,7 @@ detekt {
 publishing {
     publications.filterIsInstance<MavenPublication>()
         .forEach { publication ->
+            logger.quiet("Publication available: ${publication.artifactId}")
             publication.pom {
                 name.set("Kotlin Utilities")
                 description.set("Kotlin utility classes based on Scala")
@@ -144,7 +164,16 @@ publishing {
                         id.set("sczerwinski")
                         name.set("Slawomir Czerwinski")
                         email.set("slawomir@czerwinski.it")
+                        url.set("https://czerwinski.it/")
                     }
+                }
+                issueManagement {
+                    system.set("GitHub Issues")
+                    url.set("https://github.com/sczerwinski/kotlin-util/issues")
+                }
+                ciManagement {
+                    system.set("GitHub Actions")
+                    url.set("https://github.com/sczerwinski/kotlin-util/actions")
                 }
             }
         }
