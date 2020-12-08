@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [v1.4.21]
+### Changed
+- Kotlin 1.4.21
+- Gradle Wrapper 6.7.1
+
 ## [v1.4.20]
 ### Added
 - Publish artifacts for all native targets
