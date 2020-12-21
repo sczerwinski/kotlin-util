@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 
 plugins {
     kotlin("multiplatform") version "1.4.21"
-    id("io.gitlab.arturbosch.detekt") version "1.14.2"
+    id("io.gitlab.arturbosch.detekt") version "1.15.0"
     id("org.jetbrains.dokka") version "1.4.10"
     `maven-publish`
     signing
