@@ -3,6 +3,8 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Added
+- Dependabot integration
 
 ## [v1.4.21]
 ### Changed
