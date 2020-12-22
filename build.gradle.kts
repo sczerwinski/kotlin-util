@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
+import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     kotlin("multiplatform") version "1.4.21"
@@ -12,39 +13,6 @@ version = "1.4.30-SNAPSHOT"
 
 val isWithSigning = hasProperty("signing.keyId")
 val isSnapshot = version.toString().endsWith("SNAPSHOT")
-
-tasks {
-
-    dokkaJavadoc {
-        outputDirectory.set(buildDir.resolve("javadoc"))
-        dokkaSourceSets {
-            named("commonMain") {
-                moduleName.set("Kotlin utilities")
-                includes.from(files("packages.md"))
-            }
-        }
-    }
-
-    dokkaJekyll {
-        outputDirectory.set(buildDir.resolve("jekyll"))
-        dokkaSourceSets {
-            named("commonMain") {
-                moduleName.set("Kotlin utilities")
-                includes.from(files("packages.md"))
-            }
-        }
-    }
-
-    val javadocJar = create<Jar>("javadocJar") {
-        dependsOn.add(dokkaJavadoc)
-        archiveClassifier.set("javadoc")
-        from(dokkaJavadoc)
-    }
-
-    artifacts {
-        archives(javadocJar)
-    }
-}
 
 repositories {
     mavenCentral()
@@ -116,12 +84,6 @@ kotlin {
             }
         }
     }
-
-    configure(targets) {
-        mavenPublication {
-            artifact(tasks["javadocJar"])
-        }
-    }
 }
 
 detekt {
@@ -137,6 +99,45 @@ detekt {
             enabled = true
             destination = file("$buildDir/reports/detekt.html")
         }
+    }
+}
+
+tasks {
+
+    val dokkaJavadocCommon by creating(DokkaTask::class.java) {
+        outputDirectory.set(buildDir.resolve("javadoc"))
+        dokkaSourceSets {
+            named("commonMain") {
+                moduleName.set("Kotlin utilities")
+                includes.from(files("packages.md"))
+            }
+        }
+    }
+
+    val dokkaJekyllCommon by creating(DokkaTask::class.java) {
+        outputDirectory.set(buildDir.resolve("jekyll"))
+        dokkaSourceSets {
+            named("commonMain") {
+                moduleName.set("Kotlin utilities")
+                includes.from(files("packages.md"))
+            }
+        }
+    }
+
+    val javadocJar = create<Jar>("javadocJar") {
+        dependsOn.add(dokkaJavadocCommon)
+        archiveClassifier.set("javadoc")
+        from(dokkaJavadocCommon)
+    }
+
+    artifacts {
+        archives(javadocJar)
+    }
+}
+
+configure(kotlin.targets) {
+    mavenPublication {
+        artifact(tasks["javadocJar"])
     }
 }
 
