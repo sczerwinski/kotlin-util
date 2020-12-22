@@ -6,6 +6,11 @@
 ### Added
 - Dependabot integration
 
+### Changed
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.15.0`
+  - Upgrade `org.jetbrains.dokka` to `1.4.20`
+
 ## [v1.4.21]
 ### Changed
 - Kotlin 1.4.21
