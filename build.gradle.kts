@@ -220,14 +220,6 @@ publishing {
                             password = System.getenv("SONATYPE_PASSWORD")
                         }
                     }
-                    project.hasProperty("ossrhUsername") -> {
-                        credentials {
-                            val ossrhUsername: String? by project
-                            val ossrhPassword: String? by project
-                            username = ossrhUsername
-                            password = ossrhPassword
-                        }
-                    }
                     else -> {
                         url = uri("$buildDir/repo")
                     }
