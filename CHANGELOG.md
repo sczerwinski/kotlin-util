@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Added
+- `NonFatal` exception matcher
 - Dependabot integration
 
 ### Changed

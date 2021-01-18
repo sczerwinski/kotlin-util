@@ -75,11 +75,39 @@ kotlin {
                 implementation(kotlin("test-junit5"))
             }
         }
-        if (isMacOs) {
-            val jsMain by getting
-            val jsTest by getting {
-                dependencies {
-                    implementation(kotlin("test-js"))
+        when {
+            isLinux -> {
+                val linuxMips32Main by getting
+                val linuxMipsel32Main by getting
+                val nativeMain by creating {
+                    dependsOn(commonMain)
+                    linuxMips32Main.dependsOn(this)
+                    linuxMipsel32Main.dependsOn(this)
+                }
+            }
+            isWindows -> {
+                val mingwX64Main by getting
+                val mingwX86Main by getting
+                val nativeMain by creating {
+                    dependsOn(commonMain)
+                    mingwX64Main.dependsOn(this)
+                    mingwX86Main.dependsOn(this)
+                }
+            }
+            isMacOs -> {
+                val jsMain by getting
+                val jsTest by getting {
+                    dependencies {
+                        implementation(kotlin("test-js"))
+                    }
+                }
+                val nativeSourceSetNames = presets.withType<AbstractKotlinNativeTargetPreset<*>>()
+                    .map { preset -> "${preset.name}Main" }
+                val nativeMain by creating {
+                    dependsOn(commonMain)
+                    nativeSourceSetNames.forEach { name ->
+                        getByName(name).dependsOn(this)
+                    }
                 }
             }
         }
