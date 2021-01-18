@@ -2,6 +2,7 @@ package it.czerwinski.kotlin.util
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TryTest {
 
@@ -35,5 +36,15 @@ class TryTest {
         val result = Try { throw exception }
         // then:
         assertEquals(Failure(exception), result)
+    }
+
+    @Test
+    fun shouldThrowFatalError() {
+        // given:
+        val error = AssertionError("Test exception")
+        // then:
+        assertFailsWith(AssertionError::class) {
+            Try { throw error }
+        }
     }
 }

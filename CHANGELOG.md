@@ -8,6 +8,7 @@
 - Dependabot integration
 
 ### Changed
+- **BREAKING CHANGE:** `Try` only catches non-fatal exceptions
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.15.0`
   - Upgrade `org.jetbrains.dokka` to `1.4.20`
