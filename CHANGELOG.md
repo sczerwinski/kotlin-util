@@ -3,6 +3,8 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+
+## [v1.4.30]
 ### Added
 - `NonFatal` exception matcher
 - Dependabot integration
