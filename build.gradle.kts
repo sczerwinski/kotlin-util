@@ -1,50 +1,19 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
+import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    kotlin("multiplatform") version "1.4.21"
-    id("io.gitlab.arturbosch.detekt") version "1.14.2"
-    id("org.jetbrains.dokka") version "1.4.10"
+    kotlin("multiplatform") version "1.4.30"
+    id("io.gitlab.arturbosch.detekt") version "1.15.0"
+    id("org.jetbrains.dokka") version "1.4.20"
     `maven-publish`
     signing
 }
+
 group = "it.czerwinski"
-version = "1.4.21"
+version = "1.4.30"
 
 val isWithSigning = hasProperty("signing.keyId")
 val isSnapshot = version.toString().endsWith("SNAPSHOT")
-
-tasks {
-
-    dokkaJavadoc {
-        outputDirectory.set(buildDir.resolve("javadoc"))
-        dokkaSourceSets {
-            named("commonMain") {
-                moduleName.set("Kotlin utilities")
-                includes.from(files("packages.md"))
-            }
-        }
-    }
-
-    dokkaJekyll {
-        outputDirectory.set(buildDir.resolve("jekyll"))
-        dokkaSourceSets {
-            named("commonMain") {
-                moduleName.set("Kotlin utilities")
-                includes.from(files("packages.md"))
-            }
-        }
-    }
-
-    val javadocJar = create<Jar>("javadocJar") {
-        dependsOn.add(dokkaJavadoc)
-        archiveClassifier.set("javadoc")
-        from(dokkaJavadoc)
-    }
-
-    artifacts {
-        archives(javadocJar)
-    }
-}
 
 repositories {
     mavenCentral()
@@ -107,19 +76,41 @@ kotlin {
                 implementation(kotlin("test-junit5"))
             }
         }
-        if (isMacOs) {
-            val jsMain by getting
-            val jsTest by getting {
-                dependencies {
-                    implementation(kotlin("test-js"))
+        when {
+            isLinux -> {
+                val linuxMips32Main by getting
+                val linuxMipsel32Main by getting
+                val nativeMain by creating {
+                    dependsOn(commonMain)
+                    linuxMips32Main.dependsOn(this)
+                    linuxMipsel32Main.dependsOn(this)
                 }
             }
-        }
-    }
-
-    configure(targets) {
-        mavenPublication {
-            artifact(tasks["javadocJar"])
+            isWindows -> {
+                val mingwX64Main by getting
+                val mingwX86Main by getting
+                val nativeMain by creating {
+                    dependsOn(commonMain)
+                    mingwX64Main.dependsOn(this)
+                    mingwX86Main.dependsOn(this)
+                }
+            }
+            isMacOs -> {
+                val jsMain by getting
+                val jsTest by getting {
+                    dependencies {
+                        implementation(kotlin("test-js"))
+                    }
+                }
+                val nativeSourceSetNames = presets.withType<AbstractKotlinNativeTargetPreset<*>>()
+                    .map { preset -> "${preset.name}Main" }
+                val nativeMain by creating {
+                    dependsOn(commonMain)
+                    nativeSourceSetNames.forEach { name ->
+                        getByName(name).dependsOn(this)
+                    }
+                }
+            }
         }
     }
 }
@@ -137,6 +128,45 @@ detekt {
             enabled = true
             destination = file("$buildDir/reports/detekt.html")
         }
+    }
+}
+
+tasks {
+
+    val dokkaJavadocCommon by creating(DokkaTask::class.java) {
+        outputDirectory.set(buildDir.resolve("javadoc"))
+        dokkaSourceSets {
+            named("commonMain") {
+                moduleName.set("Kotlin utilities")
+                includes.from(files("packages.md"))
+            }
+        }
+    }
+
+    val dokkaJekyllCommon by creating(DokkaTask::class.java) {
+        outputDirectory.set(buildDir.resolve("jekyll"))
+        dokkaSourceSets {
+            named("commonMain") {
+                moduleName.set("Kotlin utilities")
+                includes.from(files("packages.md"))
+            }
+        }
+    }
+
+    val javadocJar = create<Jar>("javadocJar") {
+        dependsOn.add(dokkaJavadocCommon)
+        archiveClassifier.set("javadoc")
+        from(dokkaJavadocCommon)
+    }
+
+    artifacts {
+        archives(javadocJar)
+    }
+}
+
+configure(kotlin.targets) {
+    mavenPublication {
+        artifact(tasks["javadocJar"])
     }
 }
 
@@ -189,14 +219,6 @@ publishing {
                         credentials {
                             username = System.getenv("SONATYPE_USERNAME")
                             password = System.getenv("SONATYPE_PASSWORD")
-                        }
-                    }
-                    project.hasProperty("ossrhUsername") -> {
-                        credentials {
-                            val ossrhUsername: String? by project
-                            val ossrhPassword: String? by project
-                            username = ossrhUsername
-                            password = ossrhPassword
                         }
                     }
                     else -> {

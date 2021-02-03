@@ -1,22 +1,24 @@
 /*
- *
- * This Kotlin code is based on Scala, licensed under the Apache License 2.0.
- *
- * ===== SCALA LICENSE =====
- *
- * Scala (https://www.scala-lang.org)
- *
+ * Copyright 2018-2021 Slawomir Czerwinski
  * Copyright EPFL and Lightbend, Inc.
  *
- * Licensed under Apache License 2.0
- * (http://www.apache.org/licenses/LICENSE-2.0).
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * See the NOTICE file distributed with this work for
- * additional information regarding copyright ownership.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
  */
 
 package it.czerwinski.kotlin.util
+
+import it.czerwinski.kotlin.util.control.NonFatal
 
 /**
  * Representation of an operation that might successfully return a value or throw an exception.
@@ -24,6 +26,9 @@ package it.czerwinski.kotlin.util
  * An instance of [Try] may be either a [Success] or a [Failure].
  *
  * This type is based on `scala.util.Try`.
+ *
+ * _Note: Only non-fatal exceptions are caught by the combinators on `Try`
+ * (see [NonFatal]). Serious system errors, on the other hand, will be thrown._
  *
  * @param T Type of the value of a successful operation.
  */
@@ -121,7 +126,8 @@ sealed class Try<out T> {
             if (value is R) Success<R>(value)
             else throw NoSuchElementException("Not an instance of ${R::class}")
         } catch (exception: Throwable) {
-            Failure(exception)
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
         }
         is Failure -> this
     }
@@ -149,7 +155,12 @@ sealed class Try<out T> {
      * @return Result of applying [successTransform] on [Success] or [failureTransform] on [Failure].
      */
     inline fun <R> fold(successTransform: (T) -> R, failureTransform: (Throwable) -> R): R = when (this) {
-        is Success -> successTransform(value)
+        is Success -> try {
+            successTransform(value)
+        } catch (exception: Throwable) {
+            if (NonFatal(exception)) failureTransform(exception)
+            else throw exception
+        }
         is Failure -> failureTransform(exception)
     }
 
@@ -169,7 +180,8 @@ sealed class Try<out T> {
                 is Failure -> failureTransform(exception)
             }
         } catch (exception: Throwable) {
-            Failure(exception)
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
         }
 
     /**
@@ -225,7 +237,8 @@ sealed class Try<out T> {
             try {
                 Success(callable())
             } catch (exception: Throwable) {
-                Failure(exception)
+                if (NonFatal(exception)) Failure(exception)
+                else throw exception
             }
     }
 }
@@ -248,7 +261,13 @@ inline fun <T> Try<T>.getOrElse(default: () -> T): T =
  * @return This [Success] or [default].
  */
 inline fun <T> Try<T>.orElse(default: () -> Try<T>): Try<T> =
-    if (isSuccess) this else default()
+    if (isSuccess) this
+    else try {
+        default()
+    } catch (exception: Throwable) {
+        if (NonFatal(exception)) Failure(exception)
+        else throw exception
+    }
 
 /**
  * Transforms a nested [Try] to a not nested [Try].
@@ -269,7 +288,12 @@ fun <T> Try<Try<T>>.flatten(): Try<T> = when (this) {
  */
 inline fun <T> Try<T>.recover(rescue: (Throwable) -> T): Try<T> = when (this) {
     is Success -> this
-    is Failure -> Try { rescue(exception) }
+    is Failure -> try {
+        Success(rescue(exception))
+    } catch (exception: Throwable) {
+        if (NonFatal(exception)) Failure(exception)
+        else throw exception
+    }
 }
 
 /**
@@ -284,7 +308,8 @@ inline fun <T> Try<T>.recoverWith(rescue: (Throwable) -> Try<T>): Try<T> = when 
     is Failure -> try {
         rescue(exception)
     } catch (exception: Throwable) {
-        Failure(exception)
+        if (NonFatal(exception)) Failure(exception)
+        else throw exception
     }
 }
 
@@ -298,7 +323,8 @@ fun <T> Try<T?>.filterNotNull(): Try<T> = when (this) {
         if (value != null) Success(value)
         else throw NoSuchElementException("Value is null")
     } catch (exception: Throwable) {
-        Failure(exception)
+        if (NonFatal(exception)) Failure(exception)
+        else throw exception
     }
     is Failure -> this
 }
@@ -323,7 +349,8 @@ data class Success<out T>(val value: T) : Try<T>() {
         try {
             transform(value)
         } catch (exception: Throwable) {
-            Failure(exception)
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
         }
 
     override fun filter(predicate: (T) -> Boolean): Try<T> =
@@ -331,7 +358,8 @@ data class Success<out T>(val value: T) : Try<T>() {
             if (predicate(value)) this
             else throw NoSuchElementException("Predicate not satisfied for $value")
         } catch (exception: Throwable) {
-            Failure(exception)
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
         }
 
     override fun filterNot(predicate: (T) -> Boolean): Try<T> =
@@ -339,7 +367,8 @@ data class Success<out T>(val value: T) : Try<T>() {
             if (!predicate(value)) this
             else throw NoSuchElementException("Predicate not satisfied for $value")
         } catch (exception: Throwable) {
-            Failure(exception)
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
         }
 
     override fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T> =
@@ -347,7 +376,8 @@ data class Success<out T>(val value: T) : Try<T>() {
             if (predicate(value)) this
             else throw throwable(value)
         } catch (exception: Throwable) {
-            Failure(exception)
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
         }
 
     override fun toEither(): Either<Throwable, T> = Right(value)

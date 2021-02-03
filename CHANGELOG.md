@@ -4,6 +4,19 @@
 
 ## [Unreleased]
 
+## [v1.4.30]
+### Added
+- `NonFatal` exception matcher
+- Dependabot integration
+
+### Changed
+- Kotlin 1.4.30
+- **BREAKING CHANGE:** `Try` only catches non-fatal exceptions
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.15.0`
+  - Upgrade `org.jetbrains.dokka` to `1.4.20`
+  - Upgrade `kotlin-multiplatform` to `1.4.21-2`
+
 ## [v1.4.21]
 ### Changed
 - Kotlin 1.4.21
