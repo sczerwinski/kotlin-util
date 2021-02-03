@@ -8,6 +8,7 @@
 - Dependabot integration
 
 ### Changed
+- Kotlin 1.4.30
 - **BREAKING CHANGE:** `Try` only catches non-fatal exceptions
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.15.0`
