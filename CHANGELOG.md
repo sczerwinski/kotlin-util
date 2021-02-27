@@ -3,6 +3,8 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Changed
+- Kotlin 1.4.31
 
 ## [v1.4.30]
 ### Added
