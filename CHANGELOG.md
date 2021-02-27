@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [v1.4.31]
+### Changed
+- Kotlin 1.4.31
+- Gradle Wrapper 6.8.3
+
 ## [v1.4.30]
 ### Added
 - `NonFatal` exception matcher
