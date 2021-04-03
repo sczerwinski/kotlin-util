@@ -3,6 +3,8 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+
+## [v1.4.32]
 ### Changed
 - Kotlin 1.4.32
 - Dependencies:
