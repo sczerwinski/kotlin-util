@@ -7,6 +7,7 @@
 - Kotlin 1.4.32
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.16.0`
+  - Upgrade `org.jetbrains.dokka` to `1.4.30`
 
 ## [v1.4.31]
 ### Changed
