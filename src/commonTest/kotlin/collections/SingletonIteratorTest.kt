@@ -75,7 +75,7 @@ class SingletonIteratorTest {
         val iterator: Iterator<String> = SingletonIterator("text")
         var count = 0
         // when:
-        for (string in iterator) {
+        for (ignored in iterator) {
             count++
         }
         // then:
