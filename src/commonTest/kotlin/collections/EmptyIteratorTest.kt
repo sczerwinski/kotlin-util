@@ -50,7 +50,7 @@ class EmptyIteratorTest {
         // given:
         val iterator: Iterator<String> = EmptyIterator
         // when:
-        for (string in iterator) {
+        for (ignored in iterator) {
             // then:
             fail("should not be called")
         }
