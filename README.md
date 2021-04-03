@@ -14,13 +14,13 @@
 #### Kotlin
 
 ```kotlin
-implementation("it.czerwinski:kotlin-util:1.4.31")
+implementation("it.czerwinski:kotlin-util:1.4.32")
 ```
 
 #### Groovy
 
 ```groovy
-implementation 'it.czerwinski:kotlin-util:1.4.31'
+implementation 'it.czerwinski:kotlin-util:1.4.32'
 ```
 
 ### Maven
@@ -29,7 +29,7 @@ implementation 'it.czerwinski:kotlin-util:1.4.31'
 <dependency>
   <groupId>it.czerwinski</groupId>
   <artifactId>kotlin-util</artifactId>
-  <version>1.4.31</version>
+  <version>1.4.32</version>
 </dependency>
 ```
 
