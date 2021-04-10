@@ -20,4 +20,4 @@ Any contributions to this project are welcome:
 * new feature requests,
 * discussion on existing issues.
 
-Base branch for pull requests is `develop`.
+Base branch for pull requests is `main`.
