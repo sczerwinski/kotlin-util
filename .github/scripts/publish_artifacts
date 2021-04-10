@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 BUILD_OS=$1
+SUFFIX=$2
 
 echo "Publishing for ${BUILD_OS}"
 
@@ -19,6 +20,7 @@ esac
 echo "Running tasks ${TASKS}"
 
 ./gradlew ${TASKS} \
+    -PversionSuffix="${SUFFIX}" \
     -Psigning.secretKeyRingFile=secring.gpg \
     -Psigning.password="${SIGNING_PASS}" \
     -Psigning.keyId="${SIGNING_KEY_ID}" \

@@ -4,19 +4,19 @@
 
 ## [Unreleased]
 
-## [v1.4.32]
+## [1.4.32]
 ### Changed
 - Kotlin 1.4.32
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.16.0`
   - Upgrade `org.jetbrains.dokka` to `1.4.30`
 
-## [v1.4.31]
+## [1.4.31]
 ### Changed
 - Kotlin 1.4.31
 - Gradle Wrapper 6.8.3
 
-## [v1.4.30]
+## [1.4.30]
 ### Added
 - `NonFatal` exception matcher
 - Dependabot integration
@@ -29,23 +29,23 @@
   - Upgrade `org.jetbrains.dokka` to `1.4.20`
   - Upgrade `kotlin-multiplatform` to `1.4.21-2`
 
-## [v1.4.21]
+## [1.4.21]
 ### Changed
 - Kotlin 1.4.21
 - Gradle Wrapper 6.7.1
 
-## [v1.4.20]
+## [1.4.20]
 ### Added
 - Publish artifacts for all native targets
 
 ### Changed
 - Kotlin 1.4.20
 
-## [v1.4.10]
+## [1.4.10]
 ### Changed
 - Kotlin 1.4.10
 
-## [v1.4.0]
+## [1.4.0]
 ### Added
 - Multiplatform Kotlin project
 - New `evert()` methods for:
@@ -61,7 +61,7 @@
 - Properties in `Option` deprecated since 1.2 (due to name clashes in JavaScript):
   - `iterator`
 
-## [1.3]
+## [1.3.0]
 ### Added
 - New methods in `Option`:
   - `unzip()` – for `Option<Pair>` and `Option<Triple>`
@@ -76,7 +76,7 @@
   - `right`
 - Deprecated `RightProjection`
 
-## [1.2]
+## [1.2.0]
 ### Added
 - New methods in `Option`:
   - `iterator()`
@@ -92,7 +92,7 @@
 - Deprecated properties in `Option`:
   - `iterator`
 
-## [1.1]
+## [1.1.0]
 ### Added
 - New methods in `Option`:
   - `none()`
@@ -107,7 +107,7 @@
 ### Changed
 - Kotlin 1.2.71
 
-## [1.0]
+## [1.0.0]
 ### Added
 - New methods in `Option`:
   - `filterIsInstance()`
@@ -127,7 +127,7 @@
 ### Fixed
 * Correct implementation of `None::toString()`
 
-## [0.2]
+## [0.2.0]
 ### Added
 - Supported type: `EmptyIterator`
 - Supported type: `SingletonIterator`
@@ -142,7 +142,7 @@
   - `fold()`
   - `toOption()`
 
-## [0.1]
+## [0.1.0]
 ### Added
 - Supported type: `Either`
 - Supported type: `Try`

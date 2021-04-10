@@ -5,15 +5,19 @@ plugins {
     kotlin("multiplatform") version "1.4.32"
     id("io.gitlab.arturbosch.detekt") version "1.16.0"
     id("org.jetbrains.dokka") version "1.4.30"
+    id("org.jetbrains.changelog") version "1.1.2"
     `maven-publish`
     signing
 }
 
+val baseVersion: String by project
+val versionSuffix: String by project
+
 group = "it.czerwinski"
-version = "1.5.0-SNAPSHOT"
+version = if (versionSuffix.isBlank()) baseVersion else "$baseVersion-$versionSuffix"
 
 val isWithSigning = hasProperty("signing.keyId")
-val isSnapshot = version.toString().endsWith("SNAPSHOT")
+val isSnapshot = versionSuffix == "SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -170,10 +174,13 @@ configure(kotlin.targets) {
     }
 }
 
+changelog {
+    version = "${project.version}"
+}
+
 publishing {
     publications.filterIsInstance<MavenPublication>()
         .forEach { publication ->
-            logger.quiet("Publication available: ${publication.artifactId}")
             publication.pom {
                 name.set("Kotlin Utilities")
                 description.set("Kotlin utility classes based on Scala")

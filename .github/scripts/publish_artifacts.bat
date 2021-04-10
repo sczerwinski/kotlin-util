@@ -1,6 +1,7 @@
 @echo off
 
 set BUILD_OS=%1
+set SUFFIX=%2
 
 echo Publishing for %BUILD_OS%
 
@@ -15,6 +16,6 @@ if "%BUILD_OS:~0,6%"=="ubuntu" (
 echo Running tasks %TASKS%
 echo.
 
-./gradlew %TASKS% "-Psigning.secretKeyRingFile=secring.gpg" "-Psigning.password=%SIGNING_PASS%" "-Psigning.keyId=%SIGNING_KEY_ID%" --stacktrace
+./gradlew %TASKS% "-PversionSuffix=%SUFFIX%" "-Psigning.secretKeyRingFile=secring.gpg" "-Psigning.password=%SIGNING_PASS%" "-Psigning.keyId=%SIGNING_KEY_ID%" --stacktrace
 
 echo on
