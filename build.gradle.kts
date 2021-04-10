@@ -10,11 +10,14 @@ plugins {
     signing
 }
 
+val baseVersion: String by project
+val versionSuffix: String by project
+
 group = "it.czerwinski"
-version = "1.5.0-SNAPSHOT"
+version = if (versionSuffix.isBlank()) baseVersion else "$baseVersion-$versionSuffix"
 
 val isWithSigning = hasProperty("signing.keyId")
-val isSnapshot = version.toString().endsWith("SNAPSHOT")
+val isSnapshot = versionSuffix == "SNAPSHOT"
 
 repositories {
     mavenCentral()

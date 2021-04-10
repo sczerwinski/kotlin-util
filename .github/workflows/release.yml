@@ -1,4 +1,4 @@
-# Artifacts upload for releases
+# Release build with upload to OSSRH
 
 name: Release
 
@@ -8,36 +8,67 @@ on:
 
 jobs:
 
-  release:
+  gradleValidation:
+    name: Validate Gradle Wrapper
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
 
-    name: Upload To Maven Central
+  release:
+    name: Publish To Maven Central
+    needs: gradleValidation
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-
     steps:
-
-      - name: Checkout Tag
+      - name: Fetch Sources
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.release.tag_name }}
-
-      - name: Setup Java 8
+      - name: Setup Java
         uses: actions/setup-java@v2
         with:
           distribution: zulu
           java-version: 8
-
       - name: Decrypt Key Ring File
         env:
           SIGNING_KEY_FILE_PASSPHRASE: ${{ secrets.signingKeyFilePassphrase }}
         run: .github/scripts/decrypt_secring
-
-      - name: Upload To Maven Central
+      - name: Publish To Maven Central
         env:
           SIGNING_KEY_ID: ${{ secrets.signingKeyId }}
           SIGNING_PASS: ${{ secrets.signingPassword }}
           SONATYPE_USERNAME: ${{ secrets.ossrhUsername }}
           SONATYPE_PASSWORD: ${{ secrets.ossrhPassword }}
         run: .github/scripts/publish_artifacts ${{ matrix.os }}
+
+  changelog:
+    name: Update Changelog
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 8
+      - name: Patch Changelog
+        run: ./gradlew patchChangelog
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Update changelog" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}

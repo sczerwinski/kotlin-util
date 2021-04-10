@@ -6,33 +6,148 @@ on: [push, pull_request]
 
 jobs:
 
-  build:
-
-    name: Build Library
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-
+  gradleValidation:
+    name: Validate Gradle Wrapper
+    runs-on: ubuntu-latest
     steps:
-
-      - name: Checkout
+      - name: Fetch Sources
         uses: actions/checkout@v2
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
 
-      - name: Setup Java 8
+  properties:
+    name: Export Properties
+    if: github.event_name != 'pull_request'
+    needs: gradleValidation
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.properties.outputs.version }}
+      changelog: ${{ steps.properties.outputs.changelog }}
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+      - name: Setup Java
         uses: actions/setup-java@v2
         with:
           distribution: zulu
           java-version: 8
+      - name: Export Properties
+        id: properties
+        shell: bash
+        run: |
+          PROPERTIES="$(./gradlew properties --console=plain -q)"
+          VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
+          CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=changelog::$CHANGELOG"
 
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+  checks:
+    name: Run Checks
+    needs: gradleValidation
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 8
+      - name: Run Unit Tests
+        run: ./gradlew allTests --stacktrace
+      - name: Run Detekt
+        run: ./gradlew detekt --stacktrace
 
-      - name: Run Checks
-        run: ./gradlew check --stacktrace
-
+  dokka:
+    name: Generate Dokka Documentation
+    needs: gradleValidation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 8
       - name: Generate Documentation
         run: ./gradlew dokkaJavadocCommon dokkaJekyllCommon --stacktrace
 
-      - name: Build Library
-        run: ./gradlew build --stacktrace
+  assemble:
+    name: Assemble Library
+    needs: gradleValidation
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 8
+      - name: Assemble Library
+        run: ./gradlew assemble --stacktrace
+
+  releaseDraft:
+    name: Draft New Release
+    if: github.event_name != 'pull_request'
+    needs: properties
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+      - name: Remove Old Release Drafts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/releases \
+            | tr '\r\n' ' ' \
+            | jq '.[] | select(.draft == true) | .id' \
+            | xargs -I '{}' \
+          curl -X DELETE -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/releases/{}
+      - name: Create Release Draft
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.properties.outputs.version }}
+          release_name: v${{ needs.properties.outputs.version }}
+          body: ${{ needs.properties.outputs.changelog }}
+          draft: true
+
+  snapshot:
+    name: Publish To OSSRH Snapshot Repository
+    if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main')
+    needs: gradleValidation
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 8
+      - name: Decrypt Key Ring File
+        env:
+          SIGNING_KEY_FILE_PASSPHRASE: ${{ secrets.signingKeyFilePassphrase }}
+        run: .github/scripts/decrypt_secring
+      - name: Publish To OSSRH Snapshot Repository
+        env:
+          SIGNING_KEY_ID: ${{ secrets.signingKeyId }}
+          SIGNING_PASS: ${{ secrets.signingPassword }}
+          SONATYPE_USERNAME: ${{ secrets.ossrhUsername }}
+          SONATYPE_PASSWORD: ${{ secrets.ossrhPassword }}
+        run: .github/scripts/publish_artifacts ${{ matrix.os }} SNAPSHOT
