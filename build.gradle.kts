@@ -5,6 +5,7 @@ plugins {
     kotlin("multiplatform") version "1.4.32"
     id("io.gitlab.arturbosch.detekt") version "1.16.0"
     id("org.jetbrains.dokka") version "1.4.30"
+    id("org.jetbrains.changelog") version "1.1.2"
     `maven-publish`
     signing
 }
@@ -170,10 +171,13 @@ configure(kotlin.targets) {
     }
 }
 
+changelog {
+    version = "${project.version}"
+}
+
 publishing {
     publications.filterIsInstance<MavenPublication>()
         .forEach { publication ->
-            logger.quiet("Publication available: ${publication.artifactId}")
             publication.pom {
                 name.set("Kotlin Utilities")
                 description.set("Kotlin utility classes based on Scala")
