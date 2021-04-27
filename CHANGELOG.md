@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Changed
+- Kotlin 1.5.0
 - Dependencies:
   - Upgrade `org.jetbrains.dokka` to `1.4.32`
 
