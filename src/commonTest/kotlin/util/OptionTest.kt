@@ -27,7 +27,7 @@ class OptionTest {
     @Test
     fun shouldCreateSome() {
         // given:
-        val text: String? = "text"
+        val text = "text"
         // when:
         val result: Option<String> = Option(text)
         // then:
@@ -55,7 +55,7 @@ class OptionTest {
     @Test
     fun toOptionShouldCreateSome() {
         // given:
-        val text: String? = "text"
+        val text = "text"
         // when:
         val result: Option<String> = text.asOption()
         // then:

@@ -92,7 +92,7 @@ class RightBiasedEitherFiltersTest {
         // when:
         val result: Either<Int, Float>? = either.filterNotNull()
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<Int, Float?>?>(either, result)
     }
 
     @Test
@@ -122,7 +122,7 @@ class RightBiasedEitherFiltersTest {
         // when:
         val result: Either<String, Int>? = either.filterIsInstance()
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<String, Number>?>(either, result)
     }
 
     @Test
@@ -212,7 +212,7 @@ class RightBiasedEitherFiltersTest {
         // when:
         val result: Option<Either<Int, Float>> = either.filterNotNullToOption()
         // then:
-        assertEquals(Some(either), result)
+        assertEquals<Option<Either<Int, Float?>>>(Some(either), result)
     }
 
     @Test
@@ -242,7 +242,7 @@ class RightBiasedEitherFiltersTest {
         // when:
         val result: Option<Either<String, Int>> = either.filterIsInstanceToOption()
         // then:
-        assertEquals(Some(either), result)
+        assertEquals<Option<Either<String, Number>>>(Some(either), result)
     }
 
     @Test

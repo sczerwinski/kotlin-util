@@ -126,7 +126,7 @@ class LeftProjectionTest {
         // when:
         val result = either.left.map { it.toString() }
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<*, Float>>(either, result)
     }
 
     @Test
@@ -156,7 +156,7 @@ class LeftProjectionTest {
         // when:
         val result: Either<String, Float> = either.left.flatMap { Left(it.toString()) }
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<*, Float>>(either, result)
     }
 
     @Test
