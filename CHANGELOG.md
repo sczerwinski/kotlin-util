@@ -3,6 +3,9 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Changed
+- Dependencies:
+  - Upgrade `org.jetbrains.dokka` to `1.4.32`
 
 ## [1.4.32]
 ### Changed
