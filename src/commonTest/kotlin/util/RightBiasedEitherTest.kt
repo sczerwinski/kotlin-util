@@ -116,7 +116,7 @@ class RightBiasedEitherTest {
         // when:
         val result = either.map { it.toString() }
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<Int, *>>(either, result)
     }
 
     @Test
@@ -136,7 +136,7 @@ class RightBiasedEitherTest {
         // when:
         val result: Either<Int, String> = either.flatMap { Right(it.toString()) }
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<Int, *>>(either, result)
     }
 
     @Test

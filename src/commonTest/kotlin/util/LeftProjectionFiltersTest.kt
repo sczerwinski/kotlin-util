@@ -92,7 +92,7 @@ class LeftProjectionFiltersTest {
         // when:
         val result: Either<Int, Float>? = either.left.filterNotNull()
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<Int?, Float>?>(either, result)
     }
 
     @Test
@@ -122,7 +122,7 @@ class LeftProjectionFiltersTest {
         // when:
         val result: Either<Int, String>? = either.left.filterIsInstance()
         // then:
-        assertEquals(either, result)
+        assertEquals<Either<Number?, String>?>(either, result)
     }
 
     @Test
@@ -212,7 +212,7 @@ class LeftProjectionFiltersTest {
         // when:
         val result: Option<Either<Int, Float>> = either.left.filterNotNullToOption()
         // then:
-        assertEquals(Some(either), result)
+        assertEquals<Option<Either<Int?, Float>>>(Some(either), result)
     }
 
     @Test
@@ -242,7 +242,7 @@ class LeftProjectionFiltersTest {
         // when:
         val result: Option<Either<Int, String>> = either.left.filterIsInstanceToOption()
         // then:
-        assertEquals(Some(either), result)
+        assertEquals<Option<Either<Number, String>>>(Some(either), result)
     }
 
     @Test

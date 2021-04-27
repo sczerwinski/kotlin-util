@@ -116,7 +116,7 @@ class FailureTest {
         // when:
         val result = failure.map { it.toInt() }
         // then:
-        assertEquals(failure, result)
+        assertEquals<Try<*>>(failure, result)
     }
 
     @Test
@@ -148,7 +148,7 @@ class FailureTest {
         // when:
         val result = failure.flatten()
         // then:
-        assertEquals(failure, result)
+        assertEquals<Try<*>>(failure, result)
     }
 
     @Test
