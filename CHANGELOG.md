@@ -3,6 +3,18 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [1.5.0]
 ### Changed
 - Kotlin 1.5.0
 - Dependencies:
