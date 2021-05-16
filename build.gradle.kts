@@ -21,7 +21,6 @@ val isSnapshot = versionSuffix == "SNAPSHOT"
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 val hostOs = System.getProperty("os.name")
