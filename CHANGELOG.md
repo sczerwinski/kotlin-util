@@ -3,17 +3,10 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
-### Added
-
 ### Changed
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.17.0`
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [1.5.0]
 ### Changed
 - Kotlin 1.5.0
