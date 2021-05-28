@@ -3,6 +3,18 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [1.5.10]
 ### Changed
 - Kotlin 1.5.10
 - Gradle Wrapper 7.0.2
