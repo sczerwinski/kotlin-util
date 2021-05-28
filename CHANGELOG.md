@@ -4,8 +4,9 @@
 
 ## [Unreleased]
 ### Changed
+- Kotlin 1.5.10
 - Dependencies:
-  - Upgrade `io.gitlab.arturbosch.detekt` to `1.17.0`
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.17.1`
 
 ## [1.5.0]
 ### Changed
