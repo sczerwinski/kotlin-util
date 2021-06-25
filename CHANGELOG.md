@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Changed
+- Kotlin 1.5.20
 - Gradle Wrapper 7.1
 
 ## [1.5.10]
