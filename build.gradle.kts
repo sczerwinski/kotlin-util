@@ -3,7 +3,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     kotlin("multiplatform") version "1.5.20"
-    id("io.gitlab.arturbosch.detekt") version "1.17.1"
+    id("io.gitlab.arturbosch.detekt") version "1.18.0"
     id("org.jetbrains.dokka") version "1.4.32"
     id("org.jetbrains.changelog") version "1.1.2"
     `maven-publish`
