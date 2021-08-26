@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    kotlin("multiplatform") version "1.5.20"
-    id("io.gitlab.arturbosch.detekt") version "1.17.1"
-    id("org.jetbrains.dokka") version "1.4.32"
-    id("org.jetbrains.changelog") version "1.1.2"
+    kotlin("multiplatform") version "1.5.30"
+    id("io.gitlab.arturbosch.detekt") version "1.18.0"
+    id("org.jetbrains.dokka") version "1.5.0"
+    id("org.jetbrains.changelog") version "1.3.0"
     `maven-publish`
     signing
 }
@@ -23,7 +23,7 @@ repositories {
     mavenCentral()
 }
 
-val hostOs = System.getProperty("os.name")
+val hostOs: String = System.getProperty("os.name")
 val isLinux = hostOs == "Linux"
 val isWindows = hostOs.startsWith("Windows")
 val isMacOs = hostOs == "Mac OS X"
@@ -65,6 +65,7 @@ kotlin {
         }
     }
 
+    @Suppress("UNUSED_VARIABLE")
     sourceSets {
         val commonMain by getting
         val commonTest by getting {
@@ -119,7 +120,7 @@ kotlin {
 }
 
 detekt {
-    input = files(kotlin.sourceSets.flatMap { it.kotlin.sourceDirectories })
+    source.setFrom(files(kotlin.sourceSets.flatMap { it.kotlin.sourceDirectories }))
     config = files("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
     reports {
@@ -134,6 +135,7 @@ detekt {
     }
 }
 
+@Suppress("UNUSED_VARIABLE")
 tasks {
 
     val dokkaJavadocCommon by creating(DokkaTask::class.java) {
@@ -174,7 +176,7 @@ configure(kotlin.targets) {
 }
 
 changelog {
-    version = "${project.version}"
+    version.set("${project.version}")
 }
 
 publishing {
