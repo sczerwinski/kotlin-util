@@ -3,6 +3,19 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.5.30]
 ### Changed
 - Kotlin 1.5.30
 - Dependencies:
@@ -147,9 +160,6 @@
   - `Option<Try<T>>`
   - `Iterable<Option<T>>`
   - `Option<Iterable<T>>`
-
-### Fixed
-* Correct implementation of `None::toString()`
 
 ## [0.2.0]
 ### Added
