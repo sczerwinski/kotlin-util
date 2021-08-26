@@ -23,7 +23,7 @@ repositories {
     mavenCentral()
 }
 
-val hostOs = System.getProperty("os.name")
+val hostOs: String = System.getProperty("os.name")
 val isLinux = hostOs == "Linux"
 val isWindows = hostOs.startsWith("Windows")
 val isMacOs = hostOs == "Mac OS X"
@@ -65,6 +65,7 @@ kotlin {
         }
     }
 
+    @Suppress("UNUSED_VARIABLE")
     sourceSets {
         val commonMain by getting
         val commonTest by getting {
@@ -119,7 +120,7 @@ kotlin {
 }
 
 detekt {
-    input = files(kotlin.sourceSets.flatMap { it.kotlin.sourceDirectories })
+    source.setFrom(files(kotlin.sourceSets.flatMap { it.kotlin.sourceDirectories }))
     config = files("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
     reports {
@@ -134,6 +135,7 @@ detekt {
     }
 }
 
+@Suppress("UNUSED_VARIABLE")
 tasks {
 
     val dokkaJavadocCommon by creating(DokkaTask::class.java) {
