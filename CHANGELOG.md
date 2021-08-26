@@ -3,8 +3,6 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
-### Added
-
 ### Changed
 - Kotlin 1.5.30
 - Dependencies:
@@ -12,13 +10,6 @@
   - Upgrade `org.jetbrains.dokka` to `1.5.0`
   - Upgrade `org.jetbrains.changelog` to `1.3.0`
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [1.5.20]
 ### Changed
 - Kotlin 1.5.20
