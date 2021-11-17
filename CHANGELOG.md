@@ -3,6 +3,19 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.6.0]
 ### Changed
 - Kotlin 1.6.0
 - Dependencies:
