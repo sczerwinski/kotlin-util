@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    kotlin("multiplatform") version "1.6.0"
+    kotlin("multiplatform") version "1.6.10"
     id("io.gitlab.arturbosch.detekt") version "1.18.1"
     id("org.jetbrains.dokka") version "1.5.31"
     id("org.jetbrains.changelog") version "1.3.1"
