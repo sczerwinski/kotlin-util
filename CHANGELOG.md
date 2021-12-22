@@ -6,6 +6,9 @@
 ### Added
 
 ### Changed
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.19.0`
+  - Upgrade `org.jetbrains.dokka` to `1.6.0`
 
 ### Deprecated
 
