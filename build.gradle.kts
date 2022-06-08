@@ -1,3 +1,4 @@
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 import org.jetbrains.dokka.gradle.DokkaTask
 
@@ -123,20 +124,23 @@ detekt {
     source.setFrom(files(kotlin.sourceSets.flatMap { it.kotlin.sourceDirectories }))
     config = files("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
-    reports {
-        xml {
-            enabled = true
-            destination = file("$buildDir/reports/detekt.xml")
-        }
-        html {
-            enabled = true
-            destination = file("$buildDir/reports/detekt.html")
-        }
-    }
 }
 
 @Suppress("UNUSED_VARIABLE")
 tasks {
+
+    withType<Detekt>().configureEach {
+        reports {
+            xml {
+                required.set(true)
+                outputLocation.set(file("$buildDir/reports/detekt.xml"))
+            }
+            html {
+                required.set(true)
+                outputLocation.set(file("$buildDir/reports/detekt.html"))
+            }
+        }
+    }
 
     val dokkaJavadocCommon by creating(DokkaTask::class.java) {
         outputDirectory.set(buildDir.resolve("javadoc"))
