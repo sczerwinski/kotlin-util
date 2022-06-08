@@ -7,9 +7,10 @@
 - Compatibility with [Kotlin/JS IR compiler](https://kotlinlang.org/docs/js-ir-compiler.html)
 
 ### Changed
+- Kotlin 1.7.0-RC2
 - Dependencies:
-  - Upgrade `io.gitlab.arturbosch.detekt` to `1.19.0`
-  - Upgrade `org.jetbrains.dokka` to `1.6.0`
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.20.0`
+  - Upgrade `org.jetbrains.dokka` to `1.6.21`
 
 ### Deprecated
 
