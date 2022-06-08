@@ -19,9 +19,17 @@ esac
 
 echo "Running tasks ${TASKS}"
 
-./gradlew ${TASKS} \
-    -PversionSuffix="${SUFFIX}" \
-    -Psigning.secretKeyRingFile=secring.gpg \
-    -Psigning.password="${SIGNING_PASS}" \
-    -Psigning.keyId="${SIGNING_KEY_ID}" \
-    --stacktrace
+if [ -z "${SUFFIX}" ]; then
+  ./gradlew ${TASKS} \
+      -Psigning.secretKeyRingFile=secring.gpg \
+      -Psigning.password="${SIGNING_PASS}" \
+      -Psigning.keyId="${SIGNING_KEY_ID}" \
+      --stacktrace
+else
+  ./gradlew ${TASKS} \
+      -PversionSuffix="${SUFFIX}" \
+      -Psigning.secretKeyRingFile=secring.gpg \
+      -Psigning.password="${SIGNING_PASS}" \
+      -Psigning.keyId="${SIGNING_KEY_ID}" \
+      --stacktrace
+fi
