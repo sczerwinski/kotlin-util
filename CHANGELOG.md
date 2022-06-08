@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Added
+- Compatibility with [Kotlin/JS IR compiler](https://kotlinlang.org/docs/js-ir-compiler.html)
 
 ### Changed
 - Dependencies:

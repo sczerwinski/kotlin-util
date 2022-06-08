@@ -48,7 +48,7 @@ kotlin {
         }
 
         isMacOs -> {
-            js {
+            js(BOTH) {
                 browser {
                     testTask {
                         useKarma {
