@@ -13,14 +13,6 @@
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.20.0`
   - Upgrade `org.jetbrains.dokka` to `1.7.0`
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
 ## [1.6.0]
 ### Changed
 - Kotlin 1.6.0
