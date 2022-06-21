@@ -357,7 +357,7 @@ fun <L, R> Either<L, R?>.filterNotNullToOption(): Option<Either<L, R>> = when (t
  *
  * @since 1.3
  */
-inline fun <L, R> Either<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R>? =
+inline fun <L, R> Either<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R> =
     when (this) {
         is Right -> if (predicate(value)) this else Left(zero())
         is Left -> this
@@ -656,7 +656,7 @@ fun <L, R> LeftProjection<L?, R>.filterNotNullToOption(): Option<Either<L, R>> =
  *
  * @since 1.2
  */
-inline fun <L, R> LeftProjection<L, R>.filterOrElse(predicate: (L) -> Boolean, zero: () -> R): Either<L, R>? =
+inline fun <L, R> LeftProjection<L, R>.filterOrElse(predicate: (L) -> Boolean, zero: () -> R): Either<L, R> =
     when (either) {
         is Left -> if (predicate(either.value)) either else Right(zero())
         is Right -> either
@@ -899,7 +899,7 @@ fun <L, R> RightProjection<L, R?>.filterNotNullToOption(): Option<Either<L, R>> 
  *
  * @since 1.2
  */
-inline fun <L, R> RightProjection<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R>? =
+inline fun <L, R> RightProjection<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R> =
     when (either) {
         is Right -> if (predicate(either.value)) either else Left(zero())
         is Left -> either
