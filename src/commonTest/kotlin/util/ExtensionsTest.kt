@@ -101,7 +101,7 @@ class ExtensionsTest {
         // when:
         val result: List<String> = option.flatten()
         // then:
-        assertEquals(emptyList<String>(), result)
+        assertEquals(emptyList(), result)
     }
 
     @Test

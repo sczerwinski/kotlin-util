@@ -7,6 +7,7 @@
 - Compatibility with [Kotlin/JS IR compiler](https://kotlinlang.org/docs/js-ir-compiler.html)
 
 ### Changed
+- Method `filterOrElse` returns not null value for `Either`, `LeftProjection` and `RightProjection`
 - Kotlin 1.7.0
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.20.0`

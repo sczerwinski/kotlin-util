@@ -68,7 +68,7 @@ class SomeFiltersTest {
         // given:
         val option: Option<Number> = Some(1)
         // when:
-        val result: Option<Int> = option.filterIsInstance<Int>()
+        val result: Option<Int> = option.filterIsInstance()
         // then:
         assertEquals(Some(1), result)
     }
@@ -78,7 +78,7 @@ class SomeFiltersTest {
         // given:
         val option: Option<Any> = Some("1")
         // when:
-        val result: Option<Float> = option.filterIsInstance<Float>()
+        val result: Option<Float> = option.filterIsInstance()
         // then:
         assertEquals(None, result)
     }

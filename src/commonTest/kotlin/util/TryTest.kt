@@ -27,6 +27,7 @@ class TryTest {
     @Test
     fun shouldBeEitherSuccessOrFailure() {
         // when:
+        @Suppress("MoveVariableDeclarationIntoWhen")
         val result = Try {}
         // then:
         @Suppress("UNUSED_VARIABLE")
