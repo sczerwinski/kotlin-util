@@ -54,7 +54,7 @@ sealed class Either<out L, out R> {
      * Deprecated in 1.3. [Either] is right-biased.
      * All methods from [RightProjection] should be called directly on [Either].
      */
-    @Suppress("DeprecatedCallableAddReplaceWith")
+    @Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
     @Deprecated(
         message = "Either is right-biased. All methods from `RightProjection` should be called directly on `Either`.",
         level = DeprecationLevel.WARNING
@@ -848,6 +848,7 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
  *
  * @return Value of this [Right] or [default].
  */
+@Suppress("DEPRECATION")
 inline fun <L, R> RightProjection<L, R>.getOrElse(default: () -> R): R = when (either) {
     is Left -> default()
     is Right -> either.value
@@ -860,6 +861,7 @@ inline fun <L, R> RightProjection<L, R>.getOrElse(default: () -> R): R = when (e
  *
  * @return [Either] mapped using [transform] or this object if this is a [Left].
  */
+@Suppress("DEPRECATION")
 inline fun <L, R, T> RightProjection<L, R>.flatMap(transform: (R) -> Either<L, T>): Either<L, T> = when (either) {
     is Left -> either
     is Right -> transform(either.value)
@@ -870,6 +872,7 @@ inline fun <L, R, T> RightProjection<L, R>.flatMap(transform: (R) -> Either<L, T
  *
  * @return The same [Right] if its value is not `null`. Otherwise returns `null`.
  */
+@Suppress("DEPRECATION")
 fun <L, R> RightProjection<L, R?>.filterNotNull(): Either<L, R>? = when (either) {
     is Left -> null
     is Right -> either.value?.let { Right(it) }
@@ -880,6 +883,7 @@ fun <L, R> RightProjection<L, R?>.filterNotNull(): Either<L, R>? = when (either)
  *
  * @return [Some] containing the same [Right] if its value is not `null`. Otherwise returns [None].
  */
+@Suppress("DEPRECATION")
 fun <L, R> RightProjection<L, R?>.filterNotNullToOption(): Option<Either<L, R>> = when (either) {
     is Left -> None
     is Right -> either.value?.let { Right(it) }.asOption()
@@ -899,6 +903,7 @@ fun <L, R> RightProjection<L, R?>.filterNotNullToOption(): Option<Either<L, R>> 
  *
  * @since 1.2
  */
+@Suppress("DEPRECATION")
 inline fun <L, R> RightProjection<L, R>.filterOrElse(predicate: (R) -> Boolean, zero: () -> L): Either<L, R> =
     when (either) {
         is Right -> if (predicate(either.value)) either else Left(zero())
