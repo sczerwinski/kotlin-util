@@ -214,8 +214,8 @@ class SuccessTest {
         val failureException = NullPointerException()
         // when:
         val result: Try<String> = success.transform(
-            { _ -> throw successException },
-            { _ -> throw failureException }
+            { throw successException },
+            { throw failureException }
         )
         // then:
         assertEquals(Failure(successException), result)

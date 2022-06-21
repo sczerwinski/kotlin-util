@@ -188,7 +188,7 @@ class FailureTest {
         val failure: Try<String> = Failure(RuntimeException("Test exception"))
         val newException = NullPointerException()
         // when:
-        val result = failure.recoverWith { _ -> Failure(newException) }
+        val result = failure.recoverWith { Failure(newException) }
         // then:
         assertEquals(Failure(newException), result)
     }
@@ -199,7 +199,7 @@ class FailureTest {
         val failure: Try<String> = Failure(RuntimeException("Test exception"))
         val newException = NullPointerException()
         // when:
-        val result = failure.recoverWith { _ -> throw newException }
+        val result = failure.recoverWith { throw newException }
         // then:
         assertEquals(Failure(newException), result)
     }
@@ -238,8 +238,8 @@ class FailureTest {
         val failureException = NullPointerException()
         // when:
         val result: Try<String> = failure.transform(
-            { _ -> throw successException },
-            { _ -> throw failureException }
+            { throw successException },
+            { throw failureException }
         )
         // then:
         assertEquals(Failure(failureException), result)
