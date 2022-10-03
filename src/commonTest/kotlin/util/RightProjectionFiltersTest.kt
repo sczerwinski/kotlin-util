@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Slawomir Czerwinski
+ * Copyright 2018-2022 Slawomir Czerwinski
  * Copyright EPFL and Lightbend, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
