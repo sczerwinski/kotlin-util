@@ -8,3 +8,8 @@ complexity:
 exceptions:
   TooGenericExceptionCaught:
     allowedExceptionNameRegex: exception
+
+# Allow flattened directory structure:
+naming:
+  InvalidPackageDeclaration:
+    rootPackage: it.czerwinski.kotlin

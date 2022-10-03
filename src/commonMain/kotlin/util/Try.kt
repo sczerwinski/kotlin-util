@@ -76,7 +76,9 @@ sealed class Try<out T> {
      *
      * @param action Action to be run on a value of a [Success].
      */
-    abstract fun forEach(action: (T) -> Unit)
+    inline fun forEach(action: (T) -> Unit) {
+        if (isSuccess) action(get())
+    }
 
     /**
      * Maps value of a [Success] using [transform] or returns the same [Try] if this is a [Failure].
@@ -85,7 +87,10 @@ sealed class Try<out T> {
      *
      * @return [Try] with a value mapped using [transform] or this object if this is a [Failure].
      */
-    abstract fun <R> map(transform: (T) -> R): Try<R>
+    inline fun <R> map(transform: (T) -> R): Try<R> = when (this) {
+        is Success -> Try { transform(value) }
+        is Failure -> this
+    }
 
     /**
      * Maps value of a [Success] to a new [Try] using [transform] or returns the same [Try] if this is a [Failure].
@@ -94,7 +99,15 @@ sealed class Try<out T> {
      *
      * @return [Try] returned by [transform] or this object if this is a [Failure].
      */
-    abstract fun <R> flatMap(transform: (T) -> Try<R>): Try<R>
+    inline fun <R> flatMap(transform: (T) -> Try<R>): Try<R> = when (this) {
+        is Success -> try {
+            transform(value)
+        } catch (exception: Throwable) {
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
+        }
+        is Failure -> this
+    }
 
     /**
      * Returns the same [Success] if the [predicate] is satisfied for the value. Otherwise returns a [Failure].
@@ -103,7 +116,16 @@ sealed class Try<out T> {
      *
      * @return The same [Success] if the [predicate] is satisfied for the value. Otherwise returns a [Failure].
      */
-    abstract fun filter(predicate: (T) -> Boolean): Try<T>
+    inline fun filter(predicate: (T) -> Boolean): Try<T> = when (this)  {
+        is Success -> try {
+            if (predicate(value)) this
+            else throw NoSuchElementException("Predicate not satisfied for $value")
+        } catch (exception: Throwable) {
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
+        }
+        is Failure -> this
+    }
 
     /**
      * Returns the same [Success] if the [predicate] is not satisfied for the value. Otherwise returns a [Failure].
@@ -112,7 +134,16 @@ sealed class Try<out T> {
      *
      * @return The same [Success] if the [predicate] is not satisfied for the value. Otherwise returns a [Failure].
      */
-    abstract fun filterNot(predicate: (T) -> Boolean): Try<T>
+    inline fun filterNot(predicate: (T) -> Boolean): Try<T> = when (this)  {
+        is Success -> try {
+            if (!predicate(value)) this
+            else throw NoSuchElementException("Predicate not satisfied for $value")
+        } catch (exception: Throwable) {
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
+        }
+        is Failure -> this
+    }
 
     /**
      * Returns the same [Success] casted to type [R] if it is [R]. Otherwise returns a [Failure].
@@ -144,7 +175,16 @@ sealed class Try<out T> {
      *
      * @since 1.2
      */
-    abstract fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T>
+    inline fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T> = when (this)  {
+        is Success -> try {
+            if (predicate(value)) this
+            else throw throwable(value)
+        } catch (exception: Throwable) {
+            if (NonFatal(exception)) Failure(exception)
+            else throw exception
+        }
+        is Failure -> this
+    }
 
     /**
      * Transforms a [Success] using [successTransform] or a [Failure] using [failureTransform].
@@ -343,43 +383,6 @@ data class Success<out T>(val value: T) : Try<T>() {
     override fun get(): T = value
     override fun getOrNull(): T? = value
 
-    override fun forEach(action: (T) -> Unit) = action(value)
-    override fun <R> map(transform: (T) -> R): Try<R> = Try { transform(value) }
-    override fun <R> flatMap(transform: (T) -> Try<R>): Try<R> =
-        try {
-            transform(value)
-        } catch (exception: Throwable) {
-            if (NonFatal(exception)) Failure(exception)
-            else throw exception
-        }
-
-    override fun filter(predicate: (T) -> Boolean): Try<T> =
-        try {
-            if (predicate(value)) this
-            else throw NoSuchElementException("Predicate not satisfied for $value")
-        } catch (exception: Throwable) {
-            if (NonFatal(exception)) Failure(exception)
-            else throw exception
-        }
-
-    override fun filterNot(predicate: (T) -> Boolean): Try<T> =
-        try {
-            if (!predicate(value)) this
-            else throw NoSuchElementException("Predicate not satisfied for $value")
-        } catch (exception: Throwable) {
-            if (NonFatal(exception)) Failure(exception)
-            else throw exception
-        }
-
-    override fun filterOrElse(predicate: (T) -> Boolean, throwable: (T) -> Throwable): Try<T> =
-        try {
-            if (predicate(value)) this
-            else throw throwable(value)
-        } catch (exception: Throwable) {
-            if (NonFatal(exception)) Failure(exception)
-            else throw exception
-        }
-
     override fun toEither(): Either<Throwable, T> = Right(value)
     override fun toOption(): Option<T> = Some(value)
 }
@@ -397,14 +400,6 @@ data class Failure(val exception: Throwable) : Try<Nothing>() {
 
     override fun get(): Nothing = throw exception
     override fun getOrNull(): Nothing? = null
-
-    override fun forEach(action: (Nothing) -> Unit) = Unit
-    override fun <R> map(transform: (Nothing) -> R): Try<R> = this
-    override fun <R> flatMap(transform: (Nothing) -> Try<R>): Try<R> = this
-
-    override fun filter(predicate: (Nothing) -> Boolean): Try<Nothing> = this
-    override fun filterNot(predicate: (Nothing) -> Boolean): Try<Nothing> = this
-    override fun filterOrElse(predicate: (Nothing) -> Boolean, throwable: (Nothing) -> Throwable): Try<Nothing> = this
 
     override fun toEither(): Either<Throwable, Nothing> = Left(exception)
     override fun toOption(): Option<Nothing> = None

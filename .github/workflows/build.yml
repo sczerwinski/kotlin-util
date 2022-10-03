@@ -89,7 +89,7 @@ jobs:
         with:
           path: artifacts
       - name: Publish Test Report
-        uses: EnricoMi/publish-unit-test-result-action/composite@v1
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         with:
           files: 'artifacts/**/*.xml'
 
