@@ -6,6 +6,11 @@
 ### Added
 
 ### Changed
+- Make all higher order functions inline
+- Kotlin 1.7.20
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.21.0`
+  - Upgrade `org.jetbrains.dokka` to `1.7.10`
 
 ### Deprecated
 
