@@ -3,6 +3,19 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.7.1]
 ### Changed
 - Make all higher order functions inline
 - Kotlin 1.7.20
