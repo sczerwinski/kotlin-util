@@ -6,6 +6,10 @@
 ### Added
 
 ### Changed
+- Kotlin 1.8.0
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.22.0`
+  - Upgrade `org.jetbrains.dokka` to `1.7.20`
 
 ### Deprecated
 
