@@ -3,21 +3,11 @@
 # Kotlin Utilities Changelog
 
 ## [Unreleased]
-### Added
-
 ### Changed
 - Kotlin 1.8.0
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.22.0`
   - Upgrade `org.jetbrains.dokka` to `1.7.20`
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 
 ## [1.7.1]
 ### Changed
