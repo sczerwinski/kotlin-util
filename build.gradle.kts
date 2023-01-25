@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    kotlin("multiplatform") version "1.7.20"
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
-    id("org.jetbrains.dokka") version "1.7.10"
+    kotlin("multiplatform") version "1.8.0"
+    id("io.gitlab.arturbosch.detekt") version "1.22.0"
+    id("org.jetbrains.dokka") version "1.7.20"
     id("org.jetbrains.changelog") version "1.3.1"
     `maven-publish`
     signing
@@ -54,7 +54,9 @@ kotlin {
                     testTask {
                         useKarma {
                             useChromeHeadless()
-                            webpackConfig.cssSupport.enabled = true
+                            webpackConfig.cssSupport {
+                                enabled.set(true)
+                            }
                         }
                     }
                 }
