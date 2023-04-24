@@ -16,7 +16,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v3
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1.0.5
+        uses: gradle/wrapper-validation-action@v1.0.6
 
   properties:
     name: Export Properties
@@ -152,6 +152,32 @@ jobs:
           release_name: v${{ needs.properties.outputs.version }}
           body: ${{ needs.properties.outputs.changelog }}
           draft: true
+
+  localSnapshot:
+    name: Publish Snapshot Locally
+    if: (github.event_name == 'pull_request') || (github.ref != 'refs/heads/main')
+    needs: gradleValidation
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-2022, macos-12]
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
+      - name: Decrypt Key Ring File
+        env:
+          SIGNING_KEY_FILE_PASSPHRASE: ${{ secrets.signingKeyFilePassphrase }}
+        run: .github/scripts/decrypt_secring
+      - name: Publish Snapshot Locally
+        env:
+          SIGNING_KEY_ID: ${{ secrets.signingKeyId }}
+          SIGNING_PASS: ${{ secrets.signingPassword }}
+        run: .github/scripts/publish_artifacts ${{ matrix.os }} SNAPSHOT
 
   snapshot:
     name: Publish To OSSRH Snapshot Repository

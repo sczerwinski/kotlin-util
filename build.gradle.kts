@@ -5,7 +5,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     kotlin("multiplatform") version "1.8.0"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
-    id("org.jetbrains.dokka") version "1.7.20"
+    id("org.jetbrains.dokka") version "1.8.10"
     id("org.jetbrains.changelog") version "2.0.0"
     `maven-publish`
     signing
@@ -245,11 +245,9 @@ publishing {
 }
 
 if (isWithSigning) {
-    signing {
-        sign(
-            *publishing.publications
-                .filterIsInstance<MavenPublication>()
-                .toTypedArray()
-        )
+    val mavenPublications = publishing.publications.filterIsInstance<MavenPublication>()
+    val signTasks = signing.sign(*mavenPublications.toTypedArray())
+    tasks.withType(PublishToMavenRepository::class) {
+        mustRunAfter(*signTasks.toTypedArray())
     }
 }
