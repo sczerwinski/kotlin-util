@@ -7,6 +7,9 @@
 ### Added
 
 ### Changed
+- Gradle Wrapper 8.1.1
+- Dependencies:
+  - Upgrade `org.jetbrains.dokka` to `1.8.10`
 
 ### Deprecated
 
