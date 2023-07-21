@@ -50,7 +50,7 @@ jobs:
   checks:
     name: Run Checks
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -93,7 +93,7 @@ jobs:
   dokka:
     name: Generate Dokka Documentation
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -108,7 +108,7 @@ jobs:
   assemble:
     name: Assemble Library
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -151,7 +151,7 @@ jobs:
     name: Publish Snapshot Locally
     if: (github.event_name == 'pull_request') || (github.ref != 'refs/heads/main')
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -174,7 +174,7 @@ jobs:
     name: Publish To OSSRH Snapshot Repository
     if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main')
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3

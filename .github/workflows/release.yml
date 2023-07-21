@@ -20,7 +20,7 @@ jobs:
   release:
     name: Publish To Maven Central
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
