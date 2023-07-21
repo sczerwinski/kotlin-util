@@ -7,13 +7,18 @@
 ### Added
 
 ### Changed
-- Gradle Wrapper 8.1.1
+- Build and publish artifacts for all platforms from macOS 13
+- Kotlin 1.9.0
+- Gradle Wrapper 8.2.1
 - Dependencies:
-  - Upgrade `org.jetbrains.dokka` to `1.8.10`
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.0`
+  - Upgrade `org.jetbrains.dokka` to `1.8.20`
+  - Upgrade `org.jetbrains.changelog` to `2.1.2`
 
 ### Deprecated
 
 ### Removed
+- Remove support for deprecated legacy JS compiler. Using IR compiler only.
 
 ### Fixed
 

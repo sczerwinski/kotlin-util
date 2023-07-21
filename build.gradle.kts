@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    kotlin("multiplatform") version "1.8.0"
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
-    id("org.jetbrains.dokka") version "1.8.10"
-    id("org.jetbrains.changelog") version "2.0.0"
+    kotlin("multiplatform") version "1.9.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    id("org.jetbrains.dokka") version "1.8.20"
+    id("org.jetbrains.changelog") version "2.1.2"
     `maven-publish`
     signing
 }
@@ -36,39 +36,25 @@ kotlin {
         }
     }
 
-    when {
-
-        isLinux -> {
-            linuxMips32()
-            linuxMipsel32()
-        }
-
-        isWindows -> {
-            mingwX64()
-            mingwX86()
-        }
-
-        isMacOs -> {
-            js(BOTH) {
-                browser {
-                    testTask {
-                        useKarma {
-                            useChromeHeadless()
-                            webpackConfig.cssSupport {
-                                enabled.set(true)
-                            }
+    js(IR) {
+        browser {
+            testTask(
+                Action {
+                    useKarma {
+                        useChromeHeadless()
+                        webpackConfig.cssSupport {
+                            enabled.set(true)
                         }
                     }
                 }
-            }
-
-            presets.withType<AbstractKotlinNativeTargetPreset<*>>().forEach {
-                targetFromPreset(it)
-            }
+            )
         }
     }
 
-    @Suppress("UNUSED_VARIABLE")
+    presets.withType<AbstractKotlinNativeTargetPreset<*>>().forEach {
+        targetFromPreset(it)
+    }
+
     sourceSets {
         val commonMain by getting
         val commonTest by getting {
@@ -83,40 +69,18 @@ kotlin {
                 implementation(kotlin("test-junit5"))
             }
         }
-        when {
-            isLinux -> {
-                val linuxMips32Main by getting
-                val linuxMipsel32Main by getting
-                val nativeMain by creating {
-                    dependsOn(commonMain)
-                    linuxMips32Main.dependsOn(this)
-                    linuxMipsel32Main.dependsOn(this)
-                }
+        val jsMain by getting
+        val jsTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
             }
-            isWindows -> {
-                val mingwX64Main by getting
-                val mingwX86Main by getting
-                val nativeMain by creating {
-                    dependsOn(commonMain)
-                    mingwX64Main.dependsOn(this)
-                    mingwX86Main.dependsOn(this)
-                }
-            }
-            isMacOs -> {
-                val jsMain by getting
-                val jsTest by getting {
-                    dependencies {
-                        implementation(kotlin("test-js"))
-                    }
-                }
-                val nativeSourceSetNames = presets.withType<AbstractKotlinNativeTargetPreset<*>>()
-                    .map { preset -> "${preset.name}Main" }
-                val nativeMain by creating {
-                    dependsOn(commonMain)
-                    nativeSourceSetNames.forEach { name ->
-                        getByName(name).dependsOn(this)
-                    }
-                }
+        }
+        val nativeSourceSetNames = presets.withType<AbstractKotlinNativeTargetPreset<*>>()
+            .map { preset -> "${preset.name}Main" }
+        val nativeMain by creating {
+            dependsOn(commonMain)
+            nativeSourceSetNames.forEach { name ->
+                getByName(name).dependsOn(this)
             }
         }
     }
@@ -124,11 +88,10 @@ kotlin {
 
 detekt {
     source.setFrom(files(kotlin.sourceSets.flatMap { it.kotlin.sourceDirectories }))
-    config = files("config/detekt/detekt.yml")
+    config.setFrom("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
 }
 
-@Suppress("UNUSED_VARIABLE")
 tasks {
 
     withType<Detekt>().configureEach {

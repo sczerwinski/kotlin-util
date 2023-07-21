@@ -50,10 +50,7 @@ jobs:
   checks:
     name: Run Checks
     needs: gradleValidation
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-22.04, windows-2022, macos-12]
+    runs-on: macos-13
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -96,7 +93,7 @@ jobs:
   dokka:
     name: Generate Dokka Documentation
     needs: gradleValidation
-    runs-on: ubuntu-22.04
+    runs-on: macos-13
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -111,10 +108,7 @@ jobs:
   assemble:
     name: Assemble Library
     needs: gradleValidation
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-22.04, windows-2022, macos-12]
+    runs-on: macos-13
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -157,10 +151,7 @@ jobs:
     name: Publish Snapshot Locally
     if: (github.event_name == 'pull_request') || (github.ref != 'refs/heads/main')
     needs: gradleValidation
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-22.04, windows-2022, macos-12]
+    runs-on: macos-13
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -177,16 +168,13 @@ jobs:
         env:
           SIGNING_KEY_ID: ${{ secrets.signingKeyId }}
           SIGNING_PASS: ${{ secrets.signingPassword }}
-        run: .github/scripts/publish_artifacts ${{ matrix.os }} SNAPSHOT
+        run: .github/scripts/publish_artifacts SNAPSHOT
 
   snapshot:
     name: Publish To OSSRH Snapshot Repository
     if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main')
     needs: gradleValidation
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-22.04, windows-2022, macos-12]
+    runs-on: macos-13
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -205,4 +193,4 @@ jobs:
           SIGNING_PASS: ${{ secrets.signingPassword }}
           SONATYPE_USERNAME: ${{ secrets.ossrhUsername }}
           SONATYPE_PASSWORD: ${{ secrets.ossrhPassword }}
-        run: .github/scripts/publish_artifacts ${{ matrix.os }} SNAPSHOT
+        run: .github/scripts/publish_artifacts SNAPSHOT

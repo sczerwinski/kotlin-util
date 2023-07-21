@@ -1,32 +1,15 @@
 #!/usr/bin/env sh
 
-BUILD_OS=$1
-SUFFIX=$2
-
-echo "Publishing for ${BUILD_OS}"
-
-case "$1" in
-  ubuntu*)
-    TASKS="publishLinuxMips32PublicationToMavenRepository publishLinuxMipsel32PublicationToMavenRepository"
-    ;;
-  windows*)
-    TASKS="publishMingwX64PublicationToMavenRepository publishMingwX86PublicationToMavenRepository"
-    ;;
-  macos*)
-    TASKS="publish"
-    ;;
-esac
-
-echo "Running tasks ${TASKS}"
+SUFFIX=$1
 
 if [ -z "${SUFFIX}" ]; then
-  ./gradlew ${TASKS} \
+  ./gradlew publish \
       -Psigning.secretKeyRingFile=secring.gpg \
       -Psigning.password="${SIGNING_PASS}" \
       -Psigning.keyId="${SIGNING_KEY_ID}" \
       --stacktrace
 else
-  ./gradlew ${TASKS} \
+  ./gradlew publish \
       -PversionSuffix="${SUFFIX}" \
       -Psigning.secretKeyRingFile=secring.gpg \
       -Psigning.password="${SIGNING_PASS}" \
