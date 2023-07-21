@@ -4,8 +4,6 @@
 
 ## [Unreleased]
 
-### Added
-
 ### Changed
 - Make `None` a data object
 - Build and publish artifacts for all platforms from macOS 13
@@ -16,14 +14,8 @@
   - Upgrade `org.jetbrains.dokka` to `1.8.20`
   - Upgrade `org.jetbrains.changelog` to `2.1.2`
 
-### Deprecated
-
 ### Removed
 - Remove support for deprecated legacy JS compiler. Using IR compiler only.
-
-### Fixed
-
-### Security
 
 ## [1.8.0] - 2023-01-29
 
