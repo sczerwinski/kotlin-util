@@ -395,7 +395,7 @@ data class Some<T>(val value: T) : Option<T>() {
 /**
  * Representation of a non-existent value.
  */
-object None : Option<Nothing>() {
+data object None : Option<Nothing>() {
 
     override val isEmpty: Boolean = true
 
@@ -408,6 +408,4 @@ object None : Option<Nothing>() {
 
     override fun asIterable(): Iterable<Nothing> = emptyList()
     override fun asSequence(): Sequence<Nothing> = emptySequence()
-
-    override fun toString(): String = "None"
 }

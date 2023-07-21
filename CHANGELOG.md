@@ -7,6 +7,7 @@
 ### Added
 
 ### Changed
+- Make `None` a data object
 - Build and publish artifacts for all platforms from macOS 13
 - Kotlin 1.9.0
 - Gradle Wrapper 8.2.1
