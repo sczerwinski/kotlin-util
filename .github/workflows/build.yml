@@ -51,6 +51,9 @@ jobs:
     name: Run Checks
     needs: gradleValidation
     runs-on: macos-13
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -80,6 +83,9 @@ jobs:
     needs: checks
     runs-on: ubuntu-22.04
     if: success() || failure()
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - name: Download Test Results
         uses: actions/download-artifact@v3
