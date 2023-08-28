@@ -6,7 +6,7 @@ plugins {
     kotlin("multiplatform") version "1.9.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.0"
     id("org.jetbrains.dokka") version "1.8.20"
-    id("org.jetbrains.changelog") version "2.1.2"
+    id("org.jetbrains.changelog") version "2.2.0"
     `maven-publish`
     signing
 }
