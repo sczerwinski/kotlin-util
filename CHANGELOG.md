@@ -9,6 +9,12 @@
 
 ### Changed
 - Minimum Java version set to 11
+- Kotlin 1.9.10
+- Gradle Wrapper 8.4
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.1`
+  - Upgrade `org.jetbrains.dokka` to `1.9.10`
+  - Upgrade `org.jetbrains.changelog` to `2.2.0`
 
 ### Deprecated
 
