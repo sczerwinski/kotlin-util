@@ -31,9 +31,8 @@ val isMacOs = hostOs == "Mac OS X"
 
 kotlin {
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
+        withJava()
+        jvmToolchain(jdkVersion = 11)
     }
 
     js(IR) {
@@ -84,6 +83,16 @@ kotlin {
             }
         }
     }
+}
+
+java {
+    modularity.inferModulePath.set(true)
+}
+
+tasks.named("compileJava", JavaCompile::class.java) {
+    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+        listOf("--patch-module", "it.czerwinski.kotlin.util=${sourceSets["main"].output.asPath}")
+    })
 }
 
 detekt {
