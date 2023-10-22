@@ -1,0 +1,13 @@
+# Ignore all files:
+*
+!*/
+
+# Track .gitignore:
+!.gitignore
+
+# Track code styles:
+!codeStyles/*
+
+# Track project icon:
+!icon.svg
+!icon.png

@@ -5,7 +5,7 @@
 [![Snapshot Release](https://github.com/sczerwinski/kotlin-util/workflows/Snapshot%20Release/badge.svg)](https://github.com/sczerwinski/kotlin-util/actions)
 [![Sonatype Snapshot](https://img.shields.io/nexus/s/https/oss.sonatype.org/it.czerwinski/kotlin-util.svg)](https://oss.sonatype.org/content/repositories/snapshots/it/czerwinski/kotlin-util/)
 
-# Kotlin Utilities
+# ![icon.svg](.idea/icon.svg) Kotlin Utilities
 
 ## Project Setup
 
