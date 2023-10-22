@@ -16,14 +16,6 @@
   - Upgrade `org.jetbrains.dokka` to `1.9.10`
   - Upgrade `org.jetbrains.changelog` to `2.2.0`
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
 ## 1.9.0 - 2023-07-21
 
 ### Changed
