@@ -36,6 +36,17 @@ implementation 'it.czerwinski:kotlin-util:1.9.0'
 
 In multiplatform projects, the library can be used as `commonMain` dependency.
 
+### Java Modules (JPMS)
+
+In projects using Java Modules (JPMS), add the following line
+to your `module-info.java`:
+
+```java
+module your.module {
+    requires it.czerwinski.kotlin.util;
+}
+```
+
 ## Supported Types
 
 Package `it.czerwinski.kotlin.collections`:

@@ -5,8 +5,10 @@
 ## Unreleased
 
 ### Added
+- Java Modules (JPMS) support
 
 ### Changed
+- Minimum Java version set to 11
 
 ### Deprecated
 
