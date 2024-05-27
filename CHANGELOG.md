@@ -8,6 +8,12 @@
 
 ### Changed
 
+- Kotlin 2.0.0
+- Gradle Wrapper 8.7
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.6`
+  - Upgrade `org.jetbrains.dokka` to `1.9.20`
+
 ### Deprecated
 
 ### Removed
