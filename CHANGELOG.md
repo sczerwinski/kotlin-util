@@ -4,8 +4,6 @@
 
 ## Unreleased
 
-### Added
-
 ### Changed
 
 - Kotlin 2.0.0
@@ -14,8 +12,6 @@
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.6`
   - Upgrade `org.jetbrains.dokka` to `1.9.20`
-
-### Deprecated
 
 ### Removed
 
@@ -30,8 +26,6 @@
 ### Fixed
 
 - Move platform dependent `NonFatal` logic to internal function `isNonFatal`
-
-### Security
 
 ## 1.9.1 - 2023-10-22
 
