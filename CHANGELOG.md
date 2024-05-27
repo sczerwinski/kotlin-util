@@ -18,6 +18,14 @@
 
 ### Removed
 
+- Removed artifacts for discontinued 32-bit platforms:
+  - `iosarm32`
+  - `linuxarm32hfp`
+  - `linuxmips32`
+  - `linuxmipsel32`
+  - `mingwx86`
+  - `wasm32`
+
 ### Fixed
 
 ### Security
