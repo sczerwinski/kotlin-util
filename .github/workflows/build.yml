@@ -11,7 +11,7 @@ jobs:
 
   gradleValidation:
     name: Validate Gradle Wrapper
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
     name: Export Properties
     if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main')
     needs: gradleValidation
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.properties.outputs.version }}
       changelog: ${{ steps.properties.outputs.changelog }}
@@ -30,7 +30,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 11
@@ -50,7 +50,7 @@ jobs:
   checks:
     name: Run Checks
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: macos-latest
     permissions:
       checks: write
       pull-requests: write
@@ -58,7 +58,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 11
@@ -66,7 +66,7 @@ jobs:
         run: ./gradlew allTests --stacktrace
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: 'build/test-results/**/*.xml'
       - name: Run Detekt
@@ -81,14 +81,14 @@ jobs:
   reports:
     name: Publish Reports
     needs: checks
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: success() || failure()
     permissions:
       checks: write
       pull-requests: write
     steps:
       - name: Download Test Results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       - name: Publish Test Report
@@ -99,12 +99,12 @@ jobs:
   dokka:
     name: Generate Dokka Documentation
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 11
@@ -114,12 +114,12 @@ jobs:
   assemble:
     name: Assemble Library
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 11
@@ -130,7 +130,7 @@ jobs:
     name: Draft New Release
     if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main')
     needs: properties
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
@@ -157,12 +157,12 @@ jobs:
     name: Publish Snapshot Locally
     if: (github.event_name == 'pull_request') || (github.ref != 'refs/heads/main')
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 11
@@ -180,12 +180,12 @@ jobs:
     name: Publish To OSSRH Snapshot Repository
     if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main')
     needs: gradleValidation
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 11
