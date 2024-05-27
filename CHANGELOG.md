@@ -9,6 +9,7 @@
 ### Changed
 
 - Kotlin 2.0.0
+- Use latest stable OS versions for GitHub Actions
 - Gradle Wrapper 8.7
 - Dependencies:
   - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.6`
