@@ -4,6 +4,20 @@
 
 ## Unreleased
 
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## 2.0.0 - 2024-05-27
+
 ### Changed
 
 - Kotlin 2.0.0
