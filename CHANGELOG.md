@@ -18,7 +18,7 @@
 
 ### Removed
 
-- Removed artifacts for discontinued 32-bit platforms:
+- Remove native artifacts for discontinued 32-bit platforms:
   - `iosarm32`
   - `linuxarm32hfp`
   - `linuxmips32`
@@ -27,6 +27,8 @@
   - `wasm32`
 
 ### Fixed
+
+- Move platform dependent `NonFatal` logic to internal function `isNonFatal`
 
 ### Security
 

@@ -16,25 +16,12 @@
  *
  */
 
+@file:JsFileName(name = "NonFatalInternal")
+
 package it.czerwinski.kotlin.util.control
 
-/**
- * Matcher for non-fatal Throwables.
- *
- * _Note: [AssertionError] is not matched by `NonFatal`, as it's intended to be thrown iff
- * the assumptions about the code are false._
- *
- * _Note: [NotImplementedError] is not matched by `NonFatal`, as it's intended to indicate
- * a method that remains to be implemented._
- *
- * @since 1.4.30
- */
-object NonFatal {
-
-    /**
-     * Returns `true` if the provided `Throwable` is to be considered non-fatal,
-     * or `false` if it is to be considered fatal.
-     */
-    operator fun invoke(exception: Throwable): Boolean =
-        isNonFatal(exception)
+internal actual fun isNonFatal(exception: Throwable): Boolean = when (exception) {
+    is NotImplementedError,
+    is AssertionError -> false
+    else -> true
 }
