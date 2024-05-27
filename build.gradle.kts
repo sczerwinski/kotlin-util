@@ -1,11 +1,10 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.plugin.mpp.AbstractKotlinNativeTargetPreset
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    kotlin("multiplatform") version "1.9.10"
-    id("io.gitlab.arturbosch.detekt") version "1.23.1"
-    id("org.jetbrains.dokka") version "1.9.10"
+    kotlin("multiplatform") version "2.0.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
+    id("org.jetbrains.dokka") version "1.9.20"
     id("org.jetbrains.changelog") version "2.2.0"
     `maven-publish`
     signing
@@ -30,29 +29,48 @@ val isWindows = hostOs.startsWith("Windows")
 val isMacOs = hostOs == "Mac OS X"
 
 kotlin {
+    jvmToolchain(jdkVersion = 11)
+
     jvm {
         withJava()
-        jvmToolchain(jdkVersion = 11)
     }
 
     js(IR) {
         browser {
-            testTask(
-                Action {
-                    useKarma {
-                        useChromeHeadless()
-                        webpackConfig.cssSupport {
-                            enabled.set(true)
-                        }
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                    webpackConfig.cssSupport {
+                        enabled.set(true)
                     }
                 }
-            )
+            }
         }
     }
 
-    presets.withType<AbstractKotlinNativeTargetPreset<*>>().forEach {
-        targetFromPreset(it)
-    }
+    mingwX64()
+
+    linuxArm64()
+    linuxX64()
+
+    androidNativeArm32()
+    androidNativeArm64()
+    androidNativeX64()
+    androidNativeX86()
+
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
+    macosArm64()
+    macosX64()
+    tvosArm64()
+    tvosSimulatorArm64()
+    tvosX64()
+    watchosArm32()
+    watchosArm64()
+    watchosDeviceArm64()
+    watchosSimulatorArm64()
+    watchosX64()
 
     sourceSets {
         val commonMain by getting
@@ -62,26 +80,22 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
+
         val jvmMain by getting
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit5"))
             }
         }
+
         val jsMain by getting
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
         }
-        val nativeSourceSetNames = presets.withType<AbstractKotlinNativeTargetPreset<*>>()
-            .map { preset -> "${preset.name}Main" }
-        val nativeMain by creating {
-            dependsOn(commonMain)
-            nativeSourceSetNames.forEach { name ->
-                getByName(name).dependsOn(this)
-            }
-        }
+
+        val nativeMain by creating
     }
 }
 
@@ -107,17 +121,17 @@ tasks {
         reports {
             xml {
                 required.set(true)
-                outputLocation.set(file("$buildDir/reports/detekt.xml"))
+                outputLocation.set(layout.buildDirectory.asFile.get().resolve(relative = "reports/detekt.xml"))
             }
             html {
                 required.set(true)
-                outputLocation.set(file("$buildDir/reports/detekt.html"))
+                outputLocation.set(layout.buildDirectory.asFile.get().resolve(relative = "reports/detekt.html"))
             }
         }
     }
 
     val dokkaJavadocCommon by creating(DokkaTask::class.java) {
-        outputDirectory.set(buildDir.resolve("javadoc"))
+        outputDirectory.set(layout.buildDirectory.asFile.get().resolve(relative = "javadoc"))
         dokkaSourceSets {
             named("commonMain") {
                 moduleName.set("Kotlin utilities")
@@ -127,7 +141,7 @@ tasks {
     }
 
     val dokkaJekyllCommon by creating(DokkaTask::class.java) {
-        outputDirectory.set(buildDir.resolve("jekyll"))
+        outputDirectory.set(layout.buildDirectory.asFile.get().resolve(relative = "jekyll"))
         dokkaSourceSets {
             named("commonMain") {
                 moduleName.set("Kotlin utilities")
@@ -208,7 +222,7 @@ publishing {
                         }
                     }
                     else -> {
-                        url = uri("$buildDir/repo")
+                        url = uri(layout.buildDirectory.asFile.get().resolve(relative = "repo").path)
                     }
                 }
             }
