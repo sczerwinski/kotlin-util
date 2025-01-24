@@ -8,6 +8,11 @@
 
 ### Changed
 
+- Kotlin 2.1.0
+- Dependencies:
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.7`
+  - Upgrade `org.jetbrains.changelog` to `2.2.1`
+
 ### Deprecated
 
 ### Removed
