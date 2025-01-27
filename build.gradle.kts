@@ -2,7 +2,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    kotlin("multiplatform") version "2.1.0"
+    kotlin("multiplatform") version "2.1.10"
     id("io.gitlab.arturbosch.detekt") version "1.23.7"
     id("org.jetbrains.dokka") version "1.9.20"
     id("org.jetbrains.changelog") version "2.2.1"
