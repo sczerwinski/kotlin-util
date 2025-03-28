@@ -97,6 +97,69 @@ class SuccessTest {
     }
 
     @Test
+    fun onEachShouldBeCalled() {
+        // given:
+        val success = Success("text")
+        var result = "default"
+        // when:
+        success.onEach { result = it }
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThis() {
+        // given:
+        val success = Success("text")
+        // when:
+        val result = success.onEach {}
+        // then:
+        assertEquals(success, result)
+    }
+
+    @Test
+    fun onSuccessShouldBeCalled() {
+        // given:
+        val success = Success("text")
+        var result = "default"
+        // when:
+        success.onSuccess { result = it }
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    fun onSuccessShouldReturnThis() {
+        // given:
+        val success = Success("text")
+        // when:
+        val result = success.onSuccess {}
+        // then:
+        assertEquals(success, result)
+    }
+
+    @Test
+    fun onFailureShouldNotBeCalled() {
+        // given:
+        val success = Success("text")
+        var result = "default"
+        // when:
+        success.onFailure { result = it.message.orEmpty() }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    fun onFailureShouldReturnThis() {
+        // given:
+        val success = Success("text")
+        // when:
+        val result = success.onFailure {}
+        // then:
+        assertEquals(success, result)
+    }
+
+    @Test
     fun mapShouldMapValueOfSuccess() {
         // given:
         val success = Success("123")

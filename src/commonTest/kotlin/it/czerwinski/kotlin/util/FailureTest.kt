@@ -110,6 +110,69 @@ class FailureTest {
     }
 
     @Test
+    fun onEachShouldNotBeCalled() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        var result = "default"
+        // when:
+        failure.onEach { result = it }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThis() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.onEach {}
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
+    fun onSuccessShouldNotBeCalled() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        var result = "default"
+        // when:
+        failure.onSuccess { result = it }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    fun onSuccessShouldReturnThis() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.onSuccess {}
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
+    fun onFailureShouldBeCalled() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        var result = "default"
+        // when:
+        failure.onFailure { result = it.message.orEmpty() }
+        // then:
+        assertEquals("Test exception", result)
+    }
+
+    @Test
+    fun onFailureShouldReturnThis() {
+        // given:
+        val failure: Try<String> = Failure(RuntimeException("Test exception"))
+        // when:
+        val result = failure.onFailure {}
+        // then:
+        assertEquals(failure, result)
+    }
+
+    @Test
     fun mapShouldReturnTheSameFailure() {
         // given:
         val failure: Try<String> = Failure(RuntimeException("Test exception"))

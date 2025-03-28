@@ -110,6 +110,48 @@ class LeftProjectionTest {
     }
 
     @Test
+    fun onEachShouldBeCalledIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        var result = "default"
+        // when:
+        either.left.onEach { result = it.toString() }
+        // then:
+        assertEquals("256", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThisEitherIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.left.onEach {}
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    fun onEachShouldNotBeCalledIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        var result = "default"
+        // when:
+        either.left.onEach { result = it.toString() }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThisEitherIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.left.onEach {}
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
     fun mapShouldTransformLeft() {
         // given:
         val either: Either<Int, Float> = Left(256)

@@ -101,6 +101,18 @@ sealed class Either<out L, out R> {
     }
 
     /**
+     * Runs [action] if this is a [Right]. Returns this [Either].
+     *
+     * @param action Action to be run on a [Right].
+     *
+     * @return This [Either].
+     *
+     * @since 2.1.0
+     */
+    inline fun onEach(action: (R) -> Unit): Either<L, R> =
+        apply { if (this is Right) action(value) }
+
+    /**
      * Maps value of this [Right] using [transform].
      *
      * @param transform Function transforming a [Right].
@@ -458,6 +470,18 @@ data class LeftProjection<out L, out R>(val either: Either<L, R>) {
     }
 
     /**
+     * Runs [action] if this is a [Left]. Returns this [Either].
+     *
+     * @param action Action to be run on a [Left].
+     *
+     * @return This [Either].
+     *
+     * @since 2.1.0
+     */
+    inline fun onEach(action: (L) -> Unit): Either<L, R> =
+        either.apply { if (this is Left) action(value) }
+
+    /**
      * Maps value of this [Left] using [transform].
      *
      * @param transform Function transforming a [Left].
@@ -699,6 +723,18 @@ data class RightProjection<out L, out R>(val either: Either<L, R>) {
         is Left -> Unit
         is Right -> action(either.value)
     }
+
+    /**
+     * Runs [action] if this is a [Right]. Returns this [Either].
+     *
+     * @param action Action to be run on a [Right].
+     *
+     * @return This [Either].
+     *
+     * @since 2.1.0
+     */
+    inline fun onEach(action: (R) -> Unit): Either<L, R> =
+        either.apply { if (this is Right) action(value) }
 
     /**
      * Maps value of this [Right] using [transform].
