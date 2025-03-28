@@ -81,6 +81,44 @@ sealed class Try<out T> {
     }
 
     /**
+     * Runs [action] if this is a [Success]. Returns this [Try].
+     *
+     * This method is an alias for [onSuccess], to allow for [onEach] convention.
+     *
+     * @param action Action to be run on a value of a [Success].
+     *
+     * @return This [Try].
+     *
+     * @since 2.1.0
+     */
+    inline fun onEach(action: (T) -> Unit): Try<T> =
+        onSuccess(action)
+
+    /**
+     * Runs [action] if this is a [Success]. Returns this [Try].
+     *
+     * @param action Action to be run on a value of a [Success].
+     *
+     * @return This [Try].
+     *
+     * @since 2.1.0
+     */
+    inline fun onSuccess(action: (T) -> Unit): Try<T> =
+        apply { if (isSuccess) action(get()) }
+
+    /**
+     * Runs [action] if this is a [Failure]. Returns this [Try].
+     *
+     * @param action Action to be run on an exception causing a [Failure].
+     *
+     * @return This [Try].
+     *
+     * @since 2.1.0
+     */
+    inline fun onFailure(action: (Throwable) -> Unit): Try<T> =
+        apply { if (isFailure) action(failed.get()) }
+
+    /**
      * Maps value of a [Success] using [transform] or returns the same [Try] if this is a [Failure].
      *
      * @param transform Function transforming value of a [Success].

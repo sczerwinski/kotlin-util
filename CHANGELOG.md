@@ -6,11 +6,21 @@
 
 ### Added
 
+- New methods in `Option`:
+  - `onEach()`
+- New methods in `Either`, `LeftProjection` and `RightProjection`:
+  - `onEach()`
+- New methods in `Try`:
+  - `onEach()`
+  - `onSuccess()`
+  - `onFailure()`
+
 ### Changed
 
 - Kotlin 2.1.0
 - Dependencies:
-  - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.7`
+  - Upgrade `io.gitlab.arturbosch.detekt` to `1.23.8`
+  - Upgrade `org.jetbrains.dokka` to `2.0.0`
   - Upgrade `org.jetbrains.changelog` to `2.2.1`
 
 ### Deprecated

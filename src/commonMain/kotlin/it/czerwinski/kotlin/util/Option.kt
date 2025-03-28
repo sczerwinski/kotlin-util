@@ -79,6 +79,18 @@ sealed class Option<out T> {
     }
 
     /**
+     * Runs [action] if this is a [Some]. Returns this [Option].
+     *
+     * @param action Action to be run on a value of a [Some].
+     *
+     * @return This [Option].
+     *
+     * @since 2.1.0
+     */
+    inline fun onEach(action: (T) -> Unit): Option<T> =
+        apply { if (isDefined) action(get()) }
+
+    /**
      * Maps value of a [Some] using [transform] or returns the same [None].
      *
      * @param transform Function transforming value of a [Some].

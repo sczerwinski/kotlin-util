@@ -129,6 +129,27 @@ class NoneTest {
     }
 
     @Test
+    fun onEachShouldNotBeCalled() {
+        // given:
+        val option: Option<String> = None
+        var result = "default"
+        // when:
+        option.onEach { result = it }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThis() {
+        // given:
+        val option: Option<String> = None
+        // when:
+        val result = option.onEach {}
+        // then:
+        assertEquals(option, result)
+    }
+
+    @Test
     fun mapShouldReturnNone() {
         // given:
         val option: Option<Int> = None

@@ -140,6 +140,27 @@ class SomeTest {
     }
 
     @Test
+    fun onEachShouldBeCalled() {
+        // given:
+        val option: Option<String> = Some("text")
+        var result = "default"
+        // when:
+        option.onEach { result = it }
+        // then:
+        assertEquals("text", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThis() {
+        // given:
+        val option: Option<String> = Some("text")
+        // when:
+        val result = option.onEach {}
+        // then:
+        assertEquals(option, result)
+    }
+
+    @Test
     fun mapShouldReturnNewSome() {
         // given:
         val option: Option<Int> = Some(123)

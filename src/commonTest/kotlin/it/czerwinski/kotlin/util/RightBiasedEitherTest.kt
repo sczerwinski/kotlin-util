@@ -110,6 +110,48 @@ class RightBiasedEitherTest {
     }
 
     @Test
+    fun onEachShouldNotBeCalledIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        var result = "default"
+        // when:
+        either.onEach { result = it.toString() }
+        // then:
+        assertEquals("default", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThisIfLeft() {
+        // given:
+        val either: Either<Int, Float> = Left(256)
+        // when:
+        val result = either.onEach {}
+        // then:
+        assertEquals(either, result)
+    }
+
+    @Test
+    fun onEachShouldBeCalledIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        var result = "default"
+        // when:
+        either.onEach { result = it.toString() }
+        // then:
+        assertEquals("3.14", result)
+    }
+
+    @Test
+    fun onEachShouldReturnThisIfRight() {
+        // given:
+        val either: Either<Int, Float> = Right(3.14f)
+        // when:
+        val result = either.onEach {}
+        // then:
+        assertEquals(result, result)
+    }
+
+    @Test
     fun mapShouldNotTransformLeft() {
         // given:
         val either: Either<Int, Float> = Left(256)
