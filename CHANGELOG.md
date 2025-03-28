@@ -6,6 +6,20 @@
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## 2.1.0 - 2025-03-28
+
+### Added
+
 - New methods in `Option`:
   - `onEach()`
 - New methods in `Either`, `LeftProjection` and `RightProjection`:
